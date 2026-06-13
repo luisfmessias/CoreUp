@@ -1,0 +1,25 @@
+# dependências
+/node_modules
+
+# build do Next.js
+/.next
+/out
+next-env.d.ts
+
+# variáveis de ambiente
+.env
+.env*.local
+
+# banco de dados local
+*.db
+*.db-journal
+
+# logs
+*.log
+.next-dev.err
+.next-dev-err.log
+.next-dev-out.log
+
+# sistema operacional
+.DS_Store
+Thumbs.db
