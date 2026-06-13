@@ -1,0 +1,1402 @@
+[
+  {
+    "id": 1,
+    "nome": "Supino reto com barra",
+    "grupoMuscular": "Peito",
+    "equipamento": "Barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 2,
+    "nome": "Supino reto com halteres",
+    "grupoMuscular": "Peito",
+    "equipamento": "Halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 3,
+    "nome": "Supino inclinado com barra",
+    "grupoMuscular": "Peito",
+    "equipamento": "Barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 4,
+    "nome": "Supino inclinado com halteres",
+    "grupoMuscular": "Peito",
+    "equipamento": "Halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 5,
+    "nome": "Supino declinado",
+    "grupoMuscular": "Peito",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 6,
+    "nome": "Crucifixo reto",
+    "grupoMuscular": "Peito",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 7,
+    "nome": "Crucifixo inclinado",
+    "grupoMuscular": "Peito",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 8,
+    "nome": "Crucifixo declinado",
+    "grupoMuscular": "Peito",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 9,
+    "nome": "Crossover alto",
+    "grupoMuscular": "Peito",
+    "equipamento": "Polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 10,
+    "nome": "Crossover médio",
+    "grupoMuscular": "Peito",
+    "equipamento": "Polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 11,
+    "nome": "Crossover baixo",
+    "grupoMuscular": "Peito",
+    "equipamento": "Polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 12,
+    "nome": "Peck Deck",
+    "grupoMuscular": "Peito",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 13,
+    "nome": "Flexão tradicional",
+    "grupoMuscular": "Peito",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 14,
+    "nome": "Flexão inclinada",
+    "grupoMuscular": "Peito",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 15,
+    "nome": "Flexão declinada",
+    "grupoMuscular": "Peito",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 16,
+    "nome": "Flexão diamante",
+    "grupoMuscular": "Peito",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 17,
+    "nome": "Pullover com halter",
+    "grupoMuscular": "Peito",
+    "equipamento": "Halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 18,
+    "nome": "Supino máquina",
+    "grupoMuscular": "Peito",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 19,
+    "nome": "Chest Press",
+    "grupoMuscular": "Peito",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 20,
+    "nome": "Svend Press",
+    "grupoMuscular": "Peito",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 21,
+    "nome": "Barra fixa pronada",
+    "grupoMuscular": "Costas",
+    "equipamento": "Barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 22,
+    "nome": "Barra fixa supinada",
+    "grupoMuscular": "Costas",
+    "equipamento": "Barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 23,
+    "nome": "Barra fixa neutra",
+    "grupoMuscular": "Costas",
+    "equipamento": "Barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 24,
+    "nome": "Remada curvada",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 25,
+    "nome": "Remada unilateral",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 26,
+    "nome": "Remada cavalinho",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 27,
+    "nome": "Remada baixa",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 28,
+    "nome": "Remada máquina",
+    "grupoMuscular": "Costas",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 29,
+    "nome": "Pulldown frontal",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 30,
+    "nome": "Pulldown supinado",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 31,
+    "nome": "Pulldown unilateral",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 32,
+    "nome": "Pullover na polia",
+    "grupoMuscular": "Costas",
+    "equipamento": "Polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 33,
+    "nome": "Serrote",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 34,
+    "nome": "Remada T-Bar",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 35,
+    "nome": "Rack Pull",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 36,
+    "nome": "Levantamento terra",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 37,
+    "nome": "Remada invertida",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 38,
+    "nome": "Remada articulada",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 39,
+    "nome": "High Row",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 40,
+    "nome": "Pulldown atrás da cabeça",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 41,
+    "nome": "Desenvolvimento militar",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 42,
+    "nome": "Desenvolvimento com halteres",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 43,
+    "nome": "Desenvolvimento Arnold",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 44,
+    "nome": "Elevação lateral",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 45,
+    "nome": "Elevação frontal",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 46,
+    "nome": "Elevação frontal com corda",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 47,
+    "nome": "Crucifixo inverso",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 48,
+    "nome": "Face Pull",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 49,
+    "nome": "Desenvolvimento máquina",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 50,
+    "nome": "Elevação lateral máquina",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 51,
+    "nome": "Elevação lateral unilateral",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 52,
+    "nome": "Remada alta",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 53,
+    "nome": "Landmine Press",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 54,
+    "nome": "Cuban Press",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 55,
+    "nome": "Y Raise",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 56,
+    "nome": "Elevação frontal alternada",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 57,
+    "nome": "Elevação lateral inclinada",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 58,
+    "nome": "Crucifixo inverso máquina",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 59,
+    "nome": "Rosca direta",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 60,
+    "nome": "Rosca alternada",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 61,
+    "nome": "Rosca martelo",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 62,
+    "nome": "Rosca concentrada",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 63,
+    "nome": "Rosca Scott",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 64,
+    "nome": "Rosca Scott unilateral",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 65,
+    "nome": "Rosca inclinada",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 66,
+    "nome": "Rosca no cabo",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 67,
+    "nome": "Rosca inversa",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 68,
+    "nome": "Rosca 21",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 69,
+    "nome": "Rosca spider",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 70,
+    "nome": "Rosca Zottman",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 71,
+    "nome": "Rosca martelo cruzada",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 72,
+    "nome": "Rosca barra W",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 73,
+    "nome": "Rosca Bayesian",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 74,
+    "nome": "Rosca unilateral polia",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 75,
+    "nome": "Tríceps pulley",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 76,
+    "nome": "Tríceps corda",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 77,
+    "nome": "Tríceps francês",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 78,
+    "nome": "Tríceps testa",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 79,
+    "nome": "Tríceps banco",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 80,
+    "nome": "Mergulho nas paralelas",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 81,
+    "nome": "Tríceps unilateral polia",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 82,
+    "nome": "Tríceps coice",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 83,
+    "nome": "Tríceps máquina",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 84,
+    "nome": "Tríceps barra reta",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 85,
+    "nome": "Tríceps barra V",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 86,
+    "nome": "Tríceps overhead corda",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 87,
+    "nome": "Supino fechado",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 88,
+    "nome": "Tríceps kickback",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 89,
+    "nome": "Extensão de tríceps sentado",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 90,
+    "nome": "Extensão unilateral acima da cabeça",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 91,
+    "nome": "Rosca punho",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 92,
+    "nome": "Rosca punho inversa",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 93,
+    "nome": "Farmer Walk",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 94,
+    "nome": "Hand Grip",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 95,
+    "nome": "Wrist Roller",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 96,
+    "nome": "Pinch Grip",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 97,
+    "nome": "Dead Hang",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 98,
+    "nome": "Reverse Curl",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 99,
+    "nome": "Hammer Hold",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 100,
+    "nome": "Plate Hold",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 101,
+    "nome": "Agachamento livre",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 102,
+    "nome": "Agachamento frontal",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 103,
+    "nome": "Agachamento Smith",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 104,
+    "nome": "Leg Press 45°",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 105,
+    "nome": "Leg Press horizontal",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 106,
+    "nome": "Hack Squat",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 107,
+    "nome": "Cadeira extensora",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 108,
+    "nome": "Afundo",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 109,
+    "nome": "Passada",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 110,
+    "nome": "Bulgarian Split Squat",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 111,
+    "nome": "Step Up",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 112,
+    "nome": "Sissy Squat",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 113,
+    "nome": "Agachamento sumô",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 114,
+    "nome": "Goblet Squat",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 115,
+    "nome": "Agachamento Zercher",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 116,
+    "nome": "Wall Sit",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 117,
+    "nome": "Agachamento unilateral",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 118,
+    "nome": "Pistol Squat",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 119,
+    "nome": "Stiff",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 120,
+    "nome": "Romanian Deadlift",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 121,
+    "nome": "Mesa flexora",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 122,
+    "nome": "Cadeira flexora",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 123,
+    "nome": "Flexora unilateral",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 124,
+    "nome": "Good Morning",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 125,
+    "nome": "Nordic Curl",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 126,
+    "nome": "Glute Ham Raise",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 127,
+    "nome": "Kettlebell Swing",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "Kettlebell",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 128,
+    "nome": "Deadlift romeno unilateral",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 129,
+    "nome": "Ponte de glúteo",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 130,
+    "nome": "Hip Hinge com barra",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "Barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 131,
+    "nome": "Pull Through",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 132,
+    "nome": "Flexão nórdica assistida",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 133,
+    "nome": "Hip Thrust",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 134,
+    "nome": "Glute Bridge",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 135,
+    "nome": "Coice na polia",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "Polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 136,
+    "nome": "Abdução máquina",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 137,
+    "nome": "Abdução na polia",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "Polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 138,
+    "nome": "Frog Pump",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 139,
+    "nome": "Step Up focado em glúteo",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 140,
+    "nome": "Bulgarian Split focado em glúteo",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 141,
+    "nome": "Elevação pélvica unilateral",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 142,
+    "nome": "Agachamento sumô profundo",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 143,
+    "nome": "Donkey Kick",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 144,
+    "nome": "Fire Hydrant",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 145,
+    "nome": "Panturrilha em pé",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 146,
+    "nome": "Panturrilha sentado",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 147,
+    "nome": "Panturrilha no Leg Press",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 148,
+    "nome": "Panturrilha unilateral",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 149,
+    "nome": "Donkey Calf Raise",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 150,
+    "nome": "Panturrilha Smith",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 151,
+    "nome": "Panturrilha máquina",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 152,
+    "nome": "Saltos na ponta dos pés",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 153,
+    "nome": "Farmer Walk na ponta dos pés",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 154,
+    "nome": "Panturrilha no Hack",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 155,
+    "nome": "Crunch",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 156,
+    "nome": "Crunch máquina",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 157,
+    "nome": "Crunch inverso",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 158,
+    "nome": "Elevação de pernas",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 159,
+    "nome": "Elevação de pernas suspenso",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 160,
+    "nome": "Prancha",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 161,
+    "nome": "Prancha lateral",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 162,
+    "nome": "Abdominal bicicleta",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 163,
+    "nome": "Mountain Climber",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 164,
+    "nome": "Russian Twist",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 165,
+    "nome": "Ab Wheel",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 166,
+    "nome": "Sit Up",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 167,
+    "nome": "V-Up",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 168,
+    "nome": "Hollow Hold",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 169,
+    "nome": "Dragon Flag",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 170,
+    "nome": "Toe Touch",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 171,
+    "nome": "Wood Chop",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 172,
+    "nome": "Pallof Press",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 173,
+    "nome": "Prancha com toque nos ombros",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 174,
+    "nome": "Dead Bug",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 175,
+    "nome": "Caminhada",
+    "grupoMuscular": "Cardio",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 176,
+    "nome": "Corrida",
+    "grupoMuscular": "Cardio",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 177,
+    "nome": "Corrida inclinada",
+    "grupoMuscular": "Cardio",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 178,
+    "nome": "Bicicleta ergométrica",
+    "grupoMuscular": "Cardio",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 179,
+    "nome": "Bicicleta spinning",
+    "grupoMuscular": "Cardio",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 180,
+    "nome": "Elíptico",
+    "grupoMuscular": "Cardio",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 181,
+    "nome": "Escada",
+    "grupoMuscular": "Cardio",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 182,
+    "nome": "Remo ergométrico",
+    "grupoMuscular": "Cardio",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 183,
+    "nome": "Pular corda",
+    "grupoMuscular": "Cardio",
+    "equipamento": "Polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 184,
+    "nome": "Burpee",
+    "grupoMuscular": "Cardio",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 185,
+    "nome": "Jumping Jack",
+    "grupoMuscular": "Cardio",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 186,
+    "nome": "Corrida estacionária",
+    "grupoMuscular": "Cardio",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 187,
+    "nome": "Sprint",
+    "grupoMuscular": "Cardio",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 188,
+    "nome": "HIIT Bike",
+    "grupoMuscular": "Cardio",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 189,
+    "nome": "Air Bike",
+    "grupoMuscular": "Cardio",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 190,
+    "nome": "Shuttle Run",
+    "grupoMuscular": "Cardio",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 191,
+    "nome": "Thruster",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 192,
+    "nome": "Clean and Press",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 193,
+    "nome": "Snatch com kettlebell",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "Kettlebell",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 194,
+    "nome": "Turkish Get Up",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 195,
+    "nome": "Bear Crawl",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 196,
+    "nome": "Battle Rope",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "Corda naval",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 197,
+    "nome": "Medicine Ball Slam",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "Medicine ball",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 198,
+    "nome": "Push Press",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 199,
+    "nome": "Man Maker",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 200,
+    "nome": "Devil Press",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  }
+]
