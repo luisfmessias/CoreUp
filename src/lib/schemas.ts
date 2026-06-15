@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/;
 
 const emailSchema = z
   .string()
@@ -8,7 +9,9 @@ const emailSchema = z
   .regex(emailRegex, "Informe um e-mail valido.")
   .transform((email) => email.toLowerCase());
 
-const passwordSchema = z.string().min(8, "A senha precisa ter pelo menos 8 caracteres.");
+const passwordSchema = z
+  .string()
+  .regex(passwordRegex, "A senha precisa ter 8 caracteres, letra maiuscula, letra minuscula, numero e simbolo.");
 
 export const registerSchema = z.object({
   name: z.string().min(2),
