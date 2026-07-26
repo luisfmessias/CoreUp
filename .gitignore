@@ -6,6 +6,9 @@
 /out
 next-env.d.ts
 
+# cache incremental do TypeScript
+*.tsbuildinfo
+
 # variáveis de ambiente
 .env
 .env*.local

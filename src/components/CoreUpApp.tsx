@@ -1,8 +1,29 @@
 "use client";
 
-import { Eye, EyeOff, KeyRound, Loader2, LogOut, Mail, Menu, UserPlus, UserRound } from "lucide-react";
-import { useEffect, useState, type FormEvent, type ReactNode } from "react";
+import {
+  Activity,
+  Dumbbell,
+  Eye,
+  EyeOff,
+  KeyRound,
+  Loader2,
+  LogOut,
+  Mail,
+  Menu,
+  UserPlus,
+  UserRound
+} from "lucide-react";
+import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
+import { bodyStats, weeklyPlan } from "@/data/app-content";
+import { exerciseMap, getTodayWorkout, summarizeGroups } from "@/lib/exercise-view";
+import { generateWorkoutPlan, type GeneratorPreferences } from "@/lib/workout-generator";
+import type { Exercise, WorkoutDay } from "@/types/fitness";
+import { Badge } from "@/components/ui/Badge";
 import { IconButton } from "@/components/ui/IconButton";
+
+type CoreUpAppProps = {
+  exercises: Exercise[];
+};
 
 type AuthUser = {
   id: string;
@@ -25,7 +46,17 @@ type AuthForm = {
 
 const authStorageKey = "coreup.auth.token";
 
-export function CoreUpApp() {
+const defaultPreferences: GeneratorPreferences = {
+  goal: "hipertrofia",
+  level: "intermediario",
+  planPreset: "ppl",
+  daysPerWeek: 4,
+  minutesPerSession: 50,
+  availableEquipment: ["Academia"],
+  favoriteExerciseIds: [1, 21, 101, 160]
+};
+
+export function CoreUpApp({ exercises }: CoreUpAppProps) {
   const [authToken, setAuthToken] = useState<string | null>(null);
   const [user, setUser] = useState<AuthUser | null>(null);
   const [authMode, setAuthMode] = useState<AuthMode>("login");
@@ -42,6 +73,12 @@ export function CoreUpApp() {
   const [authLoading, setAuthLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [checkingSession, setCheckingSession] = useState(true);
+
+  const byId = useMemo(() => exerciseMap(exercises), [exercises]);
+  const generatedPlan = useMemo(() => generateWorkoutPlan(exercises, defaultPreferences), [exercises]);
+  const plan = generatedPlan.days.length ? generatedPlan.days : weeklyPlan;
+  const todayWorkout = useMemo(() => getTodayWorkout(plan), [plan]);
+  const groupSummary = useMemo(() => summarizeGroups(exercises), [exercises]);
 
   useEffect(() => {
     const token = window.localStorage.getItem(authStorageKey);
@@ -176,12 +213,13 @@ export function CoreUpApp() {
       <div className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col bg-[#f8f7f2] shadow-2xl shadow-stone-300/50 md:my-6 md:min-h-[900px] md:overflow-hidden md:rounded-[32px]">
         <AppHeader user={user} onLogout={handleLogout} />
 
-        <main className="flex-1 px-4 pb-8">
-          <section className="grid place-items-center rounded-3xl bg-white px-5 py-12 text-center shadow-sm">
-            <p className="text-sm font-bold text-stone-500">
-              Sessao ativa. As telas de treino entram nos proximos passos.
-            </p>
-          </section>
+        <main className="flex-1 overflow-hidden px-4 pb-8">
+          <HomeView
+            selectedWorkout={todayWorkout}
+            byId={byId}
+            groupSummary={groupSummary}
+            generatedPlan={generatedPlan}
+          />
         </main>
       </div>
     </div>
@@ -419,5 +457,144 @@ function AppHeader({ user, onLogout }: { user: AuthUser; onLogout: () => void })
         </IconButton>
       </div>
     </header>
+  );
+}
+
+type HomeViewProps = {
+  selectedWorkout: WorkoutDay;
+  byId: Map<number, Exercise>;
+  groupSummary: Record<string, number>;
+  generatedPlan: ReturnType<typeof generateWorkoutPlan>;
+};
+
+function HomeView({ selectedWorkout, byId, groupSummary, generatedPlan }: HomeViewProps) {
+  const totalGroups = Object.keys(groupSummary).length;
+  const weeklySets = Object.values(generatedPlan.coverage).reduce((total, amount) => total + amount, 0);
+
+  return (
+    <section className="space-y-4">
+      <section className="relative overflow-hidden rounded-[28px] bg-stone-950 px-5 py-6 text-white">
+        <div className="absolute right-[-56px] top-[-34px] size-44 rounded-full bg-emerald-400/20" />
+        <div className="absolute bottom-[-58px] left-[-50px] size-36 rounded-full bg-sky-400/15" />
+        <div className="relative space-y-5">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <Badge tone="green">Hoje</Badge>
+              <h2 className="mt-4 max-w-[250px] text-4xl font-black leading-[0.95]">Treine com clareza.</h2>
+            </div>
+            <div className="rounded-2xl bg-white/10 p-3">
+              <Activity size={24} />
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-2">
+            <HeroMetric label="Foco" value={selectedWorkout.focus} />
+            <HeroMetric label="Tempo" value={selectedWorkout.duration} />
+            <HeroMetric label="Series" value={`${weeklySets}/sem`} />
+          </div>
+        </div>
+      </section>
+
+      <section className="grid grid-cols-2 gap-3">
+        {bodyStats.map((stat) => (
+          <article key={stat.label} className="rounded-3xl border border-stone-200 bg-white p-4 shadow-sm">
+            <div className="flex items-center justify-between">
+              <span className="grid size-10 place-items-center rounded-2xl bg-stone-100 text-stone-800">
+                <stat.icon size={19} />
+              </span>
+              <span className="text-xs font-semibold text-stone-500">{stat.helper}</span>
+            </div>
+            <p className="mt-4 text-2xl font-black">{stat.value}</p>
+            <p className="text-sm font-semibold text-stone-500">{stat.label}</p>
+          </article>
+        ))}
+      </section>
+
+      <TodayWorkout workout={selectedWorkout} byId={byId} notes={generatedPlan.notes} />
+
+      <section className="rounded-3xl border border-stone-200 bg-white p-4 shadow-sm">
+        <div className="mb-4 flex items-center justify-between">
+          <div>
+            <p className="text-sm font-bold text-stone-500">Biblioteca</p>
+            <h3 className="text-xl font-black">{totalGroups} grupos musculares</h3>
+          </div>
+          <span className="grid size-11 place-items-center rounded-full bg-emerald-100 text-emerald-900">
+            <Dumbbell size={20} />
+          </span>
+        </div>
+        <GroupBars groupSummary={groupSummary} />
+      </section>
+    </section>
+  );
+}
+
+function HeroMetric({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl bg-white/10 p-3">
+      <p className="text-[11px] font-bold uppercase text-white/55">{label}</p>
+      <p className="mt-1 line-clamp-2 text-sm font-black">{value}</p>
+    </div>
+  );
+}
+
+type TodayWorkoutProps = {
+  workout: WorkoutDay;
+  byId: Map<number, Exercise>;
+  notes: string[];
+};
+
+function TodayWorkout({ workout, byId, notes }: TodayWorkoutProps) {
+  return (
+    <section className="rounded-3xl border border-stone-200 bg-white p-4 shadow-sm">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-sm font-bold text-stone-500">Treino do dia</p>
+          <h3 className="text-xl font-black">{workout.focus}</h3>
+        </div>
+        <span className="grid size-11 place-items-center rounded-full bg-stone-950 text-white">
+          <Dumbbell size={20} />
+        </span>
+      </div>
+      <div className="mt-4 space-y-2">
+        {workout.exercises.slice(0, 3).map((item) => {
+          const exercise = byId.get(item.exerciseId);
+
+          return (
+            <div key={item.exerciseId} className="flex items-center justify-between rounded-2xl bg-stone-50 p-3">
+              <div>
+                <p className="text-sm font-black">{exercise?.nome}</p>
+                <p className="text-xs font-semibold text-stone-500">{exercise?.grupoMuscular}</p>
+              </div>
+              <p className="text-sm font-black text-stone-700">
+                {item.sets} x {item.reps}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+      <p className="mt-3 text-xs font-semibold leading-relaxed text-stone-500">{notes[0]}</p>
+    </section>
+  );
+}
+
+
+function GroupBars({ groupSummary }: { groupSummary: Record<string, number> }) {
+  const entries = Object.entries(groupSummary).slice(0, 7);
+  const max = Math.max(1, ...Object.values(groupSummary));
+
+  return (
+    <div className="space-y-3">
+      {entries.length === 0 && <p className="text-sm font-semibold text-stone-500">Monte um treino para ver a cobertura.</p>}
+      {entries.map(([group, amount]) => (
+          <div key={group}>
+            <div className="mb-1 flex justify-between text-xs font-bold text-stone-500">
+              <span>{group}</span>
+              <span>{amount}</span>
+            </div>
+            <div className="h-2 rounded-full bg-stone-100">
+              <div className="h-full rounded-full bg-stone-950" style={{ width: `${(amount / max) * 100}%` }} />
+            </div>
+          </div>
+        ))}
+    </div>
   );
 }
