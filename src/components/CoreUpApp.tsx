@@ -2,14 +2,19 @@
 
 import {
   Activity,
+  CalendarDays,
+  ChevronRight,
   Dumbbell,
   Eye,
   EyeOff,
+  Flame,
+  Home,
   KeyRound,
   Loader2,
   LogOut,
   Mail,
   Menu,
+  Trash2,
   UserPlus,
   UserRound
 } from "lucide-react";
@@ -46,6 +51,13 @@ type AuthForm = {
 
 const authStorageKey = "coreup.auth.token";
 
+const tabs = [
+  { id: "home", label: "Inicio", icon: Home },
+  { id: "plan", label: "Treino", icon: CalendarDays }
+] as const;
+
+type TabId = (typeof tabs)[number]["id"];
+
 const defaultPreferences: GeneratorPreferences = {
   goal: "hipertrofia",
   level: "intermediario",
@@ -73,11 +85,14 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
   const [authLoading, setAuthLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [checkingSession, setCheckingSession] = useState(true);
+  const [activeTab, setActiveTab] = useState<TabId>("home");
+  const [generatedPlan, setGeneratedPlan] = useState(() => generateWorkoutPlan(exercises, defaultPreferences));
+  const [activeDayId, setActiveDayId] = useState(generatedPlan.days[0].id);
 
   const byId = useMemo(() => exerciseMap(exercises), [exercises]);
-  const generatedPlan = useMemo(() => generateWorkoutPlan(exercises, defaultPreferences), [exercises]);
   const plan = generatedPlan.days.length ? generatedPlan.days : weeklyPlan;
   const todayWorkout = useMemo(() => getTodayWorkout(plan), [plan]);
+  const selectedDay = plan.find((day) => day.id === activeDayId) ?? todayWorkout;
   const groupSummary = useMemo(() => summarizeGroups(exercises), [exercises]);
 
   useEffect(() => {
@@ -109,6 +124,12 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
       })
       .finally(() => setCheckingSession(false));
   }, []);
+
+  function removeWorkoutDay(dayId: string) {
+    const nextDays = generatedPlan.days.filter((day) => day.id !== dayId);
+    setGeneratedPlan({ ...generatedPlan, days: nextDays });
+    setActiveDayId(nextDays[0]?.id ?? weeklyPlan[0].id);
+  }
 
   async function handleAuthSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -181,6 +202,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
     window.localStorage.removeItem(authStorageKey);
     setAuthToken(null);
     setUser(null);
+    setActiveTab("home");
   }
 
   if (checkingSession) {
@@ -213,14 +235,30 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
       <div className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col bg-[#f8f7f2] shadow-2xl shadow-stone-300/50 md:my-6 md:min-h-[900px] md:overflow-hidden md:rounded-[32px]">
         <AppHeader user={user} onLogout={handleLogout} />
 
-        <main className="flex-1 overflow-hidden px-4 pb-8">
-          <HomeView
-            selectedWorkout={todayWorkout}
-            byId={byId}
-            groupSummary={groupSummary}
-            generatedPlan={generatedPlan}
-          />
+        <main className="flex-1 overflow-hidden px-4 pb-24">
+          {activeTab === "home" && (
+            <HomeView
+              selectedWorkout={todayWorkout}
+              byId={byId}
+              groupSummary={groupSummary}
+              generatedPlan={generatedPlan}
+              onOpenPlan={() => setActiveTab("plan")}
+            />
+          )}
+          {activeTab === "plan" && (
+            <PlanView
+              selectedDay={selectedDay}
+              activeDayId={activeDayId}
+              byId={byId}
+              plan={plan}
+              generatedPlan={generatedPlan}
+              onSelectDay={setActiveDayId}
+              onRemoveDay={removeWorkoutDay}
+            />
+          )}
         </main>
+
+        <BottomNavigation activeTab={activeTab} onChange={setActiveTab} />
       </div>
     </div>
   );
@@ -465,9 +503,10 @@ type HomeViewProps = {
   byId: Map<number, Exercise>;
   groupSummary: Record<string, number>;
   generatedPlan: ReturnType<typeof generateWorkoutPlan>;
+  onOpenPlan: () => void;
 };
 
-function HomeView({ selectedWorkout, byId, groupSummary, generatedPlan }: HomeViewProps) {
+function HomeView({ selectedWorkout, byId, groupSummary, generatedPlan, onOpenPlan }: HomeViewProps) {
   const totalGroups = Object.keys(groupSummary).length;
   const weeklySets = Object.values(generatedPlan.coverage).reduce((total, amount) => total + amount, 0);
 
@@ -509,7 +548,7 @@ function HomeView({ selectedWorkout, byId, groupSummary, generatedPlan }: HomeVi
         ))}
       </section>
 
-      <TodayWorkout workout={selectedWorkout} byId={byId} notes={generatedPlan.notes} />
+      <TodayWorkout workout={selectedWorkout} byId={byId} notes={generatedPlan.notes} onOpenPlan={onOpenPlan} />
 
       <section className="rounded-3xl border border-stone-200 bg-white p-4 shadow-sm">
         <div className="mb-4 flex items-center justify-between">
@@ -540,9 +579,10 @@ type TodayWorkoutProps = {
   workout: WorkoutDay;
   byId: Map<number, Exercise>;
   notes: string[];
+  onOpenPlan: () => void;
 };
 
-function TodayWorkout({ workout, byId, notes }: TodayWorkoutProps) {
+function TodayWorkout({ workout, byId, notes, onOpenPlan }: TodayWorkoutProps) {
   return (
     <section className="rounded-3xl border border-stone-200 bg-white p-4 shadow-sm">
       <div className="flex items-center justify-between">
@@ -550,9 +590,14 @@ function TodayWorkout({ workout, byId, notes }: TodayWorkoutProps) {
           <p className="text-sm font-bold text-stone-500">Treino do dia</p>
           <h3 className="text-xl font-black">{workout.focus}</h3>
         </div>
-        <span className="grid size-11 place-items-center rounded-full bg-stone-950 text-white">
-          <Dumbbell size={20} />
-        </span>
+        <button
+          aria-label="Abrir treino"
+          className="grid size-11 place-items-center rounded-full bg-stone-950 text-white"
+          onClick={onOpenPlan}
+          type="button"
+        >
+          <ChevronRight size={20} />
+        </button>
       </div>
       <div className="mt-4 space-y-2">
         {workout.exercises.slice(0, 3).map((item) => {
@@ -577,6 +622,107 @@ function TodayWorkout({ workout, byId, notes }: TodayWorkoutProps) {
 }
 
 
+type PlanViewProps = {
+  selectedDay: WorkoutDay;
+  activeDayId: string;
+  byId: Map<number, Exercise>;
+  plan: WorkoutDay[];
+  generatedPlan: ReturnType<typeof generateWorkoutPlan>;
+  onSelectDay: (dayId: string) => void;
+  onRemoveDay: (dayId: string) => void;
+};
+
+function PlanView({ selectedDay, activeDayId, byId, plan, generatedPlan, onSelectDay, onRemoveDay }: PlanViewProps) {
+  return (
+    <section className="space-y-4">
+      <div className="flex items-end justify-between">
+        <div>
+          <p className="text-sm font-bold text-stone-500">Rotina semanal</p>
+          <h2 className="text-3xl font-black">Treinos</h2>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-5 gap-2">
+        {plan.map((day) => (
+          <button
+            key={day.id}
+            className={`rounded-2xl px-2 py-3 text-sm font-black transition ${
+              day.id === activeDayId ? "bg-stone-950 text-white" : "bg-white text-stone-500"
+            }`}
+            onClick={() => onSelectDay(day.id)}
+            type="button"
+          >
+            {day.label}
+          </button>
+        ))}
+      </div>
+
+      <section className="rounded-[28px] bg-white p-4 shadow-sm">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <Badge tone={selectedDay.intensity === "Forte" ? "dark" : "blue"}>{selectedDay.intensity}</Badge>
+            <h3 className="mt-3 text-2xl font-black">{selectedDay.focus}</h3>
+            <p className="mt-1 text-sm font-semibold text-stone-500">{selectedDay.duration}</p>
+          </div>
+          <span className="grid size-12 place-items-center rounded-2xl bg-emerald-100 text-emerald-900">
+            <Flame size={22} />
+          </span>
+        </div>
+        <div className="mt-4">
+          <button
+            className="flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-red-50 px-3 text-sm font-black text-red-900"
+            onClick={() => onRemoveDay(selectedDay.id)}
+            type="button"
+          >
+            <Trash2 size={17} />
+            Descriar
+          </button>
+        </div>
+
+        <div className="mt-5 space-y-3">
+          {selectedDay.exercises.map((item, index) => {
+            const exercise = byId.get(item.exerciseId);
+
+            return (
+              <article key={`${selectedDay.id}-${item.exerciseId}`} className="rounded-3xl border border-stone-100 p-3">
+                <div className="flex items-center gap-3">
+                  <span className="grid size-10 shrink-0 place-items-center rounded-2xl bg-stone-950 text-sm font-black text-white">
+                    {index + 1}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <h4 className="truncate text-base font-black">{exercise?.nome}</h4>
+                    <p className="text-xs font-semibold text-stone-500">
+                      {exercise?.equipamento} · {exercise?.grupoMuscular}
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-3 grid grid-cols-3 gap-2 text-center">
+                  <MiniStat label="Series" value={String(item.sets)} />
+                  <MiniStat label="Reps" value={item.reps} />
+                  <MiniStat label="Pausa" value={item.rest} />
+                </div>
+                {item.note && <p className="mt-2 text-xs font-bold text-emerald-700">{item.note}</p>}
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="rounded-3xl border border-stone-200 bg-white p-4 shadow-sm">
+        <h3 className="text-lg font-black">Por que esse treino fecha</h3>
+        <div className="mt-3 space-y-2">
+          {generatedPlan.notes.map((note) => (
+            <p key={note} className="text-sm font-semibold leading-relaxed text-stone-600">
+              {note}
+            </p>
+          ))}
+        </div>
+      </section>
+    </section>
+  );
+}
+
+
 function GroupBars({ groupSummary }: { groupSummary: Record<string, number> }) {
   const entries = Object.entries(groupSummary).slice(0, 7);
   const max = Math.max(1, ...Object.values(groupSummary));
@@ -596,5 +742,36 @@ function GroupBars({ groupSummary }: { groupSummary: Record<string, number> }) {
           </div>
         ))}
     </div>
+  );
+}
+
+function MiniStat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl bg-stone-50 px-2 py-3">
+      <p className="text-[11px] font-bold uppercase text-stone-400">{label}</p>
+      <p className="mt-1 text-sm font-black">{value}</p>
+    </div>
+  );
+}
+
+function BottomNavigation({ activeTab, onChange }: { activeTab: TabId; onChange: (tab: TabId) => void }) {
+  return (
+    <nav className="fixed inset-x-0 bottom-0 z-10 mx-auto max-w-[430px] border-t border-stone-200 bg-white/90 px-3 pb-4 pt-2 backdrop-blur md:bottom-6 md:rounded-b-[32px]">
+      <div className="grid grid-cols-2 gap-1">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            className={`flex h-14 flex-col items-center justify-center gap-1 rounded-2xl text-[11px] font-black transition ${
+              activeTab === tab.id ? "bg-stone-950 text-white" : "text-stone-500"
+            }`}
+            onClick={() => onChange(tab.id)}
+            type="button"
+          >
+            <tab.icon size={19} />
+            {tab.label}
+          </button>
+        ))}
+      </div>
+    </nav>
   );
 }
