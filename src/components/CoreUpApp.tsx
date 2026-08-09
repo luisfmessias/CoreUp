@@ -3,17 +3,21 @@
 import {
   Activity,
   CalendarDays,
+  Check,
   ChevronRight,
   Dumbbell,
+  Flame,
   Eye,
   EyeOff,
-  Flame,
   Home,
   KeyRound,
   Loader2,
   LogOut,
   Mail,
   Menu,
+  Plus,
+  RotateCcw,
+  Sparkles,
   Trash2,
   UserPlus,
   UserRound
@@ -21,7 +25,7 @@ import {
 import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
 import { bodyStats, weeklyPlan } from "@/data/app-content";
 import { exerciseMap, getTodayWorkout, summarizeGroups } from "@/lib/exercise-view";
-import { generateWorkoutPlan, type GeneratorPreferences } from "@/lib/workout-generator";
+import { generateWorkoutPlan, generatorOptions, getEquipmentList, type GeneratorPreferences } from "@/lib/workout-generator";
 import type { Exercise, WorkoutDay } from "@/types/fitness";
 import { Badge } from "@/components/ui/Badge";
 import { IconButton } from "@/components/ui/IconButton";
@@ -53,20 +57,11 @@ const authStorageKey = "coreup.auth.token";
 
 const tabs = [
   { id: "home", label: "Inicio", icon: Home },
+  { id: "builder", label: "Montar", icon: Sparkles },
   { id: "plan", label: "Treino", icon: CalendarDays }
 ] as const;
 
 type TabId = (typeof tabs)[number]["id"];
-
-const defaultPreferences: GeneratorPreferences = {
-  goal: "hipertrofia",
-  level: "intermediario",
-  planPreset: "ppl",
-  daysPerWeek: 4,
-  minutesPerSession: 50,
-  availableEquipment: ["Academia"],
-  favoriteExerciseIds: [1, 21, 101, 160]
-};
 
 export function CoreUpApp({ exercises }: CoreUpAppProps) {
   const [authToken, setAuthToken] = useState<string | null>(null);
@@ -86,7 +81,16 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [checkingSession, setCheckingSession] = useState(true);
   const [activeTab, setActiveTab] = useState<TabId>("home");
-  const [generatedPlan, setGeneratedPlan] = useState(() => generateWorkoutPlan(exercises, defaultPreferences));
+  const [preferences, setPreferences] = useState<GeneratorPreferences>({
+    goal: "hipertrofia",
+    level: "intermediario",
+    planPreset: "ppl",
+    daysPerWeek: 4,
+    minutesPerSession: 50,
+    availableEquipment: ["Academia"],
+    favoriteExerciseIds: [1, 21, 101, 160]
+  });
+  const [generatedPlan, setGeneratedPlan] = useState(() => generateWorkoutPlan(exercises, preferences));
   const [activeDayId, setActiveDayId] = useState(generatedPlan.days[0].id);
 
   const byId = useMemo(() => exerciseMap(exercises), [exercises]);
@@ -94,6 +98,11 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
   const todayWorkout = useMemo(() => getTodayWorkout(plan), [plan]);
   const selectedDay = plan.find((day) => day.id === activeDayId) ?? todayWorkout;
   const groupSummary = useMemo(() => summarizeGroups(exercises), [exercises]);
+  const equipment = useMemo(() => getEquipmentList(exercises), [exercises]);
+  const favoriteExercises = useMemo(
+    () => exercises.filter((exercise) => preferences.favoriteExerciseIds.includes(exercise.id)).slice(0, 8),
+    [exercises, preferences.favoriteExerciseIds]
+  );
 
   useEffect(() => {
     const token = window.localStorage.getItem(authStorageKey);
@@ -125,10 +134,30 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
       .finally(() => setCheckingSession(false));
   }, []);
 
+  function updatePreferences(nextPreferences: GeneratorPreferences) {
+    setPreferences(nextPreferences);
+    const nextPlan = generateWorkoutPlan(exercises, nextPreferences);
+    setGeneratedPlan(nextPlan);
+    setActiveDayId(nextPlan.days[0]?.id ?? weeklyPlan[0].id);
+  }
+
+  function saveGeneratedPlan() {
+    setActiveDayId(generatedPlan.days[0]?.id ?? weeklyPlan[0].id);
+    setActiveTab("plan");
+  }
+
   function removeWorkoutDay(dayId: string) {
     const nextDays = generatedPlan.days.filter((day) => day.id !== dayId);
     setGeneratedPlan({ ...generatedPlan, days: nextDays });
     setActiveDayId(nextDays[0]?.id ?? weeklyPlan[0].id);
+  }
+
+  function toggleFavorite(exerciseId: number) {
+    const nextFavoriteIds = preferences.favoriteExerciseIds.includes(exerciseId)
+      ? preferences.favoriteExerciseIds.filter((id) => id !== exerciseId)
+      : [...preferences.favoriteExerciseIds, exerciseId];
+
+    updatePreferences({ ...preferences, favoriteExerciseIds: nextFavoriteIds });
   }
 
   async function handleAuthSubmit(event: FormEvent<HTMLFormElement>) {
@@ -245,6 +274,23 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
               onOpenPlan={() => setActiveTab("plan")}
             />
           )}
+          {activeTab === "builder" && (
+            <BuilderView
+              exercises={exercises}
+              equipment={equipment}
+              favoriteExercises={favoriteExercises}
+              preferences={preferences}
+              generatedPlan={generatedPlan}
+              onChange={updatePreferences}
+              onFavoriteToggle={toggleFavorite}
+              onBuildPlan={() => {
+                updatePreferences(preferences);
+                setActiveTab("plan");
+              }}
+              onOpenPlan={() => setActiveTab("plan")}
+              onSavePlan={saveGeneratedPlan}
+            />
+          )}
           {activeTab === "plan" && (
             <PlanView
               selectedDay={selectedDay}
@@ -253,6 +299,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
               plan={plan}
               generatedPlan={generatedPlan}
               onSelectDay={setActiveDayId}
+              onOpenBuilder={() => setActiveTab("builder")}
               onRemoveDay={removeWorkoutDay}
             />
           )}
@@ -621,6 +668,205 @@ function TodayWorkout({ workout, byId, notes, onOpenPlan }: TodayWorkoutProps) {
   );
 }
 
+type BuilderViewProps = {
+  exercises: Exercise[];
+  equipment: string[];
+  favoriteExercises: Exercise[];
+  preferences: GeneratorPreferences;
+  generatedPlan: ReturnType<typeof generateWorkoutPlan>;
+  onChange: (preferences: GeneratorPreferences) => void;
+  onBuildPlan: () => void;
+  onFavoriteToggle: (exerciseId: number) => void;
+  onOpenPlan: () => void;
+  onSavePlan: () => void;
+};
+
+function BuilderView({
+  exercises,
+  equipment,
+  favoriteExercises,
+  preferences,
+  generatedPlan,
+  onChange,
+  onBuildPlan,
+  onFavoriteToggle,
+  onOpenPlan,
+  onSavePlan
+}: BuilderViewProps) {
+  const suggestedFavorites = exercises
+    .filter((exercise) => ["Peito", "Costas", "Quadríceps", "Glúteos", "Abdômen"].includes(exercise.grupoMuscular))
+    .slice(0, 10);
+
+  const update = (patch: Partial<GeneratorPreferences>) => onChange({ ...preferences, ...patch });
+
+  const toggleEquipment = (item: string) => {
+    const nextEquipment = preferences.availableEquipment.includes(item)
+      ? preferences.availableEquipment.filter((equipmentItem) => equipmentItem !== item)
+      : [...preferences.availableEquipment, item];
+
+    update({ availableEquipment: nextEquipment.length ? nextEquipment : ["Peso corporal"] });
+  };
+
+  return (
+    <section className="space-y-4">
+      <div className="flex items-end justify-between gap-3">
+        <div>
+          <p className="text-sm font-bold text-stone-500">Gerador inteligente</p>
+          <h2 className="text-3xl font-black">Montar treino</h2>
+        </div>
+        <IconButton label="Abrir plano" className="bg-stone-950 text-white hover:bg-stone-800" onClick={onOpenPlan}>
+          <ChevronRight size={20} />
+        </IconButton>
+      </div>
+
+      <section className="rounded-[28px] bg-stone-950 p-4 text-white shadow-sm">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <Badge tone="green">{generatedPlan.days.length} dias</Badge>
+            <h3 className="mt-3 text-2xl font-black">Plano pronto para ajustar</h3>
+            <p className="mt-2 text-sm font-semibold leading-relaxed text-white/65">
+              O aluno escolhe o que prefere, e o app completa a semana para nao deixar grupos importantes de fora.
+            </p>
+          </div>
+          <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-white/10">
+            <Sparkles size={22} />
+          </span>
+        </div>
+        <button
+          className="mt-5 flex h-13 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-300 px-4 text-base font-black text-stone-950 transition hover:bg-emerald-200"
+          onClick={onBuildPlan}
+          type="button"
+        >
+          <Sparkles size={19} />
+          Montar treino
+        </button>
+        <button
+          className="mt-2 flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-white/10 px-4 text-sm font-black text-white transition hover:bg-white/15"
+          onClick={onSavePlan}
+          type="button"
+        >
+          <Check size={18} />
+          Usar esse plano
+        </button>
+      </section>
+
+      <ControlBlock title="Catalogo">
+        <div className="grid grid-cols-2 gap-2">
+          {generatorOptions.presets.map((preset) => (
+            <ChoiceButton
+              key={preset.id}
+              active={preferences.planPreset === preset.id}
+              label={preset.label}
+              onClick={() => update({ planPreset: preset.id })}
+            />
+          ))}
+        </div>
+      </ControlBlock>
+
+      <ControlBlock title="Objetivo">
+        <SegmentedGrid>
+          {generatorOptions.goals.map((goal) => (
+            <ChoiceButton
+              key={goal.id}
+              active={preferences.goal === goal.id}
+              label={goal.label}
+              onClick={() => update({ goal: goal.id })}
+            />
+          ))}
+        </SegmentedGrid>
+      </ControlBlock>
+
+      <section className="grid grid-cols-2 gap-3">
+        <ControlBlock title="Nivel">
+          <div className="space-y-2">
+            {generatorOptions.levels.map((level) => (
+              <ChoiceButton
+                key={level.id}
+                active={preferences.level === level.id}
+                label={level.label}
+                onClick={() => update({ level: level.id })}
+              />
+            ))}
+          </div>
+        </ControlBlock>
+
+        <ControlBlock title="Semana">
+          <Stepper
+            label="dias"
+            max={5}
+            min={2}
+            value={preferences.daysPerWeek}
+            onChange={(value) => update({ daysPerWeek: value })}
+          />
+          <div className="mt-3">
+            <Stepper
+              label="min"
+              max={70}
+              min={35}
+              step={5}
+              value={preferences.minutesPerSession}
+              onChange={(value) => update({ minutesPerSession: value })}
+            />
+          </div>
+        </ControlBlock>
+      </section>
+
+      <ControlBlock title="Equipamentos">
+        <div className="flex gap-2 overflow-x-auto pb-1">
+          {[...generatorOptions.equipment, ...equipment.filter((item) => !generatorOptions.equipment.includes(item))].map(
+            (item) => (
+              <button
+                key={item}
+                className={`shrink-0 rounded-full border px-4 py-2 text-sm font-bold transition ${
+                  preferences.availableEquipment.includes(item)
+                    ? "border-stone-950 bg-stone-950 text-white"
+                    : "border-stone-200 bg-stone-50 text-stone-600"
+                }`}
+                onClick={() => toggleEquipment(item)}
+                type="button"
+              >
+                {item}
+              </button>
+            )
+          )}
+        </div>
+      </ControlBlock>
+
+      <ControlBlock title="Favoritos do aluno">
+        <div className="space-y-2">
+          {(favoriteExercises.length ? favoriteExercises : suggestedFavorites.slice(0, 5)).map((exercise) => (
+            <FavoriteRow
+              key={exercise.id}
+              exercise={exercise}
+              active={preferences.favoriteExerciseIds.includes(exercise.id)}
+              onToggle={() => onFavoriteToggle(exercise.id)}
+            />
+          ))}
+        </div>
+      </ControlBlock>
+
+      <section className="rounded-3xl border border-stone-200 bg-white p-4 shadow-sm">
+        <div className="mb-4 flex items-center justify-between">
+          <div>
+            <p className="text-sm font-bold text-stone-500">Cobertura semanal</p>
+            <h3 className="text-xl font-black">{Object.keys(generatedPlan.coverage).length} grupos no plano</h3>
+          </div>
+          <IconButton label="Recalcular" onClick={() => onChange({ ...preferences })}>
+            <RotateCcw size={18} />
+          </IconButton>
+        </div>
+        <GroupBars groupSummary={generatedPlan.coverage} />
+        <div className="mt-4 space-y-2">
+          {generatedPlan.notes.map((note) => (
+            <p key={note} className="rounded-2xl bg-stone-50 p-3 text-xs font-semibold leading-relaxed text-stone-600">
+              {note}
+            </p>
+          ))}
+        </div>
+      </section>
+    </section>
+  );
+}
 
 type PlanViewProps = {
   selectedDay: WorkoutDay;
@@ -629,10 +875,11 @@ type PlanViewProps = {
   plan: WorkoutDay[];
   generatedPlan: ReturnType<typeof generateWorkoutPlan>;
   onSelectDay: (dayId: string) => void;
+  onOpenBuilder: () => void;
   onRemoveDay: (dayId: string) => void;
 };
 
-function PlanView({ selectedDay, activeDayId, byId, plan, generatedPlan, onSelectDay, onRemoveDay }: PlanViewProps) {
+function PlanView({ selectedDay, activeDayId, byId, plan, generatedPlan, onSelectDay, onOpenBuilder, onRemoveDay }: PlanViewProps) {
   return (
     <section className="space-y-4">
       <div className="flex items-end justify-between">
@@ -640,6 +887,9 @@ function PlanView({ selectedDay, activeDayId, byId, plan, generatedPlan, onSelec
           <p className="text-sm font-bold text-stone-500">Rotina semanal</p>
           <h2 className="text-3xl font-black">Treinos</h2>
         </div>
+        <IconButton label="Ajustar treino" className="bg-stone-950 text-white hover:bg-stone-800" onClick={onOpenBuilder}>
+          <Plus size={20} />
+        </IconButton>
       </div>
 
       <div className="grid grid-cols-5 gap-2">
@@ -668,9 +918,17 @@ function PlanView({ selectedDay, activeDayId, byId, plan, generatedPlan, onSelec
             <Flame size={22} />
           </span>
         </div>
-        <div className="mt-4">
+        <div className="mt-4 grid grid-cols-2 gap-2">
           <button
-            className="flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-red-50 px-3 text-sm font-black text-red-900"
+            className="flex h-11 items-center justify-center gap-2 rounded-2xl bg-stone-950 px-3 text-sm font-black text-white"
+            onClick={onOpenBuilder}
+            type="button"
+          >
+            <Plus size={17} />
+            Criar novo
+          </button>
+          <button
+            className="flex h-11 items-center justify-center gap-2 rounded-2xl bg-red-50 px-3 text-sm font-black text-red-900"
             onClick={() => onRemoveDay(selectedDay.id)}
             type="button"
           >
@@ -723,6 +981,111 @@ function PlanView({ selectedDay, activeDayId, byId, plan, generatedPlan, onSelec
 }
 
 
+function ControlBlock({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <section className="rounded-3xl border border-stone-200 bg-white p-4 shadow-sm">
+      <h3 className="mb-3 text-sm font-black text-stone-700">{title}</h3>
+      {children}
+    </section>
+  );
+}
+
+function SegmentedGrid({ children }: { children: ReactNode }) {
+  return <div className="grid grid-cols-2 gap-2">{children}</div>;
+}
+
+function ChoiceButton({ active, label, onClick }: { active: boolean; label: string; onClick: () => void }) {
+  return (
+    <button
+      className={`min-h-11 rounded-2xl border px-3 py-2 text-sm font-black transition ${
+        active ? "border-stone-950 bg-stone-950 text-white" : "border-stone-200 bg-stone-50 text-stone-600"
+      }`}
+      onClick={onClick}
+      type="button"
+    >
+      {label}
+    </button>
+  );
+}
+
+function Stepper({
+  label,
+  min,
+  max,
+  step = 1,
+  value,
+  onChange
+}: {
+  label: string;
+  min: number;
+  max: number;
+  step?: number;
+  value: number;
+  onChange: (value: number) => void;
+}) {
+  const change = (direction: number) => {
+    onChange(Math.min(max, Math.max(min, value + direction * step)));
+  };
+
+  return (
+    <div className="rounded-2xl bg-stone-50 p-3">
+      <p className="text-xs font-bold uppercase text-stone-400">{label}</p>
+      <div className="mt-2 flex items-center justify-between gap-2">
+        <button
+          aria-label={`Reduzir ${label}`}
+          className="grid size-9 place-items-center rounded-full bg-white text-lg font-black text-stone-700"
+          onClick={() => change(-1)}
+          type="button"
+        >
+          -
+        </button>
+        <p className="text-xl font-black">{value}</p>
+        <button
+          aria-label={`Aumentar ${label}`}
+          className="grid size-9 place-items-center rounded-full bg-stone-950 text-lg font-black text-white"
+          onClick={() => change(1)}
+          type="button"
+        >
+          +
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function FavoriteRow({
+  exercise,
+  active,
+  onToggle
+}: {
+  exercise: Exercise;
+  active: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <button
+      className="flex w-full items-center gap-3 rounded-2xl bg-stone-50 p-3 text-left transition hover:bg-stone-100"
+      onClick={onToggle}
+      type="button"
+    >
+      <span
+        className={`grid size-9 shrink-0 place-items-center rounded-full ${
+          active ? "bg-emerald-100 text-emerald-900" : "bg-white text-stone-400"
+        }`}
+      >
+        <Check size={16} />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-sm font-black">{exercise.nome}</span>
+        <span className="block text-xs font-semibold text-stone-500">
+          {exercise.grupoMuscular} · {exercise.equipamento}
+        </span>
+      </span>
+    </button>
+  );
+}
+
+
 function GroupBars({ groupSummary }: { groupSummary: Record<string, number> }) {
   const entries = Object.entries(groupSummary).slice(0, 7);
   const max = Math.max(1, ...Object.values(groupSummary));
@@ -757,7 +1120,7 @@ function MiniStat({ label, value }: { label: string; value: string }) {
 function BottomNavigation({ activeTab, onChange }: { activeTab: TabId; onChange: (tab: TabId) => void }) {
   return (
     <nav className="fixed inset-x-0 bottom-0 z-10 mx-auto max-w-[430px] border-t border-stone-200 bg-white/90 px-3 pb-4 pt-2 backdrop-blur md:bottom-6 md:rounded-b-[32px]">
-      <div className="grid grid-cols-2 gap-1">
+      <div className="grid grid-cols-3 gap-1">
         {tabs.map((tab) => (
           <button
             key={tab.id}
