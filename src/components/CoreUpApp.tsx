@@ -2,6 +2,7 @@
 
 import {
   Activity,
+  BarChart3,
   CalendarDays,
   Check,
   ChevronRight,
@@ -20,13 +21,14 @@ import {
   Plus,
   RotateCcw,
   Search,
+  Settings,
   Sparkles,
   Trash2,
   UserPlus,
   UserRound
 } from "lucide-react";
 import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
-import { bodyStats, weeklyPlan } from "@/data/app-content";
+import { bodyStats, habits, weeklyPlan } from "@/data/app-content";
 import { exerciseMap, getTodayWorkout, summarizeGroups } from "@/lib/exercise-view";
 import { generateWorkoutPlan, generatorOptions, getEquipmentList, type GeneratorPreferences } from "@/lib/workout-generator";
 import type { Exercise, WorkoutDay } from "@/types/fitness";
@@ -62,7 +64,8 @@ const tabs = [
   { id: "home", label: "Inicio", icon: Home },
   { id: "builder", label: "Montar", icon: Sparkles },
   { id: "plan", label: "Treino", icon: CalendarDays },
-  { id: "library", label: "Exerc.", icon: Library }
+  { id: "library", label: "Exerc.", icon: Library },
+  { id: "progress", label: "Evol.", icon: BarChart3 }
 ] as const;
 
 type TabId = (typeof tabs)[number]["id"];
@@ -340,6 +343,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
               onFavoriteToggle={toggleFavorite}
             />
           )}
+          {activeTab === "progress" && <ProgressView generatedPlan={generatedPlan} user={user} />}
         </main>
 
         <BottomNavigation activeTab={activeTab} onChange={setActiveTab} />
@@ -1203,6 +1207,70 @@ function FavoriteRow({
   );
 }
 
+function ProgressView({ generatedPlan, user }: { generatedPlan: ReturnType<typeof generateWorkoutPlan>; user: AuthUser }) {
+  const weeklySets = Object.values(generatedPlan.coverage).reduce((total, amount) => total + amount, 0);
+  const weight = user.weightKg ? `${user.weightKg} kg` : "-- kg";
+  const height = user.heightCm ? `${(user.heightCm / 100).toFixed(2).replace(".", ",")} m` : "-- m";
+
+  return (
+    <section className="space-y-4">
+      <div className="flex items-end justify-between">
+        <div>
+          <p className="text-sm font-bold text-stone-500">Evolucao</p>
+          <h2 className="text-3xl font-black">Progresso</h2>
+        </div>
+        <IconButton label="Preferencias">
+          <Settings size={20} />
+        </IconButton>
+      </div>
+
+      <section className="rounded-[28px] bg-white p-4 shadow-sm">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm font-bold text-stone-500">Resumo fisico</p>
+            <h3 className="text-2xl font-black">
+              {weight} · {height}
+            </h3>
+          </div>
+          <Badge tone="green">{weeklySets} series</Badge>
+        </div>
+        <div className="mt-5 grid grid-cols-7 items-end gap-2">
+          {[42, 58, 48, 76, 64, 88, 72].map((height, index) => (
+            <div key={index} className="flex h-32 items-end rounded-full bg-stone-100 p-1">
+              <div className="w-full rounded-full bg-stone-950" style={{ height: `${height}%` }} />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="space-y-3">
+        {habits.map((habit) => (
+          <article key={habit.label} className="rounded-3xl border border-stone-200 bg-white p-4 shadow-sm">
+            <div className="mb-3 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="grid size-10 place-items-center rounded-2xl bg-stone-100">
+                  <habit.icon size={19} />
+                </span>
+                <h3 className="font-black">{habit.label}</h3>
+              </div>
+              <p className="text-sm font-black">{habit.value}%</p>
+            </div>
+            <div className="h-2 rounded-full bg-stone-100">
+              <div className="h-full rounded-full bg-emerald-500" style={{ width: `${habit.value}%` }} />
+            </div>
+          </article>
+        ))}
+      </section>
+
+      <section className="rounded-3xl border border-stone-200 bg-white p-4 shadow-sm">
+        <h3 className="text-lg font-black">Mapa muscular do treino</h3>
+        <div className="mt-4">
+          <GroupBars groupSummary={generatedPlan.coverage} />
+        </div>
+      </section>
+    </section>
+  );
+}
 
 function GroupBars({ groupSummary }: { groupSummary: Record<string, number> }) {
   const entries = Object.entries(groupSummary).slice(0, 7);
@@ -1238,7 +1306,7 @@ function MiniStat({ label, value }: { label: string; value: string }) {
 function BottomNavigation({ activeTab, onChange }: { activeTab: TabId; onChange: (tab: TabId) => void }) {
   return (
     <nav className="fixed inset-x-0 bottom-0 z-10 mx-auto max-w-[430px] border-t border-stone-200 bg-white/90 px-3 pb-4 pt-2 backdrop-blur md:bottom-6 md:rounded-b-[32px]">
-      <div className="grid grid-cols-4 gap-1">
+      <div className="grid grid-cols-5 gap-1">
         {tabs.map((tab) => (
           <button
             key={tab.id}
