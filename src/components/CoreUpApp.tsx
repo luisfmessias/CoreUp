@@ -6,17 +6,20 @@ import {
   Check,
   ChevronRight,
   Dumbbell,
-  Flame,
   Eye,
   EyeOff,
+  Flame,
+  Heart,
   Home,
   KeyRound,
+  Library,
   Loader2,
   LogOut,
   Mail,
   Menu,
   Plus,
   RotateCcw,
+  Search,
   Sparkles,
   Trash2,
   UserPlus,
@@ -58,7 +61,8 @@ const authStorageKey = "coreup.auth.token";
 const tabs = [
   { id: "home", label: "Inicio", icon: Home },
   { id: "builder", label: "Montar", icon: Sparkles },
-  { id: "plan", label: "Treino", icon: CalendarDays }
+  { id: "plan", label: "Treino", icon: CalendarDays },
+  { id: "library", label: "Exerc.", icon: Library }
 ] as const;
 
 type TabId = (typeof tabs)[number]["id"];
@@ -92,12 +96,15 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
   });
   const [generatedPlan, setGeneratedPlan] = useState(() => generateWorkoutPlan(exercises, preferences));
   const [activeDayId, setActiveDayId] = useState(generatedPlan.days[0].id);
+  const [query, setQuery] = useState("");
+  const [selectedGroup, setSelectedGroup] = useState("Todos");
 
   const byId = useMemo(() => exerciseMap(exercises), [exercises]);
   const plan = generatedPlan.days.length ? generatedPlan.days : weeklyPlan;
   const todayWorkout = useMemo(() => getTodayWorkout(plan), [plan]);
   const selectedDay = plan.find((day) => day.id === activeDayId) ?? todayWorkout;
   const groupSummary = useMemo(() => summarizeGroups(exercises), [exercises]);
+  const groups = useMemo(() => ["Todos", ...Object.keys(groupSummary)], [groupSummary]);
   const equipment = useMemo(() => getEquipmentList(exercises), [exercises]);
   const favoriteExercises = useMemo(
     () => exercises.filter((exercise) => preferences.favoriteExerciseIds.includes(exercise.id)).slice(0, 8),
@@ -133,6 +140,24 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
       })
       .finally(() => setCheckingSession(false));
   }, []);
+
+  const filteredExercises = useMemo(() => {
+    const term = query
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+
+    return exercises
+      .filter((exercise) => selectedGroup === "Todos" || exercise.grupoMuscular === selectedGroup)
+      .filter((exercise) =>
+        exercise.nome
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toLowerCase()
+          .includes(term)
+      )
+      .slice(0, 18);
+  }, [exercises, query, selectedGroup]);
 
   function updatePreferences(nextPreferences: GeneratorPreferences) {
     setPreferences(nextPreferences);
@@ -301,6 +326,18 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
               onSelectDay={setActiveDayId}
               onOpenBuilder={() => setActiveTab("builder")}
               onRemoveDay={removeWorkoutDay}
+            />
+          )}
+          {activeTab === "library" && (
+            <LibraryView
+              exercises={filteredExercises}
+              groups={groups}
+              selectedGroup={selectedGroup}
+              query={query}
+              favoriteExerciseIds={preferences.favoriteExerciseIds}
+              onQueryChange={setQuery}
+              onGroupChange={setSelectedGroup}
+              onFavoriteToggle={toggleFavorite}
             />
           )}
         </main>
@@ -980,6 +1017,87 @@ function PlanView({ selectedDay, activeDayId, byId, plan, generatedPlan, onSelec
   );
 }
 
+function LibraryView({
+  exercises,
+  groups,
+  selectedGroup,
+  query,
+  favoriteExerciseIds,
+  onQueryChange,
+  onGroupChange,
+  onFavoriteToggle
+}: {
+  exercises: Exercise[];
+  groups: string[];
+  selectedGroup: string;
+  query: string;
+  favoriteExerciseIds: number[];
+  onQueryChange: (query: string) => void;
+  onGroupChange: (group: string) => void;
+  onFavoriteToggle: (exerciseId: number) => void;
+}) {
+  return (
+    <section className="space-y-4">
+      <div>
+        <p className="text-sm font-bold text-stone-500">Biblioteca</p>
+        <h2 className="text-3xl font-black">Exercicios</h2>
+      </div>
+
+      <label className="flex items-center gap-3 rounded-3xl border border-stone-200 bg-white px-4 py-3 shadow-sm">
+        <Search size={20} className="text-stone-400" />
+        <input
+          className="w-full bg-transparent text-base font-semibold outline-none placeholder:text-stone-400"
+          onChange={(event) => onQueryChange(event.target.value)}
+          placeholder="Buscar exercicio"
+          value={query}
+        />
+      </label>
+
+      <div className="flex gap-2 overflow-x-auto pb-1">
+        {groups.map((group) => (
+          <button
+            key={group}
+            className={`shrink-0 rounded-full px-4 py-2 text-sm font-bold transition ${
+              group === selectedGroup ? "bg-stone-950 text-white" : "bg-white text-stone-600"
+            }`}
+            onClick={() => onGroupChange(group)}
+            type="button"
+          >
+            {group}
+          </button>
+        ))}
+      </div>
+
+      <div className="space-y-2">
+        {exercises.map((exercise) => (
+          <article key={exercise.id} className="flex items-center gap-3 rounded-3xl bg-white p-3 shadow-sm">
+            <div className="grid size-14 shrink-0 place-items-center rounded-2xl bg-stone-100 text-stone-700">
+              <Dumbbell size={22} />
+            </div>
+            <div className="min-w-0 flex-1">
+              <h3 className="truncate text-base font-black">{exercise.nome}</h3>
+              <p className="text-xs font-semibold text-stone-500">
+                {exercise.grupoMuscular} · {exercise.equipamento}
+              </p>
+            </div>
+            <button
+              aria-label={`Favoritar ${exercise.nome}`}
+              className={`grid size-10 shrink-0 place-items-center rounded-full border transition ${
+                favoriteExerciseIds.includes(exercise.id)
+                  ? "border-emerald-200 bg-emerald-100 text-emerald-900"
+                  : "border-stone-200 bg-stone-50 text-stone-400"
+              }`}
+              onClick={() => onFavoriteToggle(exercise.id)}
+              type="button"
+            >
+              <Heart size={17} fill={favoriteExerciseIds.includes(exercise.id) ? "currentColor" : "none"} />
+            </button>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
 
 function ControlBlock({ title, children }: { title: string; children: ReactNode }) {
   return (
@@ -1120,7 +1238,7 @@ function MiniStat({ label, value }: { label: string; value: string }) {
 function BottomNavigation({ activeTab, onChange }: { activeTab: TabId; onChange: (tab: TabId) => void }) {
   return (
     <nav className="fixed inset-x-0 bottom-0 z-10 mx-auto max-w-[430px] border-t border-stone-200 bg-white/90 px-3 pb-4 pt-2 backdrop-blur md:bottom-6 md:rounded-b-[32px]">
-      <div className="grid grid-cols-3 gap-1">
+      <div className="grid grid-cols-4 gap-1">
         {tabs.map((tab) => (
           <button
             key={tab.id}
