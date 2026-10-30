@@ -11,7 +11,7 @@ e navegacao inferior em cinco abas, no formato de um app nativo.
 - **Next.js 16** com App Router e React 19
 - **TypeScript** em modo estrito
 - **Tailwind CSS 4** via plugin PostCSS
-- **Prisma 6** sobre SQLite
+- **Prisma 6** sobre PostgreSQL (Neon)
 - **Zod 4** para validacao de entrada
 - **bcrypt** e **jsonwebtoken** para autenticacao
 
@@ -29,11 +29,22 @@ e navegacao inferior em cinco abas, no formato de um app nativo.
 
 ```bash
 npm install
-cp .env.example .env
-npm run db:init      # cria o SQLite com as 7 tabelas
+cp .env.example .env   # preencha com as URLs do Neon
+npm run prisma:deploy  # aplica as migrations no banco
 npm run prisma:generate
 npm run dev
 ```
+
+Para alterar o schema, edite `prisma/schema.prisma` e rode
+`npm run prisma:migrate -- --name descricao-da-mudanca`. A migration gerada em
+`prisma/migrations/` deve ir para o git.
+
+### Deploy na Vercel
+
+O banco e um Postgres do Neon criado pela aba **Storage** da Vercel, que injeta
+`DATABASE_URL` e `DATABASE_URL_UNPOOLED` no projeto. O script `build` roda
+`prisma migrate deploy` antes do `next build`, entao cada deploy aplica as
+migrations pendentes automaticamente.
 
 A aplicacao sobe em `http://localhost:3000`. Crie uma conta pela tela de
 cadastro para comecar.
@@ -42,7 +53,8 @@ cadastro para comecar.
 
 | Variavel | Obrigatoria | Descricao |
 | --- | --- | --- |
-| `DATABASE_URL` | sim | caminho do SQLite, por exemplo `file:./dev.db` |
+| `DATABASE_URL` | sim | URL do Postgres com pooling, usada pelo app |
+| `DATABASE_URL_UNPOOLED` | sim | URL direta do Postgres, usada pelas migrations |
 | `JWT_SECRET` | em producao | segredo de assinatura das sessoes |
 | `SESSION_TTL_DAYS` | nao | validade da sessao em dias, padrao `30` |
 
@@ -94,7 +106,7 @@ equipamentos escolhidos filtram o catalogo antes da pontuacao.
 
 ```
 prisma/schema.prisma      7 models e o enum Weekday
-scripts/init-db.mjs       cria as tabelas via node:sqlite
+prisma/migrations/        historico de migrations do banco
 src/app/api/              11 rotas REST
 src/components/           CoreUpApp e componentes de UI
 src/data/exercises.json   catalogo de 200 exercicios
