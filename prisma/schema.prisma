@@ -15,6 +15,7 @@ model User {
   passwordHash String
   heightCm     Float?
   weightKg     Float?
+  preferences  Json?
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   sessions     AuthSession[]
@@ -35,16 +36,18 @@ model AuthSession {
 }
 
 model Workout {
-  id        String            @id @default(cuid())
-  userId    String
-  title     String
-  weekday   Weekday?
-  notes     String?
-  createdAt DateTime          @default(now())
-  updatedAt DateTime          @updatedAt
-  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  exercises WorkoutExercise[]
-  history   WorkoutLog[]
+  id          String            @id @default(cuid())
+  userId      String
+  title       String
+  weekday     Weekday?
+  intensity   String?
+  durationMin Int?
+  notes       String?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exercises   WorkoutExercise[]
+  history     WorkoutLog[]
 
   @@index([userId, weekday])
 }

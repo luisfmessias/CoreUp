@@ -19,11 +19,11 @@ e navegacao inferior em cinco abas, no formato de um app nativo.
 
 | Aba | O que faz |
 | --- | --- |
-| Inicio | treino do dia, metricas do mes e cobertura por grupo muscular |
+| Inicio | treino do dia e resumo do plano salvo (treinos, exercicios, tempo e grupos) |
 | Montar | gerador de plano a partir de objetivo, nivel, dias, tempo, equipamentos e favoritos |
-| Treino | rotina da semana, com criacao e remocao de dias |
+| Treino | plano salvo da semana, com remocao de dias |
 | Exercicios | busca no catalogo de 200 exercicios, com filtro por grupo |
-| Evolucao | habitos de treino e cobertura semanal do plano |
+| Evolucao | peso, altura, series por dia e cobertura muscular do plano |
 
 ## Como rodar
 
@@ -73,6 +73,9 @@ Rotas autenticadas esperam o cabecalho `Authorization: Bearer <token>`.
 | `GET` | `/api/me` | sim | dados do usuario logado |
 | `GET` | `/api/exercises` | nao | catalogo, filtra por `q`, `grupoMuscular`, `nivel` |
 | `GET` | `/api/exercises/[id]` | nao | exercicio unico |
+| `GET` | `/api/plan` | sim | plano semanal salvo e preferencias do gerador |
+| `PUT` | `/api/plan` | sim | substitui o plano inteiro e salva as preferencias |
+| `PUT` | `/api/preferences` | sim | salva as preferencias do gerador |
 | `GET` | `/api/workouts` | sim | treinos do usuario, filtra por `weekday` |
 | `POST` | `/api/workouts` | sim | cria treino com exercicios |
 | `GET` | `/api/workouts/[id]` | sim | treino unico |

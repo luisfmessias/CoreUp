@@ -72,3 +72,26 @@ export const bodyMetricSchema = z.object({
   measuredAt: z.string().datetime().optional(),
   notes: z.string().max(1000).optional()
 });
+
+export const preferencesSchema = z.object({
+  goal: z.enum(["hipertrofia", "forca", "emagrecimento", "saude"]),
+  level: z.enum(["iniciante", "intermediario", "avancado"]),
+  planPreset: z.enum(["ppl", "superiores-inferiores", "peito", "costas", "pernas", "livre"]),
+  daysPerWeek: z.number().int().min(2).max(5),
+  minutesPerSession: z.number().int().min(35).max(70),
+  availableEquipment: z.array(z.string().max(40)).max(20),
+  favoriteExerciseIds: z.array(z.number().int().positive()).max(200)
+});
+
+export const planSchema = z.object({
+  preferences: preferencesSchema,
+  days: z
+    .array(
+      workoutSchema.extend({
+        intensity: z.enum(["Leve", "Moderado", "Forte"]),
+        durationMin: z.number().int().positive().optional(),
+        exercises: z.array(workoutExerciseSchema).max(20)
+      })
+    )
+    .max(7)
+});

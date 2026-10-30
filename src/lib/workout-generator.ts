@@ -334,7 +334,7 @@ function favoriteNote(exerciseId: number, favorites: number[]) {
   return favorites.includes(exerciseId) ? "Favorito do aluno" : undefined;
 }
 
-function summarizePlanCoverage(days: WorkoutDay[], exercises: Exercise[]) {
+export function summarizePlanCoverage(days: WorkoutDay[], exercises: Exercise[]) {
   const byId = new Map(exercises.map((exercise) => [exercise.id, exercise]));
 
   return days.reduce<Record<string, number>>((summary, day) => {
@@ -350,7 +350,7 @@ function summarizePlanCoverage(days: WorkoutDay[], exercises: Exercise[]) {
   }, {});
 }
 
-function buildPlanNotes(preferences: GeneratorPreferences, coverage: Record<string, number>) {
+export function buildPlanNotes(preferences: GeneratorPreferences, coverage: Record<string, number>) {
   const missing = mustCoverGroups.filter((group) => !coverage[group]);
   const notes = [
     "Cada sessao combina preferencias do aluno com cobertura dos principais padroes de movimento.",

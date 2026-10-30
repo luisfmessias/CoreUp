@@ -12,7 +12,6 @@ import {
   Flame,
   Heart,
   Home,
-  KeyRound,
   Library,
   Loader2,
   LogOut,
@@ -21,16 +20,24 @@ import {
   Plus,
   RotateCcw,
   Search,
-  Settings,
   Sparkles,
+  Timer,
   Trash2,
   UserPlus,
   UserRound
 } from "lucide-react";
-import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
-import { bodyStats, habits, weeklyPlan } from "@/data/app-content";
+import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { exerciseMap, getTodayWorkout, summarizeGroups } from "@/lib/exercise-view";
-import { generateWorkoutPlan, generatorOptions, getEquipmentList, type GeneratorPreferences } from "@/lib/workout-generator";
+import { toPlanDays, toWorkoutDay, type ApiWorkout } from "@/lib/plan-mapping";
+import {
+  buildPlanNotes,
+  generateWorkoutPlan,
+  generatorOptions,
+  getEquipmentList,
+  summarizePlanCoverage,
+  type GeneratedPlan,
+  type GeneratorPreferences
+} from "@/lib/workout-generator";
 import type { Exercise, WorkoutDay } from "@/types/fitness";
 import { Badge } from "@/components/ui/Badge";
 import { IconButton } from "@/components/ui/IconButton";
@@ -47,7 +54,7 @@ type AuthUser = {
   weightKg?: number | null;
 };
 
-type AuthMode = "login" | "register" | "recover";
+type AuthMode = "login" | "register";
 
 type AuthForm = {
   name: string;
@@ -59,6 +66,27 @@ type AuthForm = {
 };
 
 const authStorageKey = "coreup.auth.token";
+
+const defaultPreferences: GeneratorPreferences = {
+  goal: "hipertrofia",
+  level: "intermediario",
+  planPreset: "ppl",
+  daysPerWeek: 4,
+  minutesPerSession: 50,
+  availableEquipment: ["Academia"],
+  favoriteExerciseIds: []
+};
+
+function apiFetch(token: string, path: string, init: RequestInit = {}) {
+  return fetch(path, {
+    ...init,
+    headers: {
+      ...(init.body ? { "Content-Type": "application/json" } : {}),
+      Authorization: `Bearer ${token}`,
+      ...init.headers
+    }
+  });
+}
 
 const tabs = [
   { id: "home", label: "Inicio", icon: Home },
@@ -88,23 +116,26 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [checkingSession, setCheckingSession] = useState(true);
   const [activeTab, setActiveTab] = useState<TabId>("home");
-  const [preferences, setPreferences] = useState<GeneratorPreferences>({
-    goal: "hipertrofia",
-    level: "intermediario",
-    planPreset: "ppl",
-    daysPerWeek: 4,
-    minutesPerSession: 50,
-    availableEquipment: ["Academia"],
-    favoriteExerciseIds: [1, 21, 101, 160]
-  });
-  const [generatedPlan, setGeneratedPlan] = useState(() => generateWorkoutPlan(exercises, preferences));
-  const [activeDayId, setActiveDayId] = useState(generatedPlan.days[0].id);
+  const [preferences, setPreferences] = useState<GeneratorPreferences>(defaultPreferences);
+  // Rascunho da aba Montar: muda ao vivo conforme as preferencias e so vai
+  // para o banco quando o aluno confirma em "Usar esse plano".
+  const [generatedPlan, setGeneratedPlan] = useState(() => generateWorkoutPlan(exercises, defaultPreferences));
+  const [savedDays, setSavedDays] = useState<WorkoutDay[]>([]);
+  const [planLoaded, setPlanLoaded] = useState(false);
+  const [planSaving, setPlanSaving] = useState(false);
+  const [planError, setPlanError] = useState("");
+  const preferencesDirty = useRef(false);
+  const [activeDayId, setActiveDayId] = useState("");
   const [query, setQuery] = useState("");
   const [selectedGroup, setSelectedGroup] = useState("Todos");
 
   const byId = useMemo(() => exerciseMap(exercises), [exercises]);
-  const plan = generatedPlan.days.length ? generatedPlan.days : weeklyPlan;
-  const todayWorkout = useMemo(() => getTodayWorkout(plan), [plan]);
+  const savedPlan = useMemo<GeneratedPlan>(() => {
+    const coverage = summarizePlanCoverage(savedDays, exercises);
+    return { days: savedDays, coverage, notes: buildPlanNotes(preferences, coverage) };
+  }, [savedDays, exercises, preferences]);
+  const plan = savedPlan.days;
+  const todayWorkout = useMemo(() => (plan.length ? getTodayWorkout(plan) : null), [plan]);
   const selectedDay = plan.find((day) => day.id === activeDayId) ?? todayWorkout;
   const groupSummary = useMemo(() => summarizeGroups(exercises), [exercises]);
   const groups = useMemo(() => ["Todos", ...Object.keys(groupSummary)], [groupSummary]);
@@ -144,6 +175,73 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
       .finally(() => setCheckingSession(false));
   }, []);
 
+  useEffect(() => {
+    if (!authToken) {
+      return;
+    }
+
+    let cancelled = false;
+    setPlanLoaded(false);
+    setPlanError("");
+
+    apiFetch(authToken, "/api/plan")
+      .then(async (response) => {
+        if (response.status === 401) {
+          clearSession();
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error();
+        }
+
+        const data = (await response.json()) as { workouts: ApiWorkout[]; preferences: GeneratorPreferences | null };
+
+        if (cancelled) {
+          return;
+        }
+
+        const days = data.workouts.map(toWorkoutDay);
+        const nextPreferences = data.preferences ?? defaultPreferences;
+        setSavedDays(days);
+        setActiveDayId(days[0]?.id ?? "");
+        setPreferences(nextPreferences);
+        setGeneratedPlan(generateWorkoutPlan(exercises, nextPreferences));
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setPlanError("Nao foi possivel carregar seu treino. Tente recarregar a pagina.");
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setPlanLoaded(true);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [authToken, exercises]);
+
+  // Salva as preferencias do gerador com atraso, para nao disparar uma
+  // requisicao a cada clique nos botoes de ajuste.
+  useEffect(() => {
+    if (!authToken || !preferencesDirty.current) {
+      return;
+    }
+
+    const timeout = window.setTimeout(() => {
+      preferencesDirty.current = false;
+      apiFetch(authToken, "/api/preferences", {
+        method: "PUT",
+        body: JSON.stringify(preferences)
+      }).catch(() => undefined);
+    }, 800);
+
+    return () => window.clearTimeout(timeout);
+  }, [authToken, preferences]);
+
   const filteredExercises = useMemo(() => {
     const term = query
       .normalize("NFD")
@@ -163,21 +261,59 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
   }, [exercises, query, selectedGroup]);
 
   function updatePreferences(nextPreferences: GeneratorPreferences) {
+    preferencesDirty.current = true;
     setPreferences(nextPreferences);
-    const nextPlan = generateWorkoutPlan(exercises, nextPreferences);
-    setGeneratedPlan(nextPlan);
-    setActiveDayId(nextPlan.days[0]?.id ?? weeklyPlan[0].id);
+    setGeneratedPlan(generateWorkoutPlan(exercises, nextPreferences));
   }
 
-  function saveGeneratedPlan() {
-    setActiveDayId(generatedPlan.days[0]?.id ?? weeklyPlan[0].id);
-    setActiveTab("plan");
+  async function saveGeneratedPlan() {
+    if (!authToken || !generatedPlan.days.length) {
+      return;
+    }
+
+    setPlanSaving(true);
+    setPlanError("");
+
+    try {
+      const response = await apiFetch(authToken, "/api/plan", {
+        method: "PUT",
+        body: JSON.stringify({ preferences, days: toPlanDays(generatedPlan.days) })
+      });
+      const data = (await response.json()) as { workouts?: ApiWorkout[]; error?: string };
+
+      if (!response.ok || !data.workouts) {
+        throw new Error(data.error ?? "Nao foi possivel salvar o plano.");
+      }
+
+      const days = data.workouts.map(toWorkoutDay);
+      preferencesDirty.current = false;
+      setSavedDays(days);
+      setActiveDayId(days[0]?.id ?? "");
+      setActiveTab("plan");
+    } catch (error) {
+      setPlanError(error instanceof Error ? error.message : "Nao foi possivel salvar o plano.");
+    } finally {
+      setPlanSaving(false);
+    }
   }
 
-  function removeWorkoutDay(dayId: string) {
-    const nextDays = generatedPlan.days.filter((day) => day.id !== dayId);
-    setGeneratedPlan({ ...generatedPlan, days: nextDays });
-    setActiveDayId(nextDays[0]?.id ?? weeklyPlan[0].id);
+  async function removeWorkoutDay(dayId: string) {
+    if (!authToken) {
+      return;
+    }
+
+    setPlanError("");
+    const response = await apiFetch(authToken, `/api/workouts/${dayId}`, { method: "DELETE" }).catch(() => null);
+
+    // 404 significa que o treino ja nao existe no banco: basta tirar da tela.
+    if (!response || (!response.ok && response.status !== 404)) {
+      setPlanError("Nao foi possivel remover o treino.");
+      return;
+    }
+
+    const nextDays = savedDays.filter((day) => day.id !== dayId);
+    setSavedDays(nextDays);
+    setActiveDayId(nextDays[0]?.id ?? "");
   }
 
   function toggleFavorite(exerciseId: number) {
@@ -193,12 +329,6 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
     setAuthLoading(true);
     setAuthError("");
     setAuthNotice("");
-
-    if (authMode === "recover") {
-      setAuthLoading(false);
-      setAuthNotice("Se esse e-mail estiver cadastrado, enviaremos as instrucoes de recuperacao.");
-      return;
-    }
 
     const body =
       authMode === "login"
@@ -256,13 +386,26 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
       }).catch(() => undefined);
     }
 
+    clearSession();
+  }
+
+  // Zera tudo que pertence ao usuario, para o proximo login no mesmo
+  // navegador nao herdar o plano ou as preferencias do anterior.
+  function clearSession() {
     window.localStorage.removeItem(authStorageKey);
+    preferencesDirty.current = false;
     setAuthToken(null);
     setUser(null);
     setActiveTab("home");
+    setSavedDays([]);
+    setActiveDayId("");
+    setPlanError("");
+    setPlanLoaded(false);
+    setPreferences(defaultPreferences);
+    setGeneratedPlan(generateWorkoutPlan(exercises, defaultPreferences));
   }
 
-  if (checkingSession) {
+  if (checkingSession || (authToken && user && !planLoaded)) {
     return <LoadingScreen />;
   }
 
@@ -293,13 +436,17 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
         <AppHeader user={user} onLogout={handleLogout} />
 
         <main className="flex-1 overflow-hidden px-4 pb-24">
+          {planError && (
+            <p className="mb-4 rounded-2xl bg-red-100 px-4 py-3 text-sm font-bold text-red-900">{planError}</p>
+          )}
           {activeTab === "home" && (
             <HomeView
               selectedWorkout={todayWorkout}
               byId={byId}
               groupSummary={groupSummary}
-              generatedPlan={generatedPlan}
+              savedPlan={savedPlan}
               onOpenPlan={() => setActiveTab("plan")}
+              onOpenBuilder={() => setActiveTab("builder")}
             />
           )}
           {activeTab === "builder" && (
@@ -309,12 +456,9 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
               favoriteExercises={favoriteExercises}
               preferences={preferences}
               generatedPlan={generatedPlan}
+              saving={planSaving}
               onChange={updatePreferences}
               onFavoriteToggle={toggleFavorite}
-              onBuildPlan={() => {
-                updatePreferences(preferences);
-                setActiveTab("plan");
-              }}
               onOpenPlan={() => setActiveTab("plan")}
               onSavePlan={saveGeneratedPlan}
             />
@@ -325,7 +469,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
               activeDayId={activeDayId}
               byId={byId}
               plan={plan}
-              generatedPlan={generatedPlan}
+              savedPlan={savedPlan}
               onSelectDay={setActiveDayId}
               onOpenBuilder={() => setActiveTab("builder")}
               onRemoveDay={removeWorkoutDay}
@@ -343,7 +487,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
               onFavoriteToggle={toggleFavorite}
             />
           )}
-          {activeTab === "progress" && <ProgressView generatedPlan={generatedPlan} user={user} />}
+          {activeTab === "progress" && <ProgressView savedPlan={savedPlan} user={user} />}
         </main>
 
         <BottomNavigation activeTab={activeTab} onChange={setActiveTab} />
@@ -389,7 +533,6 @@ function AuthView({
   onSubmit
 }: AuthViewProps) {
   const isRegister = authMode === "register";
-  const isRecover = authMode === "recover";
 
   return (
     <div className="min-h-dvh bg-[#f5f4ef] px-4 py-6 text-stone-950">
@@ -398,17 +541,16 @@ function AuthView({
           <div className="mb-8 flex items-center justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/45">CoreUp</p>
-              <h1 className="mt-2 text-3xl font-black">{isRecover ? "Recuperar senha" : isRegister ? "Criar conta" : "Entrar"}</h1>
+              <h1 className="mt-2 text-3xl font-black">{isRegister ? "Criar conta" : "Entrar"}</h1>
             </div>
             <span className="grid size-12 place-items-center rounded-2xl bg-white/10">
-              {isRecover ? <KeyRound size={22} /> : isRegister ? <UserPlus size={22} /> : <UserRound size={22} />}
+              {isRegister ? <UserPlus size={22} /> : <UserRound size={22} />}
             </span>
           </div>
 
-          <div className="mb-4 grid grid-cols-3 gap-2 rounded-2xl bg-white/10 p-1">
+          <div className="mb-4 grid grid-cols-2 gap-2 rounded-2xl bg-white/10 p-1">
             <AuthModeButton active={authMode === "login"} label="Login" onClick={() => onModeChange("login")} />
             <AuthModeButton active={authMode === "register"} label="Cadastro" onClick={() => onModeChange("register")} />
-            <AuthModeButton active={authMode === "recover"} label="Senha" onClick={() => onModeChange("recover")} />
           </div>
 
           <form className="space-y-3" onSubmit={onSubmit}>
@@ -428,26 +570,24 @@ function AuthView({
               type="email"
               value={authForm.email}
             />
-            {!isRecover && (
-              <AuthInput
-                label="Senha"
-                onChange={(password) => onFormChange({ ...authForm, password })}
-                placeholder={isRegister ? "8+ com numero e simbolo" : "Sua senha"}
-                type={showPassword ? "text" : "password"}
-                trailing={
-                  <button
-                    aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
-                    className="grid size-9 shrink-0 place-items-center rounded-full text-stone-500 transition hover:bg-stone-100 hover:text-stone-950"
-                    onClick={onPasswordVisibilityChange}
-                    title={showPassword ? "Ocultar senha" : "Mostrar senha"}
-                    type="button"
-                  >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </button>
-                }
-                value={authForm.password}
-              />
-            )}
+            <AuthInput
+              label="Senha"
+              onChange={(password) => onFormChange({ ...authForm, password })}
+              placeholder={isRegister ? "8+ com numero e simbolo" : "Sua senha"}
+              type={showPassword ? "text" : "password"}
+              trailing={
+                <button
+                  aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                  className="grid size-9 shrink-0 place-items-center rounded-full text-stone-500 transition hover:bg-stone-100 hover:text-stone-950"
+                  onClick={onPasswordVisibilityChange}
+                  title={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                  type="button"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              }
+              value={authForm.password}
+            />
             {isRegister && (
               <AuthInput
                 label="Confirmar senha"
@@ -496,15 +636,13 @@ function AuthView({
               type="submit"
             >
               {authLoading && <Loader2 size={18} className="animate-spin" />}
-              {isRecover ? "Enviar instrucoes" : isRegister ? "Criar e entrar" : "Entrar no app"}
+              {isRegister ? "Criar e entrar" : "Entrar no app"}
             </button>
           </form>
 
-          {!isRecover && (
-            <p className="mt-5 text-xs font-semibold leading-relaxed text-white/50">
-              A senha do cadastro precisa ter letra maiuscula, minuscula, numero, simbolo e pelo menos 8 caracteres.
-            </p>
-          )}
+          <p className="mt-5 text-xs font-semibold leading-relaxed text-white/50">
+            A senha do cadastro precisa ter letra maiuscula, minuscula, numero, simbolo e pelo menos 8 caracteres.
+          </p>
         </section>
       </main>
     </div>
@@ -587,16 +725,29 @@ function AppHeader({ user, onLogout }: { user: AuthUser; onLogout: () => void })
 }
 
 type HomeViewProps = {
-  selectedWorkout: WorkoutDay;
+  selectedWorkout: WorkoutDay | null;
   byId: Map<number, Exercise>;
   groupSummary: Record<string, number>;
-  generatedPlan: ReturnType<typeof generateWorkoutPlan>;
+  savedPlan: GeneratedPlan;
   onOpenPlan: () => void;
+  onOpenBuilder: () => void;
 };
 
-function HomeView({ selectedWorkout, byId, groupSummary, generatedPlan, onOpenPlan }: HomeViewProps) {
+function HomeView({ selectedWorkout, byId, groupSummary, savedPlan, onOpenPlan, onOpenBuilder }: HomeViewProps) {
   const totalGroups = Object.keys(groupSummary).length;
-  const weeklySets = Object.values(generatedPlan.coverage).reduce((total, amount) => total + amount, 0);
+  const weeklySets = Object.values(savedPlan.coverage).reduce((total, amount) => total + amount, 0);
+  const weeklyMinutes = savedPlan.days.reduce((total, day) => total + (Number.parseInt(day.duration, 10) || 0), 0);
+  const planStats = [
+    { label: "Treinos", value: String(savedPlan.days.length), helper: "por semana", icon: CalendarDays },
+    {
+      label: "Exercicios",
+      value: String(savedPlan.days.reduce((total, day) => total + day.exercises.length, 0)),
+      helper: "na semana",
+      icon: Dumbbell
+    },
+    { label: "Tempo", value: String(weeklyMinutes), helper: "min/semana", icon: Timer },
+    { label: "Grupos", value: String(Object.keys(savedPlan.coverage).length), helper: "trabalhados", icon: BarChart3 }
+  ];
 
   return (
     <section className="space-y-4">
@@ -614,15 +765,15 @@ function HomeView({ selectedWorkout, byId, groupSummary, generatedPlan, onOpenPl
             </div>
           </div>
           <div className="grid grid-cols-3 gap-2">
-            <HeroMetric label="Foco" value={selectedWorkout.focus} />
-            <HeroMetric label="Tempo" value={selectedWorkout.duration} />
+            <HeroMetric label="Foco" value={selectedWorkout?.focus ?? "--"} />
+            <HeroMetric label="Tempo" value={selectedWorkout?.duration ?? "--"} />
             <HeroMetric label="Series" value={`${weeklySets}/sem`} />
           </div>
         </div>
       </section>
 
       <section className="grid grid-cols-2 gap-3">
-        {bodyStats.map((stat) => (
+        {planStats.map((stat) => (
           <article key={stat.label} className="rounded-3xl border border-stone-200 bg-white p-4 shadow-sm">
             <div className="flex items-center justify-between">
               <span className="grid size-10 place-items-center rounded-2xl bg-stone-100 text-stone-800">
@@ -636,7 +787,11 @@ function HomeView({ selectedWorkout, byId, groupSummary, generatedPlan, onOpenPl
         ))}
       </section>
 
-      <TodayWorkout workout={selectedWorkout} byId={byId} notes={generatedPlan.notes} onOpenPlan={onOpenPlan} />
+      {selectedWorkout ? (
+        <TodayWorkout workout={selectedWorkout} byId={byId} notes={savedPlan.notes} onOpenPlan={onOpenPlan} />
+      ) : (
+        <EmptyPlan onOpenBuilder={onOpenBuilder} />
+      )}
 
       <section className="rounded-3xl border border-stone-200 bg-white p-4 shadow-sm">
         <div className="mb-4 flex items-center justify-between">
@@ -660,6 +815,26 @@ function HeroMetric({ label, value }: { label: string; value: string }) {
       <p className="text-[11px] font-bold uppercase text-white/55">{label}</p>
       <p className="mt-1 line-clamp-2 text-sm font-black">{value}</p>
     </div>
+  );
+}
+
+function EmptyPlan({ onOpenBuilder }: { onOpenBuilder: () => void }) {
+  return (
+    <section className="rounded-3xl border border-stone-200 bg-white p-4 shadow-sm">
+      <p className="text-sm font-bold text-stone-500">Seu treino</p>
+      <h3 className="text-xl font-black">Voce ainda nao tem um plano</h3>
+      <p className="mt-2 text-sm font-semibold leading-relaxed text-stone-500">
+        Escolha objetivo, nivel e dias na aba Montar para gerar a sua semana de treino.
+      </p>
+      <button
+        className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-stone-950 px-4 text-sm font-black text-white"
+        onClick={onOpenBuilder}
+        type="button"
+      >
+        <Sparkles size={18} />
+        Montar meu treino
+      </button>
+    </section>
   );
 }
 
@@ -714,9 +889,9 @@ type BuilderViewProps = {
   equipment: string[];
   favoriteExercises: Exercise[];
   preferences: GeneratorPreferences;
-  generatedPlan: ReturnType<typeof generateWorkoutPlan>;
+  generatedPlan: GeneratedPlan;
+  saving: boolean;
   onChange: (preferences: GeneratorPreferences) => void;
-  onBuildPlan: () => void;
   onFavoriteToggle: (exerciseId: number) => void;
   onOpenPlan: () => void;
   onSavePlan: () => void;
@@ -728,8 +903,8 @@ function BuilderView({
   favoriteExercises,
   preferences,
   generatedPlan,
+  saving,
   onChange,
-  onBuildPlan,
   onFavoriteToggle,
   onOpenPlan,
   onSavePlan
@@ -774,21 +949,17 @@ function BuilderView({
           </span>
         </div>
         <button
-          className="mt-5 flex h-13 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-300 px-4 text-base font-black text-stone-950 transition hover:bg-emerald-200"
-          onClick={onBuildPlan}
-          type="button"
-        >
-          <Sparkles size={19} />
-          Montar treino
-        </button>
-        <button
-          className="mt-2 flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-white/10 px-4 text-sm font-black text-white transition hover:bg-white/15"
+          className="mt-5 flex h-13 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-300 px-4 text-base font-black text-stone-950 transition hover:bg-emerald-200 disabled:cursor-not-allowed disabled:opacity-60"
+          disabled={saving || !generatedPlan.days.length}
           onClick={onSavePlan}
           type="button"
         >
-          <Check size={18} />
-          Usar esse plano
+          {saving ? <Loader2 size={19} className="animate-spin" /> : <Check size={19} />}
+          {saving ? "Salvando plano" : "Usar esse plano"}
         </button>
+        <p className="mt-2 text-center text-xs font-semibold text-white/50">
+          Substitui o plano atual da aba Treino.
+        </p>
       </section>
 
       <ControlBlock title="Catalogo">
@@ -910,17 +1081,29 @@ function BuilderView({
 }
 
 type PlanViewProps = {
-  selectedDay: WorkoutDay;
+  selectedDay: WorkoutDay | null;
   activeDayId: string;
   byId: Map<number, Exercise>;
   plan: WorkoutDay[];
-  generatedPlan: ReturnType<typeof generateWorkoutPlan>;
+  savedPlan: GeneratedPlan;
   onSelectDay: (dayId: string) => void;
   onOpenBuilder: () => void;
   onRemoveDay: (dayId: string) => void;
 };
 
-function PlanView({ selectedDay, activeDayId, byId, plan, generatedPlan, onSelectDay, onOpenBuilder, onRemoveDay }: PlanViewProps) {
+function PlanView({ selectedDay, activeDayId, byId, plan, savedPlan, onSelectDay, onOpenBuilder, onRemoveDay }: PlanViewProps) {
+  if (!selectedDay) {
+    return (
+      <section className="space-y-4">
+        <div>
+          <p className="text-sm font-bold text-stone-500">Rotina semanal</p>
+          <h2 className="text-3xl font-black">Treinos</h2>
+        </div>
+        <EmptyPlan onOpenBuilder={onOpenBuilder} />
+      </section>
+    );
+  }
+
   return (
     <section className="space-y-4">
       <div className="flex items-end justify-between">
@@ -1010,7 +1193,7 @@ function PlanView({ selectedDay, activeDayId, byId, plan, generatedPlan, onSelec
       <section className="rounded-3xl border border-stone-200 bg-white p-4 shadow-sm">
         <h3 className="text-lg font-black">Por que esse treino fecha</h3>
         <div className="mt-3 space-y-2">
-          {generatedPlan.notes.map((note) => (
+          {savedPlan.notes.map((note) => (
             <p key={note} className="text-sm font-semibold leading-relaxed text-stone-600">
               {note}
             </p>
@@ -1207,10 +1390,16 @@ function FavoriteRow({
   );
 }
 
-function ProgressView({ generatedPlan, user }: { generatedPlan: ReturnType<typeof generateWorkoutPlan>; user: AuthUser }) {
-  const weeklySets = Object.values(generatedPlan.coverage).reduce((total, amount) => total + amount, 0);
+function ProgressView({ savedPlan, user }: { savedPlan: GeneratedPlan; user: AuthUser }) {
+  const weeklySets = Object.values(savedPlan.coverage).reduce((total, amount) => total + amount, 0);
   const weight = user.weightKg ? `${user.weightKg} kg` : "-- kg";
   const height = user.heightCm ? `${(user.heightCm / 100).toFixed(2).replace(".", ",")} m` : "-- m";
+  const setsPerDay = savedPlan.days.map((day) => ({
+    id: day.id,
+    label: day.label,
+    sets: day.exercises.reduce((total, exercise) => total + exercise.sets, 0)
+  }));
+  const maxDaySets = Math.max(1, ...setsPerDay.map((day) => day.sets));
 
   return (
     <section className="space-y-4">
@@ -1219,9 +1408,6 @@ function ProgressView({ generatedPlan, user }: { generatedPlan: ReturnType<typeo
           <p className="text-sm font-bold text-stone-500">Evolucao</p>
           <h2 className="text-3xl font-black">Progresso</h2>
         </div>
-        <IconButton label="Preferencias">
-          <Settings size={20} />
-        </IconButton>
       </div>
 
       <section className="rounded-[28px] bg-white p-4 shadow-sm">
@@ -1234,38 +1420,28 @@ function ProgressView({ generatedPlan, user }: { generatedPlan: ReturnType<typeo
           </div>
           <Badge tone="green">{weeklySets} series</Badge>
         </div>
-        <div className="mt-5 grid grid-cols-7 items-end gap-2">
-          {[42, 58, 48, 76, 64, 88, 72].map((height, index) => (
-            <div key={index} className="flex h-32 items-end rounded-full bg-stone-100 p-1">
-              <div className="w-full rounded-full bg-stone-950" style={{ height: `${height}%` }} />
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="space-y-3">
-        {habits.map((habit) => (
-          <article key={habit.label} className="rounded-3xl border border-stone-200 bg-white p-4 shadow-sm">
-            <div className="mb-3 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <span className="grid size-10 place-items-center rounded-2xl bg-stone-100">
-                  <habit.icon size={19} />
-                </span>
-                <h3 className="font-black">{habit.label}</h3>
+        <p className="mt-5 text-xs font-bold uppercase text-stone-400">Series por dia do plano</p>
+        {savedPlan.days.length ? (
+          <div className="mt-2 flex items-end gap-2">
+            {setsPerDay.map((day) => (
+              <div key={day.id} className="flex flex-1 flex-col items-center gap-1">
+                <div className="flex h-32 w-full items-end rounded-full bg-stone-100 p-1">
+                  <div className="w-full rounded-full bg-stone-950" style={{ height: `${(day.sets / maxDaySets) * 100}%` }} />
+                </div>
+                <span className="text-xs font-black">{day.sets}</span>
+                <span className="text-[11px] font-bold text-stone-500">{day.label}</span>
               </div>
-              <p className="text-sm font-black">{habit.value}%</p>
-            </div>
-            <div className="h-2 rounded-full bg-stone-100">
-              <div className="h-full rounded-full bg-emerald-500" style={{ width: `${habit.value}%` }} />
-            </div>
-          </article>
-        ))}
+            ))}
+          </div>
+        ) : (
+          <p className="mt-2 text-sm font-semibold text-stone-500">Monte um treino para ver a distribuicao da semana.</p>
+        )}
       </section>
 
       <section className="rounded-3xl border border-stone-200 bg-white p-4 shadow-sm">
         <h3 className="text-lg font-black">Mapa muscular do treino</h3>
         <div className="mt-4">
-          <GroupBars groupSummary={generatedPlan.coverage} />
+          <GroupBars groupSummary={savedPlan.coverage} />
         </div>
       </section>
     </section>

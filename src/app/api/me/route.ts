@@ -17,10 +17,6 @@ export async function GET(request: NextRequest) {
       heightCm: user.heightCm,
       weightKg: user.weightKg,
       createdAt: user.createdAt
-    },
-    dashboard: {
-      status: "placeholder",
-      message: "Painel inicial ainda sera implementado no front."
     }
   });
 }
