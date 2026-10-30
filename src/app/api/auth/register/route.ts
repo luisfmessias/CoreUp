@@ -1,14 +1,23 @@
 import { Prisma } from "@prisma/client";
 import { NextRequest } from "next/server";
 import { createSession } from "@/lib/auth";
-import { badRequest, json } from "@/lib/http";
+import { badRequest, json, tooManyRequests } from "@/lib/http";
 import { hashPassword } from "@/lib/password";
 import { prisma } from "@/lib/prisma";
+import { checkRateLimit, getClientIp, limits, recordAttempt } from "@/lib/rate-limit";
 import { registerSchema } from "@/lib/schemas";
 
 export async function POST(request: NextRequest) {
   try {
     const payload = registerSchema.parse(await request.json());
+    const ipLimit = limits.registerByIp(getClientIp(request));
+    const retryAfter = await checkRateLimit(ipLimit);
+
+    if (retryAfter) {
+      return tooManyRequests(retryAfter);
+    }
+
+    await recordAttempt(ipLimit);
 
     const user = await prisma.user.create({
       data: {
@@ -16,7 +25,8 @@ export async function POST(request: NextRequest) {
         email: payload.email,
         passwordHash: await hashPassword(payload.password),
         heightCm: payload.heightCm,
-        weightKg: payload.weightKg
+        weightKg: payload.weightKg,
+        privacyAcceptedAt: new Date()
       },
       select: {
         id: true,

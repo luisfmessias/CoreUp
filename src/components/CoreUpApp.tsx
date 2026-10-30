@@ -63,6 +63,7 @@ type AuthForm = {
   confirmPassword: string;
   heightCm: string;
   weightKg: string;
+  acceptPrivacy: boolean;
 };
 
 const authStorageKey = "coreup.auth.token";
@@ -108,7 +109,8 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
     password: "",
     confirmPassword: "",
     heightCm: "",
-    weightKg: ""
+    weightKg: "",
+    acceptPrivacy: false
   });
   const [authError, setAuthError] = useState("");
   const [authNotice, setAuthNotice] = useState("");
@@ -316,6 +318,30 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
     setActiveDayId(nextDays[0]?.id ?? "");
   }
 
+  // Devolve a mensagem de erro, ou null quando a conta foi excluida.
+  async function deleteAccount(password: string) {
+    if (!authToken) {
+      return "Sessao expirada. Entre novamente.";
+    }
+
+    try {
+      const response = await apiFetch(authToken, "/api/me", {
+        method: "DELETE",
+        body: JSON.stringify({ password })
+      });
+
+      if (!response.ok) {
+        const data = (await response.json()) as { error?: string; details?: Array<{ message: string }> };
+        return data.details?.[0]?.message ?? data.error ?? "Nao foi possivel excluir a conta.";
+      }
+
+      clearSession();
+      return null;
+    } catch {
+      return "Nao foi possivel excluir a conta.";
+    }
+  }
+
   function toggleFavorite(exerciseId: number) {
     const nextFavoriteIds = preferences.favoriteExerciseIds.includes(exerciseId)
       ? preferences.favoriteExerciseIds.filter((id) => id !== exerciseId)
@@ -341,12 +367,17 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
             email: authForm.email,
             password: authForm.password,
             heightCm: parseOptionalNumber(authForm.heightCm),
-            weightKg: parseOptionalNumber(authForm.weightKg)
+            weightKg: parseOptionalNumber(authForm.weightKg),
+            acceptPrivacy: authForm.acceptPrivacy
           };
 
     try {
       if (authMode === "register" && authForm.password !== authForm.confirmPassword) {
         throw new Error("As senhas nao conferem.");
+      }
+
+      if (authMode === "register" && !authForm.acceptPrivacy) {
+        throw new Error("Aceite a Politica de Privacidade para criar a conta.");
       }
 
       const response = await fetch(`/api/auth/${authMode === "login" ? "login" : "register"}`, {
@@ -366,7 +397,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
       window.localStorage.setItem(authStorageKey, data.token);
       setAuthToken(data.token);
       setUser(data.user);
-      setAuthForm({ name: "", email: "", password: "", confirmPassword: "", heightCm: "", weightKg: "" });
+      setAuthForm({ name: "", email: "", password: "", confirmPassword: "", heightCm: "", weightKg: "", acceptPrivacy: false });
     } catch (error) {
       setAuthError(error instanceof Error ? error.message : "Nao foi possivel entrar.");
     } finally {
@@ -487,7 +518,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
               onFavoriteToggle={toggleFavorite}
             />
           )}
-          {activeTab === "progress" && <ProgressView savedPlan={savedPlan} user={user} />}
+          {activeTab === "progress" && <ProgressView savedPlan={savedPlan} user={user} onDeleteAccount={deleteAccount} />}
         </main>
 
         <BottomNavigation activeTab={activeTab} onChange={setActiveTab} />
@@ -626,6 +657,23 @@ function AuthView({
                 />
               </div>
             )}
+            {isRegister && (
+              <label className="flex items-start gap-3 rounded-2xl bg-white/10 p-3 text-xs font-semibold leading-relaxed text-white/75">
+                <input
+                  checked={authForm.acceptPrivacy}
+                  className="mt-0.5 size-4 shrink-0 accent-emerald-300"
+                  onChange={(event) => onFormChange({ ...authForm, acceptPrivacy: event.target.checked })}
+                  type="checkbox"
+                />
+                <span>
+                  Li e aceito a{" "}
+                  <a className="font-black text-emerald-300 underline" href="/privacidade" target="_blank">
+                    Politica de Privacidade
+                  </a>{" "}
+                  e autorizo o uso dos meus dados de saude (altura, peso e medidas) para acompanhar minha evolucao.
+                </span>
+              </label>
+            )}
 
             {authError && <p className="rounded-2xl bg-red-100 px-4 py-3 text-sm font-bold text-red-900">{authError}</p>}
             {authNotice && <p className="rounded-2xl bg-emerald-100 px-4 py-3 text-sm font-bold text-emerald-950">{authNotice}</p>}
@@ -643,6 +691,9 @@ function AuthView({
           <p className="mt-5 text-xs font-semibold leading-relaxed text-white/50">
             A senha do cadastro precisa ter letra maiuscula, minuscula, numero, simbolo e pelo menos 8 caracteres.
           </p>
+          <a className="mt-3 block text-xs font-black text-white/60 underline hover:text-white" href="/privacidade">
+            Politica de Privacidade
+          </a>
         </section>
       </main>
     </div>
@@ -1390,7 +1441,15 @@ function FavoriteRow({
   );
 }
 
-function ProgressView({ savedPlan, user }: { savedPlan: GeneratedPlan; user: AuthUser }) {
+function ProgressView({
+  savedPlan,
+  user,
+  onDeleteAccount
+}: {
+  savedPlan: GeneratedPlan;
+  user: AuthUser;
+  onDeleteAccount: (password: string) => Promise<string | null>;
+}) {
   const weeklySets = Object.values(savedPlan.coverage).reduce((total, amount) => total + amount, 0);
   const weight = user.weightKg ? `${user.weightKg} kg` : "-- kg";
   const height = user.heightCm ? `${(user.heightCm / 100).toFixed(2).replace(".", ",")} m` : "-- m";
@@ -1444,6 +1503,92 @@ function ProgressView({ savedPlan, user }: { savedPlan: GeneratedPlan; user: Aut
           <GroupBars groupSummary={savedPlan.coverage} />
         </div>
       </section>
+
+      <AccountSection email={user.email} onDeleteAccount={onDeleteAccount} />
+    </section>
+  );
+}
+
+function AccountSection({
+  email,
+  onDeleteAccount
+}: {
+  email: string;
+  onDeleteAccount: (password: string) => Promise<string | null>;
+}) {
+  const [confirming, setConfirming] = useState(false);
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [deleting, setDeleting] = useState(false);
+
+  async function handleDelete(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setDeleting(true);
+    setError("");
+    const message = await onDeleteAccount(password);
+
+    // Em caso de sucesso o componente e desmontado junto com a sessao.
+    if (message) {
+      setError(message);
+      setDeleting(false);
+    }
+  }
+
+  return (
+    <section className="rounded-3xl border border-stone-200 bg-white p-4 shadow-sm">
+      <h3 className="text-lg font-black">Conta</h3>
+      <p className="mt-1 truncate text-sm font-semibold text-stone-500">{email}</p>
+      <a className="mt-3 inline-block text-sm font-black text-emerald-700 underline" href="/privacidade" target="_blank">
+        Politica de Privacidade
+      </a>
+
+      {!confirming ? (
+        <button
+          className="mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-red-50 px-3 text-sm font-black text-red-900"
+          onClick={() => setConfirming(true)}
+          type="button"
+        >
+          <Trash2 size={17} />
+          Excluir minha conta
+        </button>
+      ) : (
+        <form className="mt-4 space-y-3 rounded-2xl bg-red-50 p-3" onSubmit={handleDelete}>
+          <p className="text-sm font-bold leading-relaxed text-red-950">
+            Isso apaga definitivamente sua conta, seus planos, seu historico e suas medidas. Nao tem volta.
+          </p>
+          <input
+            autoComplete="current-password"
+            className="h-11 w-full rounded-xl border border-red-200 bg-white px-3 text-sm font-bold outline-none focus:border-red-400"
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder="Confirme com sua senha"
+            type="password"
+            value={password}
+          />
+          {error && <p className="text-sm font-bold text-red-900">{error}</p>}
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              className="h-11 rounded-xl bg-white text-sm font-black text-stone-700"
+              disabled={deleting}
+              onClick={() => {
+                setConfirming(false);
+                setPassword("");
+                setError("");
+              }}
+              type="button"
+            >
+              Cancelar
+            </button>
+            <button
+              className="flex h-11 items-center justify-center gap-2 rounded-xl bg-red-700 text-sm font-black text-white disabled:opacity-60"
+              disabled={deleting || !password}
+              type="submit"
+            >
+              {deleting && <Loader2 size={16} className="animate-spin" />}
+              Excluir
+            </button>
+          </div>
+        </form>
+      )}
     </section>
   );
 }

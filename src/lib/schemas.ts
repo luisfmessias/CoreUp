@@ -18,7 +18,12 @@ export const registerSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
   heightCm: z.number().positive().optional(),
-  weightKg: z.number().positive().optional()
+  weightKg: z.number().positive().optional(),
+  acceptPrivacy: z.literal(true, { error: "Aceite a Politica de Privacidade para criar a conta." })
+});
+
+export const deleteAccountSchema = z.object({
+  password: z.string().min(1, "Informe sua senha.")
 });
 
 export const loginSchema = z.object({

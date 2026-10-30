@@ -67,10 +67,11 @@ Rotas autenticadas esperam o cabecalho `Authorization: Bearer <token>`.
 
 | Metodo | Rota | Auth | Descricao |
 | --- | --- | --- | --- |
-| `POST` | `/api/auth/register` | nao | cria conta e ja devolve sessao |
+| `POST` | `/api/auth/register` | nao | cria conta e ja devolve sessao, exige `acceptPrivacy: true` |
 | `POST` | `/api/auth/login` | nao | autentica e devolve token |
 | `POST` | `/api/auth/logout` | sim | revoga a sessao atual |
 | `GET` | `/api/me` | sim | dados do usuario logado |
+| `DELETE` | `/api/me` | sim | exclui a conta e todos os dados, exige `password` no corpo |
 | `GET` | `/api/exercises` | nao | catalogo, filtra por `q`, `grupoMuscular`, `nivel` |
 | `GET` | `/api/exercises/[id]` | nao | exercicio unico |
 | `GET` | `/api/plan` | sim | plano semanal salvo e preferencias do gerador |
@@ -122,3 +123,17 @@ src/types/fitness.ts      tipos de dominio
 O catalogo de exercicios e um JSON estatico, nao uma tabela. Por isso as rotas
 que recebem `exerciseId` validam manualmente contra o catalogo antes de gravar,
 ja que nao existe chave estrangeira cobrindo essa relacao.
+
+## Seguranca e LGPD
+
+- **Limite de tentativas:** login bloqueia por 15 minutos apos 5 senhas erradas
+  no mesmo e-mail ou 20 no mesmo IP; cadastro aceita 5 contas por IP por hora;
+  exclusao de conta bloqueia apos 5 senhas erradas. As tentativas ficam na
+  tabela `AuthAttempt`, porque na Vercel cada requisicao pode cair numa
+  instancia diferente. A API responde `429` com o cabecalho `Retry-After`.
+- **Consentimento:** o cadastro exige aceite da Politica de Privacidade e do uso
+  dos dados de saude. A data fica em `User.privacyAcceptedAt`.
+- **Politica de Privacidade:** pagina em `/privacidade`. O e-mail de contato e a
+  data de atualizacao ficam em `src/lib/legal.ts`.
+- **Exclusao de conta:** aba Evolucao, secao Conta. Apaga o usuario e, em
+  cascata, sessoes, treinos, historico e medidas.

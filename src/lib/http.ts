@@ -30,6 +30,17 @@ export function forbidden() {
   return json({ error: "Voce nao tem permissao para acessar este recurso." }, 403);
 }
 
+export function tooManyRequests(retryAfterSeconds: number) {
+  const minutes = Math.ceil(retryAfterSeconds / 60);
+  const response = json(
+    { error: `Muitas tentativas. Tente novamente em ${minutes} ${minutes === 1 ? "minuto" : "minutos"}.` },
+    429
+  );
+  response.headers.set("Retry-After", String(retryAfterSeconds));
+
+  return response;
+}
+
 export function notFound(resource = "Recurso") {
   return json({ error: `${resource} nao encontrado.` }, 404);
 }
