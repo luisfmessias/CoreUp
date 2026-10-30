@@ -14,7 +14,7 @@ export function getTodayWorkout(plan: WorkoutDay[]) {
     [5, 4]
   ]);
 
-  return plan[indexByDay.get(today) ?? 0];
+  return plan[indexByDay.get(today) ?? 0] ?? plan[0];
 }
 
 export function summarizeGroups(exercises: Exercise[]) {
