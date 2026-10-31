@@ -9,25 +9,26 @@ datasource db {
 }
 
 model User {
-  id                   String                @id @default(cuid())
-  name                 String
-  email                String                @unique
-  passwordHash         String
-  heightCm             Float?
-  weightKg             Float?
-  preferences          Json?
-  privacyAcceptedAt    DateTime?
-  accountType          AccountType           @default(USER)
-  createdAt            DateTime              @default(now())
-  updatedAt            DateTime              @updatedAt
-  sessions             AuthSession[]
-  workouts             Workout[]
-  history              WorkoutLog[]
-  bodyMetrics          BodyMetric[]
-  professionalRequests ProfessionalRequest[] @relation("RequestOwner")
-  reviewedRequests     ProfessionalRequest[] @relation("RequestReviewer")
-  notifications        Notification[]
-  workoutReviews       WorkoutReview[]
+  id                    String                @id @default(cuid())
+  name                  String
+  email                 String                @unique
+  passwordHash          String
+  heightCm              Float?
+  weightKg              Float?
+  preferences           Json?
+  privacyAcceptedAt     DateTime?
+  accountType           AccountType           @default(USER)
+  onboardingCompletedAt DateTime?
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+  sessions              AuthSession[]
+  workouts              Workout[]
+  history               WorkoutLog[]
+  bodyMetrics           BodyMetric[]
+  professionalRequests  ProfessionalRequest[] @relation("RequestOwner")
+  reviewedRequests      ProfessionalRequest[] @relation("RequestReviewer")
+  notifications         Notification[]
+  workoutReviews        WorkoutReview[]
 }
 
 // Nao use onDelete: Cascade em userId: a solicitacao sobrevive a exclusao da conta para manter o CREF bloqueado.

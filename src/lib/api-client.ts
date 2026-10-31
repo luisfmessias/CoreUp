@@ -31,6 +31,7 @@ export type AuthUser = {
   heightCm?: number | null;
   weightKg?: number | null;
   accountType: AccountType;
+  onboardingCompleted: boolean;
   professional: ProfessionalInfo | null;
 };
 

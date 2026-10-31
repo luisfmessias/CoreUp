@@ -17,6 +17,7 @@ export function toPublicUser(user: UserWithRequests) {
     weightKg: user.weightKg,
     createdAt: user.createdAt,
     accountType: user.accountType,
+    onboardingCompleted: Boolean(user.onboardingCompletedAt),
     professional: request
       ? {
           status: request.status,

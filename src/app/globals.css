@@ -73,6 +73,12 @@ button:disabled {
   outline-offset: 2px;
 }
 
+input:not([type="checkbox"]):not([type="radio"]):focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+}
+
 ::selection {
   background: rgba(124, 198, 160, 0.3);
   color: white;

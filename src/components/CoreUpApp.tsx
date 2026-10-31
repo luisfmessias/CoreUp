@@ -42,9 +42,11 @@ import {
 import type { Exercise, WorkoutDay } from "@/types/fitness";
 import { AdminRequestsView } from "@/components/AdminRequestsView";
 import { NotificationsView } from "@/components/NotificationsView";
+import { Onboarding, type OnboardingDestination } from "@/components/Onboarding";
 import { ProfessionalRequestForm, ProfessionalStatusCard } from "@/components/ProfessionalStatus";
 import { ProfessionalReviewsView } from "@/components/ProfessionalReviewsView";
 import { Badge } from "@/components/ui/Badge";
+import { BrandMark } from "@/components/ui/BrandMark";
 import { IconButton } from "@/components/ui/IconButton";
 
 type CoreUpAppProps = {
@@ -142,6 +144,8 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
   const [justRequested, setJustRequested] = useState(false);
   const [tabResetKey, setTabResetKey] = useState(0);
   const [returnTab, setReturnTab] = useState<TabId>("home");
+  const [replayOnboarding, setReplayOnboarding] = useState(false);
+  const onboardingDismissed = useRef(false);
 
   const byId = useMemo(() => exerciseMap(exercises), [exercises]);
   const savedPlan = useMemo<GeneratedPlan>(() => {
@@ -532,6 +536,8 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
     setUnreadCount(0);
     setAdminRequestId(null);
     setJustRequested(false);
+    setReplayOnboarding(false);
+    onboardingDismissed.current = false;
   }
 
   async function reloadNotifications() {
@@ -569,6 +575,26 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
     }
 
     setActiveTab("progress");
+  }
+
+  function finishOnboarding(destination: OnboardingDestination) {
+    setReplayOnboarding(false);
+
+    if (authToken && user && !user.onboardingCompleted) {
+      onboardingDismissed.current = true;
+      setUser({ ...user, onboardingCompleted: true });
+      void apiFetch(authToken, "/api/me/onboarding", { method: "POST" }).catch(() => null);
+    }
+
+    if (destination !== "home") {
+      changeTab(destination);
+    }
+  }
+
+  function changeOnboardingGoal(goal: GeneratorPreferences["goal"]) {
+    if (goal !== preferences.goal) {
+      updatePreferences({ ...preferences, goal });
+    }
   }
 
   function changeTab(tab: TabId) {
@@ -694,6 +720,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
               savedPlan={savedPlan}
               user={user}
               onDeleteAccount={deleteAccount}
+              onReplayOnboarding={() => setReplayOnboarding(true)}
               onUserChange={setUser}
             />
           )}
@@ -716,6 +743,16 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
         </main>
 
         <BottomNavigation activeTab={activeTab} tabs={tabsFor(user)} onChange={changeTab} />
+
+        {(replayOnboarding || (!user.onboardingCompleted && !onboardingDismissed.current)) && (
+          <Onboarding
+            goal={preferences.goal}
+            hasPlan={savedDays.length > 0}
+            user={user}
+            onFinish={finishOnboarding}
+            onGoalChange={changeOnboardingGoal}
+          />
+        )}
       </div>
     </div>
   );
@@ -729,15 +766,6 @@ function LoadingScreen() {
         Abrindo CoreUp
       </div>
     </div>
-  );
-}
-
-function BrandMark({ size = 36 }: { size?: number }) {
-  return (
-    <svg aria-hidden="true" height={size} viewBox="0 0 64 64" width={size}>
-      <path d="M42 22.5a13 13 0 1 0 0 19" fill="none" stroke="var(--color-accent)" strokeLinecap="round" strokeWidth="7" />
-      <circle cx="44" cy="32" fill="var(--color-accent)" r="3.5" />
-    </svg>
   );
 }
 
@@ -1959,7 +1987,9 @@ function PlanView({
           </button>
           <button
             className="flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-xl px-3 text-sm font-medium text-red-300/90 transition hover:bg-red-500/10"
+            aria-label="Remover dia"
             onClick={() => setConfirmRemoveId(selectedDay.id)}
+            title="Remover dia"
             type="button"
           >
             <Trash2 size={16} />
@@ -2187,12 +2217,14 @@ function ProgressView({
   savedPlan,
   user,
   onDeleteAccount,
+  onReplayOnboarding,
   onUserChange
 }: {
   authToken: string;
   savedPlan: GeneratedPlan;
   user: AuthUser;
   onDeleteAccount: (password: string) => Promise<string | null>;
+  onReplayOnboarding: () => void;
   onUserChange: (user: AuthUser) => void;
 }) {
   const weeklySets = Object.values(savedPlan.coverage).reduce((total, amount) => total + amount, 0);
@@ -2252,7 +2284,13 @@ function ProgressView({
         </div>
       </section>
 
-      <AccountSection authToken={authToken} user={user} onDeleteAccount={onDeleteAccount} onUserChange={onUserChange} />
+      <AccountSection
+        authToken={authToken}
+        user={user}
+        onDeleteAccount={onDeleteAccount}
+        onReplayOnboarding={onReplayOnboarding}
+        onUserChange={onUserChange}
+      />
     </section>
   );
 }
@@ -2323,11 +2361,13 @@ function AccountSection({
   authToken,
   user,
   onDeleteAccount,
+  onReplayOnboarding,
   onUserChange
 }: {
   authToken: string;
   user: AuthUser;
   onDeleteAccount: (password: string) => Promise<string | null>;
+  onReplayOnboarding: () => void;
   onUserChange: (user: AuthUser) => void;
 }) {
   const email = user.email;
@@ -2360,6 +2400,13 @@ function AccountSection({
       >
         Politica de Privacidade
       </a>
+      <button
+        className="mt-3 block text-sm text-white/70 underline underline-offset-4 transition hover:text-white"
+        onClick={onReplayOnboarding}
+        type="button"
+      >
+        Ver introducao do app
+      </button>
 
       {!confirming ? (
         <button
