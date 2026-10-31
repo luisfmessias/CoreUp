@@ -10,13 +10,13 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-dvh bg-[#f5f4ef] px-4 py-8 text-stone-950">
-      <main className="mx-auto w-full max-w-[680px] rounded-[32px] bg-white p-6 shadow-sm md:p-10">
-        <Link className="text-sm font-black text-emerald-700 hover:text-emerald-900" href="/">
+    <div className="min-h-dvh px-4 py-8">
+      <main className="glass-strong mx-auto w-full max-w-[680px] rounded-3xl p-6 md:p-10">
+        <Link className="text-sm font-medium text-accent transition hover:text-accent-strong" href="/">
           ← Voltar ao CoreUp
         </Link>
-        <h1 className="mt-6 text-3xl font-black">Política de Privacidade</h1>
-        <p className="mt-2 text-sm font-semibold text-stone-500">Última atualização: {legal.policyUpdatedAt}</p>
+        <h1 className="mt-6 text-2xl font-semibold tracking-tight">Política de Privacidade</h1>
+        <p className="mt-2 text-sm text-white/50">Última atualização: {legal.policyUpdatedAt}</p>
 
         <Section title="1. Quem somos">
           <p>
@@ -138,8 +138,8 @@ export default function PrivacyPage() {
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section className="mt-8 space-y-3 text-[15px] leading-relaxed text-stone-700 [&_li]:ml-5 [&_li]:list-disc [&_strong]:text-stone-950 [&_ul]:space-y-2">
-      <h2 className="text-lg font-black text-stone-950">{title}</h2>
+    <section className="mt-8 space-y-3 text-[15px] leading-relaxed text-white/70 [&_li]:ml-5 [&_li]:list-disc [&_li]:marker:text-accent/70 [&_strong]:font-semibold [&_strong]:text-white [&_ul]:space-y-2">
+      <h2 className="text-lg font-semibold text-white">{title}</h2>
       {children}
     </section>
   );
@@ -147,7 +147,7 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 
 function Email() {
   return (
-    <a className="font-bold text-emerald-700 underline" href={`mailto:${legal.contactEmail}`}>
+    <a className="font-medium text-accent underline underline-offset-2" href={`mailto:${legal.contactEmail}`}>
       {legal.contactEmail}
     </a>
   );

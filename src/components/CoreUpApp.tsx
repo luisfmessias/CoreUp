@@ -1,27 +1,23 @@
 "use client";
 
 import {
-  Activity,
   BarChart3,
   CalendarDays,
   Check,
   ChevronRight,
-  Dumbbell,
   Eye,
   EyeOff,
-  Flame,
   Heart,
   Home,
   Library,
   Loader2,
+  LockKeyhole,
   LogOut,
   Mail,
-  Menu,
   Plus,
   RotateCcw,
   Search,
   Sparkles,
-  Timer,
   Trash2,
   UserPlus,
   UserRound
@@ -462,13 +458,15 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
   }
 
   return (
-    <div className="min-h-dvh bg-[#f5f4ef] text-stone-950">
-      <div className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col bg-[#f8f7f2] shadow-2xl shadow-stone-300/50 md:my-6 md:min-h-[900px] md:overflow-hidden md:rounded-[32px]">
+    <div className="min-h-dvh">
+      <div className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col">
         <AppHeader user={user} onLogout={handleLogout} />
 
-        <main className="flex-1 overflow-hidden px-4 pb-24">
+        <main key={activeTab} className="flex-1 animate-fade-up px-4 pb-32">
           {planError && (
-            <p className="mb-4 rounded-2xl bg-red-100 px-4 py-3 text-sm font-bold text-red-900">{planError}</p>
+            <div className="mb-4">
+              <Alert tone="error">{planError}</Alert>
+            </div>
           )}
           {activeTab === "home" && (
             <HomeView
@@ -529,12 +527,21 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
 
 function LoadingScreen() {
   return (
-    <div className="grid min-h-dvh place-items-center bg-[#f5f4ef] text-stone-950">
-      <div className="flex items-center gap-3 rounded-3xl bg-white px-5 py-4 text-sm font-black shadow-sm">
-        <Loader2 size={19} className="animate-spin" />
+    <div className="grid min-h-dvh place-items-center px-4">
+      <div className="glass flex items-center gap-3 rounded-full px-5 py-3 text-sm font-medium text-white/80">
+        <Loader2 size={18} className="animate-spin text-accent" />
         Abrindo CoreUp
       </div>
     </div>
+  );
+}
+
+function BrandMark({ size = 36 }: { size?: number }) {
+  return (
+    <svg aria-hidden="true" height={size} viewBox="0 0 64 64" width={size}>
+      <path d="M42 22.5a13 13 0 1 0 0 19" fill="none" stroke="var(--color-accent)" strokeLinecap="round" strokeWidth="7" />
+      <circle cx="44" cy="32" fill="var(--color-accent)" r="3.5" />
+    </svg>
   );
 }
 
@@ -564,29 +571,43 @@ function AuthView({
   onSubmit
 }: AuthViewProps) {
   const isRegister = authMode === "register";
+  const passwordToggle = (
+    <button
+      aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+      className="grid size-9 shrink-0 place-items-center rounded-full text-white/55 transition hover:bg-white/10 hover:text-white"
+      onClick={onPasswordVisibilityChange}
+      title={showPassword ? "Ocultar senha" : "Mostrar senha"}
+      type="button"
+    >
+      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+    </button>
+  );
 
   return (
-    <div className="min-h-dvh bg-[#f5f4ef] px-4 py-6 text-stone-950">
-      <main className="mx-auto flex min-h-[calc(100dvh-48px)] w-full max-w-[360px] flex-col justify-center">
-        <section className="overflow-hidden rounded-[32px] bg-stone-950 p-5 text-white shadow-2xl shadow-stone-300/60">
-          <div className="mb-8 flex items-center justify-between">
+    <div className="px-4 py-8">
+      <main className="relative mx-auto flex min-h-[calc(100dvh-64px)] w-full max-w-[380px] flex-col justify-center">
+
+        <section className="glass-strong rounded-2xl p-6">
+          <div className="mb-7 flex items-start justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/45">CoreUp</p>
-              <h1 className="mt-2 text-3xl font-black">{isRegister ? "Criar conta" : "Entrar"}</h1>
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-white/50">CoreUp</p>
+              <h1 className="mt-1 text-3xl font-semibold uppercase tracking-tight">{isRegister ? "Criar conta" : "Entrar"}</h1>
             </div>
-            <span className="grid size-12 place-items-center rounded-2xl bg-white/10">
+            <span className="grid size-11 place-items-center rounded-full border border-white/10 text-accent">
               {isRegister ? <UserPlus size={22} /> : <UserRound size={22} />}
             </span>
           </div>
 
-          <div className="mb-4 grid grid-cols-2 gap-2 rounded-2xl bg-white/10 p-1">
-            <AuthModeButton active={authMode === "login"} label="Login" onClick={() => onModeChange("login")} />
-            <AuthModeButton active={authMode === "register"} label="Cadastro" onClick={() => onModeChange("register")} />
+          <div className="glass-inset mb-5 grid grid-cols-2 gap-1 rounded-xl p-1">
+            <AuthModeButton active={!isRegister} label="Entrar" onClick={() => onModeChange("login")} />
+            <AuthModeButton active={isRegister} label="Cadastrar" onClick={() => onModeChange("register")} />
           </div>
 
-          <form className="space-y-3" onSubmit={onSubmit}>
+          <form className="space-y-4" onSubmit={onSubmit}>
             {isRegister && (
               <AuthInput
+                autoComplete="name"
+                icon={<UserRound size={18} />}
                 label="Nome"
                 onChange={(name) => onFormChange({ ...authForm, name })}
                 placeholder="Seu nome"
@@ -594,6 +615,7 @@ function AuthView({
               />
             )}
             <AuthInput
+              autoComplete="email"
               icon={<Mail size={18} />}
               label="E-mail"
               onChange={(email) => onFormChange({ ...authForm, email })}
@@ -602,46 +624,31 @@ function AuthView({
               value={authForm.email}
             />
             <AuthInput
+              autoComplete={isRegister ? "new-password" : "current-password"}
+              icon={<LockKeyhole size={18} />}
               label="Senha"
               onChange={(password) => onFormChange({ ...authForm, password })}
               placeholder={isRegister ? "8+ com numero e simbolo" : "Sua senha"}
+              trailing={passwordToggle}
               type={showPassword ? "text" : "password"}
-              trailing={
-                <button
-                  aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
-                  className="grid size-9 shrink-0 place-items-center rounded-full text-stone-500 transition hover:bg-stone-100 hover:text-stone-950"
-                  onClick={onPasswordVisibilityChange}
-                  title={showPassword ? "Ocultar senha" : "Mostrar senha"}
-                  type="button"
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              }
               value={authForm.password}
             />
             {isRegister && (
               <AuthInput
+                autoComplete="new-password"
+                icon={<LockKeyhole size={18} />}
                 label="Confirmar senha"
                 onChange={(confirmPassword) => onFormChange({ ...authForm, confirmPassword })}
                 placeholder="Repita sua senha"
+                trailing={passwordToggle}
                 type={showPassword ? "text" : "password"}
-                trailing={
-                  <button
-                    aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
-                    className="grid size-9 shrink-0 place-items-center rounded-full text-stone-500 transition hover:bg-stone-100 hover:text-stone-950"
-                    onClick={onPasswordVisibilityChange}
-                    title={showPassword ? "Ocultar senha" : "Mostrar senha"}
-                    type="button"
-                  >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </button>
-                }
                 value={authForm.confirmPassword}
               />
             )}
             {isRegister && (
               <div className="grid grid-cols-2 gap-3">
                 <AuthInput
+                  inputMode="decimal"
                   label="Altura"
                   onChange={(heightCm) => onFormChange({ ...authForm, heightCm })}
                   placeholder="cm"
@@ -649,6 +656,7 @@ function AuthView({
                   value={authForm.heightCm}
                 />
                 <AuthInput
+                  inputMode="decimal"
                   label="Peso"
                   onChange={(weightKg) => onFormChange({ ...authForm, weightKg })}
                   placeholder="kg"
@@ -658,16 +666,16 @@ function AuthView({
               </div>
             )}
             {isRegister && (
-              <label className="flex items-start gap-3 rounded-2xl bg-white/10 p-3 text-xs font-semibold leading-relaxed text-white/75">
+              <label className="glass-inset flex cursor-pointer items-start gap-3 rounded-xl p-3 text-xs leading-relaxed text-white/70">
                 <input
                   checked={authForm.acceptPrivacy}
-                  className="mt-0.5 size-4 shrink-0 accent-emerald-300"
+                  className="mt-0.5 size-4 shrink-0 cursor-pointer accent-accent"
                   onChange={(event) => onFormChange({ ...authForm, acceptPrivacy: event.target.checked })}
                   type="checkbox"
                 />
                 <span>
                   Li e aceito a{" "}
-                  <a className="font-black text-emerald-300 underline" href="/privacidade" target="_blank">
+                  <a className="font-medium text-accent underline underline-offset-2" href="/privacidade" target="_blank">
                     Politica de Privacidade
                   </a>{" "}
                   e autorizo o uso dos meus dados de saude (altura, peso e medidas) para acompanhar minha evolucao.
@@ -675,26 +683,29 @@ function AuthView({
               </label>
             )}
 
-            {authError && <p className="rounded-2xl bg-red-100 px-4 py-3 text-sm font-bold text-red-900">{authError}</p>}
-            {authNotice && <p className="rounded-2xl bg-emerald-100 px-4 py-3 text-sm font-bold text-emerald-950">{authNotice}</p>}
+            {authError && <Alert tone="error">{authError}</Alert>}
+            {authNotice && <Alert tone="success">{authNotice}</Alert>}
 
             <button
-              className="flex h-13 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-300 px-4 text-base font-black text-stone-950 transition hover:bg-emerald-200 disabled:cursor-not-allowed disabled:opacity-60"
+              className="btn-primary mt-2 flex h-13 w-full items-center justify-center gap-2 rounded-xl px-4 text-base font-semibold"
               disabled={authLoading}
               type="submit"
             >
               {authLoading && <Loader2 size={18} className="animate-spin" />}
-              {isRegister ? "Criar e entrar" : "Entrar no app"}
+              {isRegister ? "Criar e entrar" : "Entrar"}
             </button>
           </form>
 
-          <p className="mt-5 text-xs font-semibold leading-relaxed text-white/50">
-            A senha do cadastro precisa ter letra maiuscula, minuscula, numero, simbolo e pelo menos 8 caracteres.
-          </p>
-          <a className="mt-3 block text-xs font-black text-white/60 underline hover:text-white" href="/privacidade">
-            Politica de Privacidade
-          </a>
+          {isRegister && (
+            <p className="mt-5 text-xs leading-relaxed text-white/50">
+              A senha precisa ter letra maiuscula, minuscula, numero, simbolo e pelo menos 8 caracteres.
+            </p>
+          )}
         </section>
+
+        <a className="mt-6 text-center text-xs font-medium text-white/45 transition hover:text-white/80" href="/privacidade">
+          Politica de Privacidade
+        </a>
       </main>
     </div>
   );
@@ -703,7 +714,10 @@ function AuthView({
 function AuthModeButton({ active, label, onClick }: { active: boolean; label: string; onClick: () => void }) {
   return (
     <button
-      className={`h-10 rounded-xl text-sm font-black transition ${active ? "bg-white text-stone-950" : "text-white/55"}`}
+      aria-pressed={active}
+      className={`h-10 rounded-xl text-sm font-semibold transition ${
+        active ? "bg-white/90 text-[#06100b] shadow-sm" : "text-white/65 hover:text-white"
+      }`}
       onClick={onClick}
       type="button"
     >
@@ -713,7 +727,9 @@ function AuthModeButton({ active, label, onClick }: { active: boolean; label: st
 }
 
 function AuthInput({
+  autoComplete,
   icon,
+  inputMode,
   label,
   onChange,
   placeholder,
@@ -721,7 +737,9 @@ function AuthInput({
   type = "text",
   value
 }: {
+  autoComplete?: string;
   icon?: ReactNode;
+  inputMode?: "decimal" | "email" | "text";
   label: string;
   onChange: (value: string) => void;
   placeholder: string;
@@ -731,11 +749,13 @@ function AuthInput({
 }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-xs font-bold uppercase text-white/45">{label}</span>
-      <span className="flex h-13 items-center gap-3 rounded-2xl bg-white px-4 text-stone-950">
-        {icon}
+      <span className="mb-1.5 block px-1 text-sm font-medium text-white/85">{label}</span>
+      <span className="glass-field flex h-13 items-center gap-3 rounded-xl pl-4 pr-2 text-white">
+        {icon && <span className="text-white/55">{icon}</span>}
         <input
-          className="min-w-0 flex-1 bg-transparent text-base font-bold outline-none placeholder:text-stone-400"
+          autoComplete={autoComplete}
+          className="min-w-0 flex-1 bg-transparent py-3 text-[15px] outline-none placeholder:text-white/35"
+          inputMode={inputMode}
           onChange={(event) => onChange(event.target.value)}
           placeholder={placeholder}
           type={type}
@@ -744,6 +764,19 @@ function AuthInput({
         {trailing}
       </span>
     </label>
+  );
+}
+
+function Alert({ tone, children }: { tone: "error" | "success"; children: ReactNode }) {
+  return (
+    <p
+      className={`rounded-xl border px-4 py-3 text-sm font-medium ${
+        tone === "error" ? "border-red-400/25 bg-red-500/15 text-red-100" : "border-accent/25 bg-accent/15 text-white"
+      }`}
+      role={tone === "error" ? "alert" : "status"}
+    >
+      {children}
+    </p>
   );
 }
 
@@ -757,18 +790,20 @@ function parseOptionalNumber(value: string) {
 }
 
 function AppHeader({ user, onLogout }: { user: AuthUser; onLogout: () => void }) {
+  const firstName = user.name.trim().split(/\s+/)[0];
+
   return (
-    <header className="px-4 pb-3 pt-5">
-      <div className="flex items-center justify-between">
-        <IconButton label="Menu">
-          <Menu size={20} />
-        </IconButton>
-        <div className="text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-stone-500">CoreUp</p>
-          <h1 className="max-w-52 truncate text-lg font-black">{user.name}</h1>
+    <header className="px-4 pb-4 pt-[max(1.25rem,env(safe-area-inset-top))]">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex min-w-0 items-center gap-3">
+          <BrandMark size={30} />
+          <div className="min-w-0">
+            <p className="text-xs text-white/45">Ola,</p>
+            <h1 className="truncate text-lg font-semibold leading-tight">{firstName}</h1>
+          </div>
         </div>
         <IconButton label="Sair" onClick={onLogout}>
-          <LogOut size={20} />
+          <LogOut size={19} />
         </IconButton>
       </div>
     </header>
@@ -789,70 +824,47 @@ function HomeView({ selectedWorkout, byId, groupSummary, savedPlan, onOpenPlan, 
   const weeklySets = Object.values(savedPlan.coverage).reduce((total, amount) => total + amount, 0);
   const weeklyMinutes = savedPlan.days.reduce((total, day) => total + (Number.parseInt(day.duration, 10) || 0), 0);
   const planStats = [
-    { label: "Treinos", value: String(savedPlan.days.length), helper: "por semana", icon: CalendarDays },
+    { label: "Treinos", value: savedPlan.days.length, helper: "por semana" },
     {
       label: "Exercicios",
-      value: String(savedPlan.days.reduce((total, day) => total + day.exercises.length, 0)),
-      helper: "na semana",
-      icon: Dumbbell
+      value: savedPlan.days.reduce((total, day) => total + day.exercises.length, 0),
+      helper: "na semana"
     },
-    { label: "Tempo", value: String(weeklyMinutes), helper: "min/semana", icon: Timer },
-    { label: "Grupos", value: String(Object.keys(savedPlan.coverage).length), helper: "trabalhados", icon: BarChart3 }
+    { label: "Minutos", value: weeklyMinutes, helper: "por semana" },
+    { label: "Grupos", value: Object.keys(savedPlan.coverage).length, helper: "trabalhados" }
   ];
 
   return (
-    <section className="space-y-4">
-      <section className="relative overflow-hidden rounded-[28px] bg-stone-950 px-5 py-6 text-white">
-        <div className="absolute right-[-56px] top-[-34px] size-44 rounded-full bg-emerald-400/20" />
-        <div className="absolute bottom-[-58px] left-[-50px] size-36 rounded-full bg-sky-400/15" />
-        <div className="relative space-y-5">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <Badge tone="green">Hoje</Badge>
-              <h2 className="mt-4 max-w-[250px] text-4xl font-black leading-[0.95]">Treine com clareza.</h2>
-            </div>
-            <div className="rounded-2xl bg-white/10 p-3">
-              <Activity size={24} />
-            </div>
-          </div>
-          <div className="grid grid-cols-3 gap-2">
-            <HeroMetric label="Foco" value={selectedWorkout?.focus ?? "--"} />
-            <HeroMetric label="Tempo" value={selectedWorkout?.duration ?? "--"} />
-            <HeroMetric label="Series" value={`${weeklySets}/sem`} />
-          </div>
-        </div>
-      </section>
-
-      <section className="grid grid-cols-2 gap-3">
-        {planStats.map((stat) => (
-          <article key={stat.label} className="rounded-3xl border border-stone-200 bg-white p-4 shadow-sm">
-            <div className="flex items-center justify-between">
-              <span className="grid size-10 place-items-center rounded-2xl bg-stone-100 text-stone-800">
-                <stat.icon size={19} />
-              </span>
-              <span className="text-xs font-semibold text-stone-500">{stat.helper}</span>
-            </div>
-            <p className="mt-4 text-2xl font-black">{stat.value}</p>
-            <p className="text-sm font-semibold text-stone-500">{stat.label}</p>
-          </article>
-        ))}
-      </section>
-
+    <section className="space-y-6">
       {selectedWorkout ? (
-        <TodayWorkout workout={selectedWorkout} byId={byId} notes={savedPlan.notes} onOpenPlan={onOpenPlan} />
+        <TodayWorkout
+          workout={selectedWorkout}
+          byId={byId}
+          notes={savedPlan.notes}
+          weeklySets={weeklySets}
+          onOpenPlan={onOpenPlan}
+        />
       ) : (
         <EmptyPlan onOpenBuilder={onOpenBuilder} />
       )}
 
-      <section className="rounded-3xl border border-stone-200 bg-white p-4 shadow-sm">
-        <div className="mb-4 flex items-center justify-between">
-          <div>
-            <p className="text-sm font-bold text-stone-500">Biblioteca</p>
-            <h3 className="text-xl font-black">{totalGroups} grupos musculares</h3>
+      <section
+        aria-label="Resumo da semana"
+        className="grid grid-cols-4 divide-x divide-white/[0.07] rounded-2xl border border-white/[0.07]"
+      >
+        {planStats.map((stat) => (
+          <div key={stat.label} className="px-3 py-3.5">
+            <p className="text-xl font-semibold tabular-nums">{stat.value}</p>
+            <p className="mt-0.5 text-xs text-white/60">{stat.label}</p>
+            <p className="text-[11px] text-white/35">{stat.helper}</p>
           </div>
-          <span className="grid size-11 place-items-center rounded-full bg-emerald-100 text-emerald-900">
-            <Dumbbell size={20} />
-          </span>
+        ))}
+      </section>
+
+      <section>
+        <div className="mb-3 flex items-baseline justify-between">
+          <h3 className="text-sm font-medium text-white/80">Biblioteca</h3>
+          <span className="text-xs text-white/45">{totalGroups} grupos musculares</span>
         </div>
         <GroupBars groupSummary={groupSummary} />
       </section>
@@ -860,29 +872,19 @@ function HomeView({ selectedWorkout, byId, groupSummary, savedPlan, onOpenPlan, 
   );
 }
 
-function HeroMetric({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-2xl bg-white/10 p-3">
-      <p className="text-[11px] font-bold uppercase text-white/55">{label}</p>
-      <p className="mt-1 line-clamp-2 text-sm font-black">{value}</p>
-    </div>
-  );
-}
-
 function EmptyPlan({ onOpenBuilder }: { onOpenBuilder: () => void }) {
   return (
-    <section className="rounded-3xl border border-stone-200 bg-white p-4 shadow-sm">
-      <p className="text-sm font-bold text-stone-500">Seu treino</p>
-      <h3 className="text-xl font-black">Voce ainda nao tem um plano</h3>
-      <p className="mt-2 text-sm font-semibold leading-relaxed text-stone-500">
+    <section className="glass-strong rounded-2xl p-5">
+      <p className="text-xs font-medium text-accent">Seu treino</p>
+      <h3 className="mt-2 text-lg font-semibold">Voce ainda nao tem um plano</h3>
+      <p className="mt-1 text-sm leading-relaxed text-white/55">
         Escolha objetivo, nivel e dias na aba Montar para gerar a sua semana de treino.
       </p>
       <button
-        className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-stone-950 px-4 text-sm font-black text-white"
+        className="btn-primary mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold"
         onClick={onOpenBuilder}
         type="button"
       >
-        <Sparkles size={18} />
         Montar meu treino
       </button>
     </section>
@@ -893,44 +895,49 @@ type TodayWorkoutProps = {
   workout: WorkoutDay;
   byId: Map<number, Exercise>;
   notes: string[];
+  weeklySets: number;
   onOpenPlan: () => void;
 };
 
-function TodayWorkout({ workout, byId, notes, onOpenPlan }: TodayWorkoutProps) {
+function TodayWorkout({ workout, byId, notes, weeklySets, onOpenPlan }: TodayWorkoutProps) {
   return (
-    <section className="rounded-3xl border border-stone-200 bg-white p-4 shadow-sm">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm font-bold text-stone-500">Treino do dia</p>
-          <h3 className="text-xl font-black">{workout.focus}</h3>
-        </div>
-        <button
-          aria-label="Abrir treino"
-          className="grid size-11 place-items-center rounded-full bg-stone-950 text-white"
-          onClick={onOpenPlan}
-          type="button"
-        >
-          <ChevronRight size={20} />
-        </button>
+    <section className="glass-strong rounded-2xl p-5">
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-xs font-medium text-accent">Treino de hoje · {workout.label}</p>
+        <span className="text-xs text-white/45">{workout.intensity}</span>
       </div>
-      <div className="mt-4 space-y-2">
+      <h2 className="mt-2 text-2xl font-semibold leading-tight tracking-tight">{workout.focus}</h2>
+      <p className="mt-1 text-sm tabular-nums text-white/55">
+        {workout.duration} · {workout.exercises.length} exercicios · {weeklySets} series na semana
+      </p>
+
+      <ul className="mt-4 divide-y divide-white/[0.07] border-t border-white/[0.07]">
         {workout.exercises.slice(0, 3).map((item) => {
           const exercise = byId.get(item.exerciseId);
 
           return (
-            <div key={item.exerciseId} className="flex items-center justify-between rounded-2xl bg-stone-50 p-3">
-              <div>
-                <p className="text-sm font-black">{exercise?.nome}</p>
-                <p className="text-xs font-semibold text-stone-500">{exercise?.grupoMuscular}</p>
+            <li key={item.exerciseId} className="flex items-center justify-between gap-3 py-3">
+              <div className="min-w-0">
+                <p className="truncate text-sm font-medium">{exercise?.nome}</p>
+                <p className="text-xs text-white/45">{exercise?.grupoMuscular}</p>
               </div>
-              <p className="text-sm font-black text-stone-700">
-                {item.sets} x {item.reps}
+              <p className="shrink-0 text-sm tabular-nums text-white/70">
+                {item.sets} × {item.reps}
               </p>
-            </div>
+            </li>
           );
         })}
-      </div>
-      <p className="mt-3 text-xs font-semibold leading-relaxed text-stone-500">{notes[0]}</p>
+      </ul>
+      <p className="mt-1 text-xs leading-relaxed text-white/45">{notes[0]}</p>
+
+      <button
+        className="mt-4 flex h-11 w-full items-center justify-center gap-1.5 rounded-xl border border-white/10 text-sm font-medium text-white/85 transition hover:bg-white/[0.05]"
+        onClick={onOpenPlan}
+        type="button"
+      >
+        Ver treino completo
+        <ChevronRight size={16} />
+      </button>
     </section>
   );
 }
@@ -975,40 +982,35 @@ function BuilderView({
   };
 
   return (
-    <section className="space-y-4">
+    <section className="space-y-5">
       <div className="flex items-end justify-between gap-3">
         <div>
-          <p className="text-sm font-bold text-stone-500">Gerador inteligente</p>
-          <h2 className="text-3xl font-black">Montar treino</h2>
+          <p className="text-sm text-white/45">Gerador inteligente</p>
+          <h2 className="text-2xl font-semibold tracking-tight">Montar treino</h2>
         </div>
-        <IconButton label="Abrir plano" className="bg-stone-950 text-white hover:bg-stone-800" onClick={onOpenPlan}>
+        <IconButton label="Abrir plano" className="text-accent" onClick={onOpenPlan}>
           <ChevronRight size={20} />
         </IconButton>
       </div>
 
-      <section className="rounded-[28px] bg-stone-950 p-4 text-white shadow-sm">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <Badge tone="green">{generatedPlan.days.length} dias</Badge>
-            <h3 className="mt-3 text-2xl font-black">Plano pronto para ajustar</h3>
-            <p className="mt-2 text-sm font-semibold leading-relaxed text-white/65">
-              O aluno escolhe o que prefere, e o app completa a semana para nao deixar grupos importantes de fora.
-            </p>
-          </div>
-          <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-white/10">
-            <Sparkles size={22} />
-          </span>
-        </div>
+      <section className="glass-strong rounded-2xl p-5">
+        <p className="text-xs font-medium text-accent">Previa do plano</p>
+        <h3 className="mt-2 text-xl font-semibold tracking-tight">
+          {generatedPlan.days.length} dias · {Object.keys(generatedPlan.coverage).length} grupos musculares
+        </h3>
+        <p className="mt-1 text-sm leading-relaxed text-white/55">
+          O aluno escolhe o que prefere, e o app completa a semana para nao deixar grupos importantes de fora.
+        </p>
         <button
-          className="mt-5 flex h-13 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-300 px-4 text-base font-black text-stone-950 transition hover:bg-emerald-200 disabled:cursor-not-allowed disabled:opacity-60"
+          className="btn-primary mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-xl px-4 text-[15px] font-semibold"
           disabled={saving || !generatedPlan.days.length}
           onClick={onSavePlan}
           type="button"
         >
-          {saving ? <Loader2 size={19} className="animate-spin" /> : <Check size={19} />}
+          {saving && <Loader2 size={18} className="animate-spin" />}
           {saving ? "Salvando plano" : "Usar esse plano"}
         </button>
-        <p className="mt-2 text-center text-xs font-semibold text-white/50">
+        <p className="mt-2 text-center text-xs text-white/45">
           Substitui o plano atual da aba Treino.
         </p>
       </section>
@@ -1080,10 +1082,10 @@ function BuilderView({
             (item) => (
               <button
                 key={item}
-                className={`shrink-0 rounded-full border px-4 py-2 text-sm font-bold transition ${
+                className={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition ${
                   preferences.availableEquipment.includes(item)
-                    ? "border-stone-950 bg-stone-950 text-white"
-                    : "border-stone-200 bg-stone-50 text-stone-600"
+                    ? "chip-active"
+                    : "border-white/10 bg-white/[0.04] text-white/65"
                 }`}
                 onClick={() => toggleEquipment(item)}
                 type="button"
@@ -1096,7 +1098,7 @@ function BuilderView({
       </ControlBlock>
 
       <ControlBlock title="Favoritos do aluno">
-        <div className="space-y-2">
+        <div className="-my-1 divide-y divide-white/[0.06]">
           {(favoriteExercises.length ? favoriteExercises : suggestedFavorites.slice(0, 5)).map((exercise) => (
             <FavoriteRow
               key={exercise.id}
@@ -1108,24 +1110,24 @@ function BuilderView({
         </div>
       </ControlBlock>
 
-      <section className="rounded-3xl border border-stone-200 bg-white p-4 shadow-sm">
+      <section className="border-t border-white/[0.07] pt-5">
         <div className="mb-4 flex items-center justify-between">
           <div>
-            <p className="text-sm font-bold text-stone-500">Cobertura semanal</p>
-            <h3 className="text-xl font-black">{Object.keys(generatedPlan.coverage).length} grupos no plano</h3>
+            <h3 className="text-sm font-medium text-white/80">Cobertura semanal</h3>
+            <p className="text-xs text-white/45">{Object.keys(generatedPlan.coverage).length} grupos no plano</p>
           </div>
           <IconButton label="Recalcular" onClick={() => onChange({ ...preferences })}>
             <RotateCcw size={18} />
           </IconButton>
         </div>
         <GroupBars groupSummary={generatedPlan.coverage} />
-        <div className="mt-4 space-y-2">
+        <ul className="mt-5 space-y-2 border-l border-white/10 pl-3">
           {generatedPlan.notes.map((note) => (
-            <p key={note} className="rounded-2xl bg-stone-50 p-3 text-xs font-semibold leading-relaxed text-stone-600">
+            <li key={note} className="text-xs leading-relaxed text-white/55">
               {note}
-            </p>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
     </section>
   );
@@ -1145,10 +1147,10 @@ type PlanViewProps = {
 function PlanView({ selectedDay, activeDayId, byId, plan, savedPlan, onSelectDay, onOpenBuilder, onRemoveDay }: PlanViewProps) {
   if (!selectedDay) {
     return (
-      <section className="space-y-4">
+      <section className="space-y-5">
         <div>
-          <p className="text-sm font-bold text-stone-500">Rotina semanal</p>
-          <h2 className="text-3xl font-black">Treinos</h2>
+          <p className="text-sm text-white/45">Rotina semanal</p>
+          <h2 className="text-2xl font-semibold tracking-tight">Treinos</h2>
         </div>
         <EmptyPlan onOpenBuilder={onOpenBuilder} />
       </section>
@@ -1156,13 +1158,13 @@ function PlanView({ selectedDay, activeDayId, byId, plan, savedPlan, onSelectDay
   }
 
   return (
-    <section className="space-y-4">
+    <section className="space-y-5">
       <div className="flex items-end justify-between">
         <div>
-          <p className="text-sm font-bold text-stone-500">Rotina semanal</p>
-          <h2 className="text-3xl font-black">Treinos</h2>
+          <p className="text-sm text-white/45">Rotina semanal</p>
+          <h2 className="text-2xl font-semibold tracking-tight">Treinos</h2>
         </div>
-        <IconButton label="Ajustar treino" className="bg-stone-950 text-white hover:bg-stone-800" onClick={onOpenBuilder}>
+        <IconButton label="Ajustar treino" className="text-accent" onClick={onOpenBuilder}>
           <Plus size={20} />
         </IconButton>
       </div>
@@ -1171,8 +1173,8 @@ function PlanView({ selectedDay, activeDayId, byId, plan, savedPlan, onSelectDay
         {plan.map((day) => (
           <button
             key={day.id}
-            className={`rounded-2xl px-2 py-3 text-sm font-black transition ${
-              day.id === activeDayId ? "bg-stone-950 text-white" : "bg-white text-stone-500"
+            className={`rounded-xl border px-2 py-2.5 text-sm font-medium transition ${
+              day.id === activeDayId ? "chip-active" : "border-white/[0.08] text-white/55 hover:border-white/20 hover:text-white"
             }`}
             onClick={() => onSelectDay(day.id)}
             type="button"
@@ -1182,74 +1184,71 @@ function PlanView({ selectedDay, activeDayId, byId, plan, savedPlan, onSelectDay
         ))}
       </div>
 
-      <section className="rounded-[28px] bg-white p-4 shadow-sm">
+      <section className="glass-strong rounded-2xl p-5">
         <div className="flex items-start justify-between gap-4">
-          <div>
-            <Badge tone={selectedDay.intensity === "Forte" ? "dark" : "blue"}>{selectedDay.intensity}</Badge>
-            <h3 className="mt-3 text-2xl font-black">{selectedDay.focus}</h3>
-            <p className="mt-1 text-sm font-semibold text-stone-500">{selectedDay.duration}</p>
+          <div className="min-w-0">
+            <h3 className="text-xl font-semibold leading-tight tracking-tight">{selectedDay.focus}</h3>
+            <p className="mt-1 text-sm text-white/55">
+              {selectedDay.duration} · {selectedDay.exercises.length} exercicios
+            </p>
           </div>
-          <span className="grid size-12 place-items-center rounded-2xl bg-emerald-100 text-emerald-900">
-            <Flame size={22} />
-          </span>
+          <Badge tone={selectedDay.intensity === "Forte" ? "green" : "muted"}>{selectedDay.intensity}</Badge>
         </div>
         <div className="mt-4 grid grid-cols-2 gap-2">
           <button
-            className="flex h-11 items-center justify-center gap-2 rounded-2xl bg-stone-950 px-3 text-sm font-black text-white"
+            className="flex h-10 items-center justify-center gap-2 rounded-xl border border-white/10 px-3 text-sm font-medium text-white/85 transition hover:bg-white/[0.05]"
             onClick={onOpenBuilder}
             type="button"
           >
-            <Plus size={17} />
+            <Plus size={16} />
             Criar novo
           </button>
           <button
-            className="flex h-11 items-center justify-center gap-2 rounded-2xl bg-red-50 px-3 text-sm font-black text-red-900"
+            className="flex h-10 items-center justify-center gap-2 rounded-xl px-3 text-sm font-medium text-red-300/90 transition hover:bg-red-500/10"
             onClick={() => onRemoveDay(selectedDay.id)}
             type="button"
           >
-            <Trash2 size={17} />
-            Descriar
+            <Trash2 size={16} />
+            Remover dia
           </button>
         </div>
 
-        <div className="mt-5 space-y-3">
+        <div className="mt-5 divide-y divide-white/[0.07] border-t border-white/[0.07]">
           {selectedDay.exercises.map((item, index) => {
             const exercise = byId.get(item.exerciseId);
 
             return (
-              <article key={`${selectedDay.id}-${item.exerciseId}`} className="rounded-3xl border border-stone-100 p-3">
-                <div className="flex items-center gap-3">
-                  <span className="grid size-10 shrink-0 place-items-center rounded-2xl bg-stone-950 text-sm font-black text-white">
-                    {index + 1}
-                  </span>
+              <article key={`${selectedDay.id}-${item.exerciseId}`} className="py-4">
+                <div className="flex items-baseline gap-3">
+                  <span className="w-5 shrink-0 text-sm tabular-nums text-white/35">{index + 1}</span>
                   <div className="min-w-0 flex-1">
-                    <h4 className="truncate text-base font-black">{exercise?.nome}</h4>
-                    <p className="text-xs font-semibold text-stone-500">
+                    <h4 className="truncate text-[15px] font-medium">{exercise?.nome}</h4>
+                    <p className="text-xs text-white/45">
                       {exercise?.equipamento} · {exercise?.grupoMuscular}
                     </p>
                   </div>
                 </div>
-                <div className="mt-3 grid grid-cols-3 gap-2 text-center">
+                <div className="mt-3 grid grid-cols-3 gap-2 pl-8">
                   <MiniStat label="Series" value={String(item.sets)} />
                   <MiniStat label="Reps" value={item.reps} />
                   <MiniStat label="Pausa" value={item.rest} />
                 </div>
-                {item.note && <p className="mt-2 text-xs font-bold text-emerald-700">{item.note}</p>}
+                {item.note && <p className="mt-2 pl-8 text-xs text-accent">{item.note}</p>}
               </article>
             );
           })}
         </div>
       </section>
 
-      <section className="rounded-3xl border border-stone-200 bg-white p-4 shadow-sm">
-        <h3 className="text-lg font-black">Por que esse treino fecha</h3>
-        <div className="mt-3 space-y-2">
+      <section className="px-1">
+        <h3 className="text-sm font-medium text-white/80">Por que esse treino fecha</h3>
+        <ul className="mt-3 space-y-2 border-l border-white/10 pl-3">
           {savedPlan.notes.map((note) => (
-            <p key={note} className="text-sm font-semibold leading-relaxed text-stone-600">
+            <li key={note} className="text-sm leading-relaxed text-white/55">
               {note}
-            </p>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
     </section>
   );
@@ -1275,16 +1274,16 @@ function LibraryView({
   onFavoriteToggle: (exerciseId: number) => void;
 }) {
   return (
-    <section className="space-y-4">
+    <section className="space-y-5">
       <div>
-        <p className="text-sm font-bold text-stone-500">Biblioteca</p>
-        <h2 className="text-3xl font-black">Exercicios</h2>
+        <p className="text-sm text-white/45">Biblioteca</p>
+        <h2 className="text-2xl font-semibold tracking-tight">Exercicios</h2>
       </div>
 
-      <label className="flex items-center gap-3 rounded-3xl border border-stone-200 bg-white px-4 py-3 shadow-sm">
-        <Search size={20} className="text-stone-400" />
+      <label className="glass-field flex items-center gap-3 rounded-xl px-4 py-3">
+        <Search size={18} className="text-white/40" />
         <input
-          className="w-full bg-transparent text-base font-semibold outline-none placeholder:text-stone-400"
+          className="w-full bg-transparent text-[15px] outline-none placeholder:text-white/40"
           onChange={(event) => onQueryChange(event.target.value)}
           placeholder="Buscar exercicio"
           value={query}
@@ -1295,8 +1294,8 @@ function LibraryView({
         {groups.map((group) => (
           <button
             key={group}
-            className={`shrink-0 rounded-full px-4 py-2 text-sm font-bold transition ${
-              group === selectedGroup ? "bg-stone-950 text-white" : "bg-white text-stone-600"
+            className={`shrink-0 rounded-full border px-3.5 py-1.5 text-sm font-medium transition ${
+              group === selectedGroup ? "chip-active" : "border-white/[0.08] text-white/60 hover:border-white/20 hover:text-white"
             }`}
             onClick={() => onGroupChange(group)}
             type="button"
@@ -1306,24 +1305,19 @@ function LibraryView({
         ))}
       </div>
 
-      <div className="space-y-2">
+      <div className="divide-y divide-white/[0.07] border-y border-white/[0.07]">
         {exercises.map((exercise) => (
-          <article key={exercise.id} className="flex items-center gap-3 rounded-3xl bg-white p-3 shadow-sm">
-            <div className="grid size-14 shrink-0 place-items-center rounded-2xl bg-stone-100 text-stone-700">
-              <Dumbbell size={22} />
-            </div>
+          <article key={exercise.id} className="flex items-center gap-3 py-3">
             <div className="min-w-0 flex-1">
-              <h3 className="truncate text-base font-black">{exercise.nome}</h3>
-              <p className="text-xs font-semibold text-stone-500">
+              <h3 className="truncate text-[15px] font-medium">{exercise.nome}</h3>
+              <p className="text-xs text-white/45">
                 {exercise.grupoMuscular} · {exercise.equipamento}
               </p>
             </div>
             <button
               aria-label={`Favoritar ${exercise.nome}`}
-              className={`grid size-10 shrink-0 place-items-center rounded-full border transition ${
-                favoriteExerciseIds.includes(exercise.id)
-                  ? "border-emerald-200 bg-emerald-100 text-emerald-900"
-                  : "border-stone-200 bg-stone-50 text-stone-400"
+              className={`grid size-10 shrink-0 place-items-center rounded-full transition hover:bg-white/[0.06] ${
+                favoriteExerciseIds.includes(exercise.id) ? "text-accent" : "text-white/35 hover:text-white/70"
               }`}
               onClick={() => onFavoriteToggle(exercise.id)}
               type="button"
@@ -1339,8 +1333,8 @@ function LibraryView({
 
 function ControlBlock({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section className="rounded-3xl border border-stone-200 bg-white p-4 shadow-sm">
-      <h3 className="mb-3 text-sm font-black text-stone-700">{title}</h3>
+    <section className="border-t border-white/[0.07] pt-5">
+      <h3 className="mb-3 text-sm font-medium text-white/80">{title}</h3>
       {children}
     </section>
   );
@@ -1353,8 +1347,8 @@ function SegmentedGrid({ children }: { children: ReactNode }) {
 function ChoiceButton({ active, label, onClick }: { active: boolean; label: string; onClick: () => void }) {
   return (
     <button
-      className={`min-h-11 rounded-2xl border px-3 py-2 text-sm font-black transition ${
-        active ? "border-stone-950 bg-stone-950 text-white" : "border-stone-200 bg-stone-50 text-stone-600"
+      className={`min-h-11 rounded-xl border px-3 py-2 text-sm font-medium transition active:scale-[0.98] ${
+        active ? "chip-active" : "border-white/[0.08] text-white/65 hover:border-white/20 hover:text-white"
       }`}
       onClick={onClick}
       type="button"
@@ -1384,21 +1378,21 @@ function Stepper({
   };
 
   return (
-    <div className="rounded-2xl bg-stone-50 p-3">
-      <p className="text-xs font-bold uppercase text-stone-400">{label}</p>
+    <div className="rounded-xl border border-white/[0.08] p-3">
+      <p className="text-xs text-white/45">{label}</p>
       <div className="mt-2 flex items-center justify-between gap-2">
         <button
           aria-label={`Reduzir ${label}`}
-          className="grid size-9 place-items-center rounded-full bg-white text-lg font-black text-stone-700"
+          className="grid size-8 place-items-center rounded-full bg-white/[0.06] text-base text-white/75 transition hover:bg-white/10"
           onClick={() => change(-1)}
           type="button"
         >
           -
         </button>
-        <p className="text-xl font-black">{value}</p>
+        <p className="text-lg font-semibold tabular-nums">{value}</p>
         <button
           aria-label={`Aumentar ${label}`}
-          className="grid size-9 place-items-center rounded-full bg-stone-950 text-lg font-black text-white"
+          className="grid size-8 place-items-center rounded-full bg-white/[0.06] text-base text-white/75 transition hover:bg-white/10"
           onClick={() => change(1)}
           type="button"
         >
@@ -1420,20 +1414,20 @@ function FavoriteRow({
 }) {
   return (
     <button
-      className="flex w-full items-center gap-3 rounded-2xl bg-stone-50 p-3 text-left transition hover:bg-stone-100"
+      className="flex w-full items-center gap-3 py-3 text-left transition hover:opacity-90"
       onClick={onToggle}
       type="button"
     >
       <span
-        className={`grid size-9 shrink-0 place-items-center rounded-full ${
-          active ? "bg-emerald-100 text-emerald-900" : "bg-white text-stone-400"
+        className={`grid size-6 shrink-0 place-items-center rounded-md border ${
+          active ? "border-accent bg-accent text-on-accent" : "border-white/20 text-transparent"
         }`}
       >
-        <Check size={16} />
+        <Check size={14} strokeWidth={3} />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-sm font-black">{exercise.nome}</span>
-        <span className="block text-xs font-semibold text-stone-500">
+        <span className="block truncate text-sm font-medium">{exercise.nome}</span>
+        <span className="block text-xs text-white/45">
           {exercise.grupoMuscular} · {exercise.equipamento}
         </span>
       </span>
@@ -1461,44 +1455,47 @@ function ProgressView({
   const maxDaySets = Math.max(1, ...setsPerDay.map((day) => day.sets));
 
   return (
-    <section className="space-y-4">
+    <section className="space-y-5">
       <div className="flex items-end justify-between">
         <div>
-          <p className="text-sm font-bold text-stone-500">Evolucao</p>
-          <h2 className="text-3xl font-black">Progresso</h2>
+          <p className="text-sm text-white/45">Evolucao</p>
+          <h2 className="text-2xl font-semibold tracking-tight">Progresso</h2>
         </div>
       </div>
 
-      <section className="rounded-[28px] bg-white p-4 shadow-sm">
-        <div className="flex items-center justify-between">
+      <section className="glass-strong rounded-2xl p-5">
+        <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="text-sm font-bold text-stone-500">Resumo fisico</p>
-            <h3 className="text-2xl font-black">
+            <p className="text-xs font-medium text-accent">Resumo fisico</p>
+            <h3 className="mt-2 text-2xl font-semibold tabular-nums tracking-tight">
               {weight} · {height}
             </h3>
           </div>
-          <Badge tone="green">{weeklySets} series</Badge>
+          <p className="pt-0.5 text-right text-sm tabular-nums text-white/55">
+            <span className="block text-base font-semibold text-white">{weeklySets}</span>
+            series/semana
+          </p>
         </div>
-        <p className="mt-5 text-xs font-bold uppercase text-stone-400">Series por dia do plano</p>
+        <p className="mt-6 text-xs text-white/45">Series por dia do plano</p>
         {savedPlan.days.length ? (
           <div className="mt-2 flex items-end gap-2">
             {setsPerDay.map((day) => (
               <div key={day.id} className="flex flex-1 flex-col items-center gap-1">
-                <div className="flex h-32 w-full items-end rounded-full bg-stone-100 p-1">
-                  <div className="w-full rounded-full bg-stone-950" style={{ height: `${(day.sets / maxDaySets) * 100}%` }} />
+                <div className="flex h-28 w-2.5 items-end rounded-full bg-white/[0.06]">
+                  <div className="bar-fill w-full rounded-full" style={{ height: `${(day.sets / maxDaySets) * 100}%` }} />
                 </div>
-                <span className="text-xs font-black">{day.sets}</span>
-                <span className="text-[11px] font-bold text-stone-500">{day.label}</span>
+                <span className="mt-1 text-xs font-medium tabular-nums">{day.sets}</span>
+                <span className="text-[11px] text-white/45">{day.label}</span>
               </div>
             ))}
           </div>
         ) : (
-          <p className="mt-2 text-sm font-semibold text-stone-500">Monte um treino para ver a distribuicao da semana.</p>
+          <p className="mt-2 text-sm text-white/55">Monte um treino para ver a distribuicao da semana.</p>
         )}
       </section>
 
-      <section className="rounded-3xl border border-stone-200 bg-white p-4 shadow-sm">
-        <h3 className="text-lg font-black">Mapa muscular do treino</h3>
+      <section className="border-t border-white/[0.07] pt-5">
+        <h3 className="text-sm font-medium text-white/80">Mapa muscular do treino</h3>
         <div className="mt-4">
           <GroupBars groupSummary={savedPlan.coverage} />
         </div>
@@ -1535,39 +1532,43 @@ function AccountSection({
   }
 
   return (
-    <section className="rounded-3xl border border-stone-200 bg-white p-4 shadow-sm">
-      <h3 className="text-lg font-black">Conta</h3>
-      <p className="mt-1 truncate text-sm font-semibold text-stone-500">{email}</p>
-      <a className="mt-3 inline-block text-sm font-black text-emerald-700 underline" href="/privacidade" target="_blank">
+    <section className="border-t border-white/[0.07] pt-5">
+      <h3 className="text-sm font-medium text-white/80">Conta</h3>
+      <p className="mt-1 truncate text-sm text-white/55">{email}</p>
+      <a
+        className="mt-3 inline-block text-sm text-white/70 underline underline-offset-4 transition hover:text-white"
+        href="/privacidade"
+        target="_blank"
+      >
         Politica de Privacidade
       </a>
 
       {!confirming ? (
         <button
-          className="mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-red-50 px-3 text-sm font-black text-red-900"
+          className="mt-4 -ml-2 flex h-10 items-center gap-2 rounded-lg px-2 text-sm font-medium text-red-300/90 transition hover:bg-red-500/10"
           onClick={() => setConfirming(true)}
           type="button"
         >
-          <Trash2 size={17} />
+          <Trash2 size={16} />
           Excluir minha conta
         </button>
       ) : (
-        <form className="mt-4 space-y-3 rounded-2xl bg-red-50 p-3" onSubmit={handleDelete}>
-          <p className="text-sm font-bold leading-relaxed text-red-950">
+        <form className="mt-4 space-y-3 rounded-xl border border-red-400/20 bg-red-500/[0.06] p-4" onSubmit={handleDelete}>
+          <p className="text-sm font-medium leading-relaxed text-red-100">
             Isso apaga definitivamente sua conta, seus planos, seu historico e suas medidas. Nao tem volta.
           </p>
           <input
             autoComplete="current-password"
-            className="h-11 w-full rounded-xl border border-red-200 bg-white px-3 text-sm font-bold outline-none focus:border-red-400"
+            className="h-11 w-full rounded-xl border border-red-400/25 bg-white/[0.06] px-3 text-sm text-white outline-none placeholder:text-white/35 focus:border-red-300/60"
             onChange={(event) => setPassword(event.target.value)}
             placeholder="Confirme com sua senha"
             type="password"
             value={password}
           />
-          {error && <p className="text-sm font-bold text-red-900">{error}</p>}
+          {error && <p className="text-sm font-medium text-red-200">{error}</p>}
           <div className="grid grid-cols-2 gap-2">
             <button
-              className="h-11 rounded-xl bg-white text-sm font-black text-stone-700"
+              className="h-11 rounded-xl border border-white/10 text-sm font-medium text-white/80 transition hover:bg-white/[0.05]"
               disabled={deleting}
               onClick={() => {
                 setConfirming(false);
@@ -1579,7 +1580,7 @@ function AccountSection({
               Cancelar
             </button>
             <button
-              className="flex h-11 items-center justify-center gap-2 rounded-xl bg-red-700 text-sm font-black text-white disabled:opacity-60"
+              className="flex h-11 items-center justify-center gap-2 rounded-xl bg-red-500/85 text-sm font-medium text-white transition hover:bg-red-500 disabled:opacity-50"
               disabled={deleting || !password}
               type="submit"
             >
@@ -1599,15 +1600,15 @@ function GroupBars({ groupSummary }: { groupSummary: Record<string, number> }) {
 
   return (
     <div className="space-y-3">
-      {entries.length === 0 && <p className="text-sm font-semibold text-stone-500">Monte um treino para ver a cobertura.</p>}
+      {entries.length === 0 && <p className="text-sm text-white/55">Monte um treino para ver a cobertura.</p>}
       {entries.map(([group, amount]) => (
           <div key={group}>
-            <div className="mb-1 flex justify-between text-xs font-bold text-stone-500">
-              <span>{group}</span>
-              <span>{amount}</span>
+            <div className="mb-1.5 flex justify-between text-xs">
+              <span className="text-white/70">{group}</span>
+              <span className="tabular-nums text-white/45">{amount}</span>
             </div>
-            <div className="h-2 rounded-full bg-stone-100">
-              <div className="h-full rounded-full bg-stone-950" style={{ width: `${(amount / max) * 100}%` }} />
+            <div className="h-1.5 rounded-full bg-white/[0.06]">
+              <div className="bar-fill h-full rounded-full" style={{ width: `${(amount / max) * 100}%` }} />
             </div>
           </div>
         ))}
@@ -1617,30 +1618,37 @@ function GroupBars({ groupSummary }: { groupSummary: Record<string, number> }) {
 
 function MiniStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl bg-stone-50 px-2 py-3">
-      <p className="text-[11px] font-bold uppercase text-stone-400">{label}</p>
-      <p className="mt-1 text-sm font-black">{value}</p>
+    <div>
+      <p className="text-[11px] text-white/40">{label}</p>
+      <p className="mt-0.5 text-sm font-medium tabular-nums">{value}</p>
     </div>
   );
 }
 
 function BottomNavigation({ activeTab, onChange }: { activeTab: TabId; onChange: (tab: TabId) => void }) {
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-10 mx-auto max-w-[430px] border-t border-stone-200 bg-white/90 px-3 pb-4 pt-2 backdrop-blur md:bottom-6 md:rounded-b-[32px]">
-      <div className="grid grid-cols-5 gap-1">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            className={`flex h-14 flex-col items-center justify-center gap-1 rounded-2xl text-[11px] font-black transition ${
-              activeTab === tab.id ? "bg-stone-950 text-white" : "text-stone-500"
-            }`}
-            onClick={() => onChange(tab.id)}
-            type="button"
-          >
-            <tab.icon size={19} />
-            {tab.label}
-          </button>
-        ))}
+    <nav className="fixed inset-x-0 bottom-0 z-10 mx-auto max-w-[430px] px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+      <div className="glass-nav grid grid-cols-5 gap-1 rounded-full p-1.5">
+        {tabs.map((tab) => {
+          const active = activeTab === tab.id;
+
+          return (
+            <button
+              key={tab.id}
+              aria-current={active ? "page" : undefined}
+              className={`flex h-14 flex-col items-center justify-center gap-0.5 rounded-full text-[11px] font-medium transition ${
+                active
+                  ? "bg-white/[0.12] text-accent shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]"
+                  : "text-white/55 hover:text-white/85"
+              }`}
+              onClick={() => onChange(tab.id)}
+              type="button"
+            >
+              <tab.icon size={20} strokeWidth={active ? 2.2 : 1.8} />
+              {tab.label}
+            </button>
+          );
+        })}
       </div>
     </nav>
   );
