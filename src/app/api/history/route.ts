@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
       }
     },
     orderBy: { performedAt: "desc" },
-    take: 50
+    take: 100
   });
 
   return json({ history });
@@ -60,6 +60,7 @@ export async function POST(request: NextRequest) {
       data: {
         userId: user.id,
         workoutId: payload.workoutId,
+        title: payload.title,
         performedAt: payload.performedAt ? new Date(payload.performedAt) : undefined,
         durationMin: payload.durationMin,
         notes: payload.notes,

@@ -15,6 +15,8 @@ import {
   LockKeyhole,
   LogOut,
   Mail,
+  Pencil,
+  Play,
   Plus,
   Search,
   ChevronDown,
@@ -29,6 +31,7 @@ import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } 
 import { apiFetch, type AccountType, type AppNotification, type AuthUser } from "@/lib/api-client";
 import { brazilianStates } from "@/lib/professional";
 import { exerciseMap, getTodayWorkout, summarizeGroups } from "@/lib/exercise-view";
+import type { ApiBodyMetric, ApiWorkoutLog } from "@/lib/history";
 import { toPlanDays, toWorkoutDay, type ApiWorkout } from "@/lib/plan-mapping";
 import {
   buildPlanNotes,
@@ -41,12 +44,17 @@ import {
 } from "@/lib/workout-generator";
 import type { Exercise, WorkoutDay } from "@/types/fitness";
 import { AdminRequestsView } from "@/components/AdminRequestsView";
+import { ExerciseSheet } from "@/components/ExerciseSheets";
 import { NotificationsView } from "@/components/NotificationsView";
 import { Onboarding, type OnboardingDestination } from "@/components/Onboarding";
 import { ProfessionalRequestForm, ProfessionalStatusCard } from "@/components/ProfessionalStatus";
+import { BodySection, HistoryList, LoadProgress, TrainingSummary } from "@/components/ProgressSections";
 import { ProfessionalReviewsView } from "@/components/ProfessionalReviewsView";
+import { WorkoutEditor, type EditorPayload } from "@/components/WorkoutEditor";
+import { readActiveSession, WorkoutSession, type SessionPayload } from "@/components/WorkoutSession";
 import { Badge } from "@/components/ui/Badge";
 import { BrandMark } from "@/components/ui/BrandMark";
+import { ConfirmPanel } from "@/components/ui/ConfirmPanel";
 import { IconButton } from "@/components/ui/IconButton";
 
 type CoreUpAppProps = {
@@ -108,7 +116,7 @@ const tabs = [
 ] as const;
 
 type NavTab = (typeof tabs)[number];
-type TabId = NavTab["id"] | "notifications";
+type TabId = NavTab["id"] | "notifications" | "session";
 
 function tabsFor(user: AuthUser) {
   return tabs.filter((tab) => tab.id !== "admin" || user.accountType === "ADMIN");
@@ -131,6 +139,10 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
   const [preferences, setPreferences] = useState<GeneratorPreferences>(defaultPreferences);
   const [generatedPlan, setGeneratedPlan] = useState(() => generateWorkoutPlan(exercises, defaultPreferences));
   const [savedDays, setSavedDays] = useState<WorkoutDay[]>([]);
+  const [logs, setLogs] = useState<ApiWorkoutLog[]>([]);
+  const [metrics, setMetrics] = useState<ApiBodyMetric[]>([]);
+  const [sessionDayId, setSessionDayId] = useState<string | null>(null);
+  const [exerciseSheetId, setExerciseSheetId] = useState<number | null>(null);
   const [planLoaded, setPlanLoaded] = useState(false);
   const [planSaving, setPlanSaving] = useState(false);
   const [planError, setPlanError] = useState("");
@@ -225,6 +237,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
         setActiveDayId(days[0]?.id ?? "");
         setPreferences(nextPreferences);
         setGeneratedPlan(generateWorkoutPlan(exercises, nextPreferences));
+        void loadActivity(authToken!);
       })
       .catch(() => {
         if (!cancelled) {
@@ -383,6 +396,112 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
     setActiveDayId(nextDays[0]?.id ?? "");
   }
 
+  async function loadActivity(token: string) {
+    const [historyResponse, metricsResponse] = await Promise.all([
+      apiFetch(token, "/api/history").catch(() => null),
+      apiFetch(token, "/api/body-metrics").catch(() => null)
+    ]);
+
+    if (historyResponse?.ok) {
+      setLogs(((await historyResponse.json()) as { history: ApiWorkoutLog[] }).history);
+    }
+
+    if (metricsResponse?.ok) {
+      setMetrics(((await metricsResponse.json()) as { metrics: ApiBodyMetric[] }).metrics);
+    }
+  }
+
+  async function saveSession(payload: SessionPayload) {
+    if (!authToken) {
+      return null;
+    }
+
+    const response = await apiFetch(authToken, "/api/history", { method: "POST", body: JSON.stringify(payload) }).catch(() => null);
+
+    if (!response?.ok) {
+      return null;
+    }
+
+    const { log } = (await response.json()) as { log: ApiWorkoutLog };
+    setLogs((current) => [log, ...current]);
+    return log;
+  }
+
+  async function deleteLog(logId: string) {
+    if (!authToken) {
+      return false;
+    }
+
+    const response = await apiFetch(authToken, `/api/history/${logId}`, { method: "DELETE" }).catch(() => null);
+
+    if (!response?.ok && response?.status !== 404) {
+      setPlanError("Nao foi possivel apagar o registro.");
+      return false;
+    }
+
+    setLogs((current) => current.filter((log) => log.id !== logId));
+    return true;
+  }
+
+  async function addMetric(payload: { weightKg: number; bodyFat?: number }) {
+    if (!authToken || !user) {
+      return "Sessao expirada. Entre novamente.";
+    }
+
+    const response = await apiFetch(authToken, "/api/body-metrics", { method: "POST", body: JSON.stringify(payload) }).catch(() => null);
+
+    if (!response?.ok) {
+      return "Nao foi possivel salvar a medida.";
+    }
+
+    const { metric } = (await response.json()) as { metric: ApiBodyMetric };
+    setMetrics((current) => [metric, ...current]);
+    setUser({ ...user, weightKg: metric.weightKg ?? user.weightKg });
+    return null;
+  }
+
+  async function saveDayEdit(dayId: string, exercisesPayload: EditorPayload) {
+    if (!authToken) {
+      return "Sessao expirada. Entre novamente.";
+    }
+
+    const response = await apiFetch(authToken, `/api/workouts/${dayId}`, {
+      method: "PUT",
+      body: JSON.stringify({ exercises: exercisesPayload })
+    }).catch(() => null);
+    const data = response ? ((await response.json().catch(() => ({}))) as { workout?: ApiWorkout; error?: string; details?: Array<{ message: string }> }) : {};
+
+    if (!response?.ok || !data.workout) {
+      return data.details?.[0]?.message ?? data.error ?? "Nao foi possivel salvar o dia.";
+    }
+
+    const updated = toWorkoutDay(data.workout);
+    setSavedDays((current) => current.map((day) => (day.id === dayId ? updated : day)));
+    return null;
+  }
+
+  async function updateProfile(payload: { name: string; heightCm: number | null }) {
+    if (!authToken) {
+      return "Sessao expirada. Entre novamente.";
+    }
+
+    const response = await apiFetch(authToken, "/api/me", { method: "PATCH", body: JSON.stringify(payload) }).catch(() => null);
+    const data = response ? ((await response.json().catch(() => ({}))) as { user?: AuthUser; error?: string; details?: Array<{ message: string }> }) : {};
+
+    if (!response?.ok || !data.user) {
+      return data.details?.[0]?.message ?? data.error ?? "Nao foi possivel salvar o perfil.";
+    }
+
+    setUser(data.user);
+    return null;
+  }
+
+  function startSession(dayId: string) {
+    setSessionDayId(dayId);
+    changeTab("session");
+    window.scrollTo({ top: 0 });
+  }
+
   async function clearPlan() {
     if (!authToken) {
       return false;
@@ -538,6 +657,10 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
     setJustRequested(false);
     setReplayOnboarding(false);
     onboardingDismissed.current = false;
+    setLogs([]);
+    setMetrics([]);
+    setSessionDayId(null);
+    setExerciseSheetId(null);
   }
 
   async function reloadNotifications() {
@@ -616,6 +739,10 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
     setActiveTab(tab);
   }
 
+  const storedSession = user ? readActiveSession(user.id) : null;
+  const activeSessionDay = storedSession ? savedDays.find((day) => day.id === storedSession.dayId) ?? null : null;
+  const sessionDay = savedDays.find((day) => day.id === sessionDayId) ?? null;
+
   if (checkingSession || (authToken && user && !planLoaded)) {
     return <LoadingScreen />;
   }
@@ -658,6 +785,40 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
               <Alert tone="error">{planError}</Alert>
             </div>
           )}
+          {activeTab !== "session" && activeSessionDay && (
+            <button
+              className="mb-4 flex w-full items-center justify-between gap-3 rounded-xl border border-accent/35 bg-accent/[0.08] px-4 py-3 text-left transition hover:bg-accent/[0.12]"
+              onClick={() => startSession(activeSessionDay.id)}
+              type="button"
+            >
+              <span className="min-w-0">
+                <span className="block text-xs font-medium text-accent">Treino em andamento</span>
+                <span className="block truncate text-sm font-medium">{activeSessionDay.focus}</span>
+              </span>
+              <span className="flex shrink-0 items-center gap-1 text-sm font-medium text-accent">
+                Continuar
+                <ChevronRight size={16} />
+              </span>
+            </button>
+          )}
+          {activeTab === "session" && sessionDay && (
+            <WorkoutSession
+              byId={byId}
+              day={sessionDay}
+              logs={logs}
+              userId={user.id}
+              onExit={() => {
+                setSessionDayId(null);
+                changeTab("home");
+              }}
+              onOpenExercise={setExerciseSheetId}
+              onOpenProgress={() => {
+                setSessionDayId(null);
+                changeTab("progress");
+              }}
+              onSave={saveSession}
+            />
+          )}
           {activeTab === "home" && user.professional && user.professional.status !== "APPROVED" && (
             <div className="mb-5">
               <ProfessionalStatusCard justSubmitted={justRequested} professional={user.professional} />
@@ -671,6 +832,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
               savedPlan={savedPlan}
               onOpenPlan={() => changeTab("plan")}
               onOpenBuilder={() => changeTab("builder")}
+              onStartSession={startSession}
             />
           )}
           {activeTab === "builder" && (
@@ -697,8 +859,12 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
               savedPlan={savedPlan}
               onSelectDay={setActiveDayId}
               onOpenBuilder={() => changeTab("builder")}
+              exercises={exercises}
               onClearPlan={clearPlan}
+              onOpenExercise={setExerciseSheetId}
               onRemoveDay={removeWorkoutDay}
+              onSaveDay={saveDayEdit}
+              onStartSession={startSession}
             />
           )}
           {activeTab === "library" && (
@@ -711,15 +877,22 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
               onQueryChange={setQuery}
               onGroupChange={setSelectedGroup}
               onFavoriteToggle={toggleFavorite}
+              onOpenExercise={setExerciseSheetId}
             />
           )}
           {activeTab === "reviews" && <ProfessionalReviewsView authToken={authToken} exercises={exercises} user={user} />}
           {activeTab === "progress" && (
             <ProgressView
               authToken={authToken}
+              byId={byId}
+              logs={logs}
+              metrics={metrics}
               savedPlan={savedPlan}
               user={user}
+              onAddMetric={addMetric}
               onDeleteAccount={deleteAccount}
+              onDeleteLog={deleteLog}
+              onUpdateProfile={updateProfile}
               onReplayOnboarding={() => setReplayOnboarding(true)}
               onUserChange={setUser}
             />
@@ -743,6 +916,10 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
         </main>
 
         <BottomNavigation activeTab={activeTab} tabs={tabsFor(user)} onChange={changeTab} />
+
+        {exerciseSheetId !== null && byId.get(exerciseSheetId) && (
+          <ExerciseSheet exercise={byId.get(exerciseSheetId)!} logs={logs} onClose={() => setExerciseSheetId(null)} />
+        )}
 
         {(replayOnboarding || (!user.onboardingCompleted && !onboardingDismissed.current)) && (
           <Onboarding
@@ -1210,9 +1387,10 @@ type HomeViewProps = {
   savedPlan: GeneratedPlan;
   onOpenPlan: () => void;
   onOpenBuilder: () => void;
+  onStartSession: (dayId: string) => void;
 };
 
-function HomeView({ selectedWorkout, byId, groupSummary, savedPlan, onOpenPlan, onOpenBuilder }: HomeViewProps) {
+function HomeView({ selectedWorkout, byId, groupSummary, savedPlan, onOpenPlan, onOpenBuilder, onStartSession }: HomeViewProps) {
   const totalGroups = Object.keys(groupSummary).length;
   const weeklySets = Object.values(savedPlan.coverage).reduce((total, amount) => total + amount, 0);
   const weeklyMinutes = savedPlan.days.reduce((total, day) => total + (Number.parseInt(day.duration, 10) || 0), 0);
@@ -1236,6 +1414,7 @@ function HomeView({ selectedWorkout, byId, groupSummary, savedPlan, onOpenPlan, 
           notes={savedPlan.notes}
           weeklySets={weeklySets}
           onOpenPlan={onOpenPlan}
+          onStart={() => onStartSession(selectedWorkout.id)}
         />
       ) : (
         <EmptyPlan onOpenBuilder={onOpenBuilder} />
@@ -1290,9 +1469,10 @@ type TodayWorkoutProps = {
   notes: string[];
   weeklySets: number;
   onOpenPlan: () => void;
+  onStart: () => void;
 };
 
-function TodayWorkout({ workout, byId, notes, weeklySets, onOpenPlan }: TodayWorkoutProps) {
+function TodayWorkout({ workout, byId, notes, weeklySets, onOpenPlan, onStart }: TodayWorkoutProps) {
   return (
     <section className="glass-strong rounded-2xl p-5">
       <div className="flex items-center justify-between gap-3">
@@ -1324,7 +1504,15 @@ function TodayWorkout({ workout, byId, notes, weeklySets, onOpenPlan }: TodayWor
       <p className="mt-1 text-xs leading-relaxed text-white/45">{notes[0]}</p>
 
       <button
-        className="mt-4 flex h-11 w-full items-center justify-center gap-1.5 rounded-xl border border-white/10 text-sm font-medium text-white/85 transition hover:bg-white/[0.05]"
+        className="btn-primary mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-xl text-[15px] font-semibold"
+        onClick={onStart}
+        type="button"
+      >
+        <Play size={16} fill="currentColor" />
+        Comecar treino
+      </button>
+      <button
+        className="mt-2 flex h-10 w-full items-center justify-center gap-1.5 rounded-xl text-sm font-medium text-white/70 transition hover:bg-white/[0.04] hover:text-white"
         onClick={onOpenPlan}
         type="button"
       >
@@ -1871,6 +2059,10 @@ type PlanViewProps = {
   onOpenBuilder: () => void;
   onRemoveDay: (dayId: string) => Promise<void>;
   onClearPlan: () => Promise<boolean>;
+  exercises: Exercise[];
+  onOpenExercise: (exerciseId: number) => void;
+  onSaveDay: (dayId: string, payload: EditorPayload) => Promise<string | null>;
+  onStartSession: (dayId: string) => void;
 };
 
 function PlanView({
@@ -1882,8 +2074,13 @@ function PlanView({
   onSelectDay,
   onOpenBuilder,
   onRemoveDay,
-  onClearPlan
+  onClearPlan,
+  exercises,
+  onOpenExercise,
+  onSaveDay,
+  onStartSession
 }: PlanViewProps) {
+  const [editingDayId, setEditingDayId] = useState<string | null>(null);
   const [confirmingClear, setConfirmingClear] = useState(false);
   const [clearing, setClearing] = useState(false);
   const [confirmRemoveId, setConfirmRemoveId] = useState<string | null>(null);
@@ -1966,75 +2163,107 @@ function PlanView({
         ))}
       </div>
 
-      <section className="glass-strong rounded-2xl p-5">
-        <div className="flex items-start justify-between gap-4">
-          <div className="min-w-0">
-            <h3 className="text-xl font-semibold leading-tight tracking-tight">{selectedDay.focus}</h3>
-            <p className="mt-1 text-sm text-white/55">
-              {selectedDay.duration} · {selectedDay.exercises.length} exercicios
-            </p>
+      {editingDayId === selectedDay.id ? (
+        <WorkoutEditor
+          byId={byId}
+          day={selectedDay}
+          exercises={exercises}
+          onCancel={() => setEditingDayId(null)}
+          onSave={async (payload) => {
+            const message = await onSaveDay(selectedDay.id, payload);
+
+            if (!message) {
+              setEditingDayId(null);
+            }
+
+            return message;
+          }}
+        />
+      ) : (
+        <section className="glass-strong rounded-2xl p-5">
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <h3 className="text-xl font-semibold leading-tight tracking-tight">{selectedDay.focus}</h3>
+              <p className="mt-1 text-sm text-white/55">
+                {selectedDay.duration} · {selectedDay.exercises.length} exercicios
+              </p>
+            </div>
+            <Badge tone={selectedDay.intensity === "Forte" ? "green" : "muted"}>{selectedDay.intensity}</Badge>
           </div>
-          <Badge tone={selectedDay.intensity === "Forte" ? "green" : "muted"}>{selectedDay.intensity}</Badge>
-        </div>
-        <div className="mt-4 grid grid-cols-2 gap-2">
-          <button
-            className="flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-white/10 px-3 text-sm font-medium text-white/85 transition hover:bg-white/[0.05]"
-            onClick={onOpenBuilder}
-            type="button"
-          >
-            <Plus size={16} />
-            Criar novo
-          </button>
-          <button
-            className="flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-xl px-3 text-sm font-medium text-red-300/90 transition hover:bg-red-500/10"
-            aria-label="Remover dia"
-            onClick={() => setConfirmRemoveId(selectedDay.id)}
-            title="Remover dia"
-            type="button"
-          >
-            <Trash2 size={16} />
-          </button>
-        </div>
-
-        {confirmRemoveId === selectedDay.id && (
-          <div className="mt-4">
-            <ConfirmPanel
-              busy={removing}
-              confirmLabel="Remover dia"
-              description="Esse dia sai da sua semana. Os outros dias do treino continuam iguais."
-              title={"Remover dia de treino"}
-              onCancel={() => setConfirmRemoveId(null)}
-              onConfirm={() => void handleRemoveDay(selectedDay.id)}
-            />
+          <div className="mt-4 grid grid-cols-2 gap-2">
+            <button
+              className="btn-primary col-span-2 flex h-11 items-center justify-center gap-2 rounded-xl text-[15px] font-semibold"
+              onClick={() => onStartSession(selectedDay.id)}
+              type="button"
+            >
+              <Play size={16} fill="currentColor" />
+              Comecar treino
+            </button>
+            <button
+              className="flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-white/10 px-3 text-sm font-medium text-white/85 transition hover:bg-white/[0.05]"
+              onClick={() => setEditingDayId(selectedDay.id)}
+              type="button"
+            >
+              <Pencil size={16} />
+              Editar dia
+            </button>
+            <button
+              className="flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-xl px-3 text-sm font-medium text-red-300/90 transition hover:bg-red-500/10"
+              aria-label="Remover dia"
+              onClick={() => setConfirmRemoveId(selectedDay.id)}
+              title="Remover dia"
+              type="button"
+            >
+              <Trash2 size={16} />
+            </button>
           </div>
-        )}
 
-        <div className="mt-5 divide-y divide-white/[0.07] border-t border-white/[0.07]">
-          {selectedDay.exercises.map((item, index) => {
-            const exercise = byId.get(item.exerciseId);
+          {confirmRemoveId === selectedDay.id && (
+            <div className="mt-4">
+              <ConfirmPanel
+                busy={removing}
+                confirmLabel="Remover dia"
+                description="Esse dia sai da sua semana. Os outros dias do treino continuam iguais."
+                title={"Remover dia de treino"}
+                onCancel={() => setConfirmRemoveId(null)}
+                onConfirm={() => void handleRemoveDay(selectedDay.id)}
+              />
+            </div>
+          )}
 
-            return (
-              <article key={`${selectedDay.id}-${item.exerciseId}`} className="py-4">
-                <div className="flex items-baseline gap-3">
-                  <span className="w-5 shrink-0 text-sm tabular-nums text-white/35">{index + 1}</span>
-                  <div className="min-w-0 flex-1">
-                    <h4 className="truncate text-[15px] font-medium">{exercise?.nome}</h4>
-                    <p className="text-xs text-white/45">
-                      {exercise?.equipamento} · {exercise?.grupoMuscular}
-                    </p>
+          <div className="mt-5 divide-y divide-white/[0.07] border-t border-white/[0.07]">
+            {selectedDay.exercises.map((item, index) => {
+              const exercise = byId.get(item.exerciseId);
+
+              return (
+                <article key={`${selectedDay.id}-${item.exerciseId}`} className="py-4">
+                  <div className="flex items-baseline gap-3">
+                    <span className="w-5 shrink-0 text-sm tabular-nums text-white/35">{index + 1}</span>
+                    <div className="min-w-0 flex-1">
+                      <button
+                        className="block max-w-full truncate text-left text-[15px] font-medium underline-offset-4 hover:underline"
+                        onClick={() => onOpenExercise(item.exerciseId)}
+                        type="button"
+                      >
+                        {exercise?.nome}
+                      </button>
+                      <p className="text-xs text-white/45">
+                        {exercise?.equipamento} · {exercise?.grupoMuscular}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div className="mt-3 grid grid-cols-3 gap-2 pl-8">
-                  <MiniStat label="Series" value={String(item.sets)} />
-                  <MiniStat label="Reps" value={item.reps} />
-                  <MiniStat label="Pausa" value={item.rest} />
-                </div>
-                {item.note && <p className="mt-2 pl-8 text-xs text-accent">{item.note}</p>}
-              </article>
-            );
-          })}
-        </div>
-      </section>
+                  <div className="mt-3 grid grid-cols-3 gap-2 pl-8">
+                    <MiniStat label="Series" value={String(item.sets)} />
+                    <MiniStat label="Reps" value={item.reps} />
+                    <MiniStat label="Pausa" value={item.rest} />
+                  </div>
+                  {item.note && <p className="mt-2 pl-8 text-xs text-accent">{item.note}</p>}
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       <section className="px-1">
         <h3 className="text-sm font-medium text-white/80">Por que esse treino fecha</h3>
@@ -2058,7 +2287,8 @@ function LibraryView({
   favoriteExerciseIds,
   onQueryChange,
   onGroupChange,
-  onFavoriteToggle
+  onFavoriteToggle,
+  onOpenExercise
 }: {
   exercises: Exercise[];
   groups: string[];
@@ -2068,6 +2298,7 @@ function LibraryView({
   onQueryChange: (query: string) => void;
   onGroupChange: (group: string) => void;
   onFavoriteToggle: (exerciseId: number) => void;
+  onOpenExercise: (exerciseId: number) => void;
 }) {
   return (
     <section className="space-y-5">
@@ -2115,12 +2346,12 @@ function LibraryView({
       <div className="divide-y divide-white/[0.07] border-y border-white/[0.07]">
         {exercises.map((exercise) => (
           <article key={exercise.id} className="flex items-center gap-3 py-3">
-            <div className="min-w-0 flex-1">
-              <h3 className="truncate text-[15px] font-medium">{exercise.nome}</h3>
-              <p className="text-xs text-white/45">
+            <button className="min-w-0 flex-1 text-left" onClick={() => onOpenExercise(exercise.id)} type="button">
+              <span className="block truncate text-[15px] font-medium">{exercise.nome}</span>
+              <span className="block text-xs text-white/45">
                 {exercise.grupoMuscular} · {exercise.equipamento}
-              </p>
-            </div>
+              </span>
+            </button>
             <button
               aria-label={`Favoritar ${exercise.nome}`}
               className={`grid size-10 shrink-0 place-items-center rounded-full transition hover:bg-white/[0.06] ${
@@ -2135,48 +2366,6 @@ function LibraryView({
         ))}
       </div>
     </section>
-  );
-}
-
-function ConfirmPanel({
-  title,
-  description,
-  confirmLabel,
-  busy,
-  onCancel,
-  onConfirm
-}: {
-  title: string;
-  description: string;
-  confirmLabel: string;
-  busy: boolean;
-  onCancel: () => void;
-  onConfirm: () => void;
-}) {
-  return (
-    <div aria-label={title} className="space-y-3 rounded-xl border border-red-400/20 bg-red-500/[0.06] p-4" role="alertdialog">
-      <p className="text-sm font-medium text-red-100">{title}</p>
-      <p className="text-xs leading-relaxed text-white/55">{description}</p>
-      <div className="grid grid-cols-2 gap-2">
-        <button
-          className="h-11 rounded-xl border border-white/10 text-sm font-medium text-white/80 transition hover:bg-white/[0.05]"
-          disabled={busy}
-          onClick={onCancel}
-          type="button"
-        >
-          Cancelar
-        </button>
-        <button
-          className="flex h-11 items-center justify-center gap-2 rounded-xl bg-red-500/85 text-sm font-medium text-white transition hover:bg-red-500 disabled:opacity-50"
-          disabled={busy}
-          onClick={onConfirm}
-          type="button"
-        >
-          {busy && <Loader2 className="animate-spin" size={16} />}
-          {confirmLabel}
-        </button>
-      </div>
-    </div>
   );
 }
 
@@ -2214,22 +2403,32 @@ function FavoriteRow({
 
 function ProgressView({
   authToken,
+  byId,
+  logs,
+  metrics,
   savedPlan,
   user,
+  onAddMetric,
   onDeleteAccount,
+  onDeleteLog,
   onReplayOnboarding,
+  onUpdateProfile,
   onUserChange
 }: {
   authToken: string;
+  byId: Map<number, Exercise>;
+  logs: ApiWorkoutLog[];
+  metrics: ApiBodyMetric[];
   savedPlan: GeneratedPlan;
   user: AuthUser;
+  onAddMetric: (payload: { weightKg: number; bodyFat?: number }) => Promise<string | null>;
   onDeleteAccount: (password: string) => Promise<string | null>;
+  onDeleteLog: (logId: string) => Promise<boolean>;
   onReplayOnboarding: () => void;
+  onUpdateProfile: (payload: { name: string; heightCm: number | null }) => Promise<string | null>;
   onUserChange: (user: AuthUser) => void;
 }) {
   const weeklySets = Object.values(savedPlan.coverage).reduce((total, amount) => total + amount, 0);
-  const weight = user.weightKg ? `${user.weightKg} kg` : "-- kg";
-  const height = user.heightCm ? `${(user.heightCm / 100).toFixed(2).replace(".", ",")} m` : "-- m";
   const setsPerDay = savedPlan.days.map((day) => ({
     id: day.id,
     label: day.label,
@@ -2239,49 +2438,41 @@ function ProgressView({
 
   return (
     <section className="space-y-5">
-      <div className="flex items-end justify-between">
-        <div>
-          <p className="text-sm text-white/45">Evolucao</p>
-          <h2 className="text-2xl font-semibold tracking-tight">Progresso</h2>
-        </div>
+      <div>
+        <p className="text-sm text-white/45">Evolucao</p>
+        <h2 className="text-2xl font-semibold tracking-tight">Progresso</h2>
       </div>
 
-      <section className="glass-strong rounded-2xl p-5">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <p className="text-xs font-medium text-accent">Resumo fisico</p>
-            <h3 className="mt-2 text-2xl font-semibold tabular-nums tracking-tight">
-              {weight} · {height}
-            </h3>
-          </div>
-          <p className="pt-0.5 text-right text-sm tabular-nums text-white/55">
-            <span className="block text-base font-semibold text-white">{weeklySets}</span>
-            series/semana
-          </p>
+      <TrainingSummary logs={logs} />
+      <LoadProgress byId={byId} logs={logs} />
+      <BodySection currentWeight={user.weightKg} heightCm={user.heightCm} metrics={metrics} onAdd={onAddMetric} />
+      <HistoryList byId={byId} logs={logs} onDelete={onDeleteLog} />
+
+      <section className="border-t border-white/[0.07] pt-5">
+        <div className="flex items-baseline justify-between">
+          <h3 className="text-sm font-medium text-white/80">Seu plano</h3>
+          <span className="text-xs tabular-nums text-white/45">{weeklySets} series por semana</span>
         </div>
-        <p className="mt-6 text-xs text-white/45">Series por dia do plano</p>
         {savedPlan.days.length ? (
-          <div className="mt-2 flex items-end gap-2">
-            {setsPerDay.map((day) => (
-              <div key={day.id} className="flex flex-1 flex-col items-center gap-1">
-                <div className="flex h-28 w-2.5 items-end rounded-full bg-white/[0.06]">
-                  <div className="bar-fill w-full rounded-full" style={{ height: `${(day.sets / maxDaySets) * 100}%` }} />
+          <>
+            <p className="mt-3 text-xs text-white/45">Series por dia</p>
+            <div className="mt-2 flex items-end gap-2">
+              {setsPerDay.map((day) => (
+                <div key={day.id} className="flex flex-1 flex-col items-center gap-1">
+                  <div className="flex h-24 w-2.5 items-end rounded-full bg-white/[0.06]">
+                    <div className="bar-fill w-full rounded-full" style={{ height: `${(day.sets / maxDaySets) * 100}%` }} />
+                  </div>
+                  <span className="mt-1 text-xs font-medium tabular-nums">{day.sets}</span>
+                  <span className="text-[11px] text-white/45">{day.label}</span>
                 </div>
-                <span className="mt-1 text-xs font-medium tabular-nums">{day.sets}</span>
-                <span className="text-[11px] text-white/45">{day.label}</span>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+            <p className="mb-3 mt-5 text-xs text-white/45">Mapa muscular</p>
+            <GroupBars groupSummary={savedPlan.coverage} />
+          </>
         ) : (
           <p className="mt-2 text-sm text-white/55">Monte um treino para ver a distribuicao da semana.</p>
         )}
-      </section>
-
-      <section className="border-t border-white/[0.07] pt-5">
-        <h3 className="text-sm font-medium text-white/80">Mapa muscular do treino</h3>
-        <div className="mt-4">
-          <GroupBars groupSummary={savedPlan.coverage} />
-        </div>
       </section>
 
       <AccountSection
@@ -2289,9 +2480,96 @@ function ProgressView({
         user={user}
         onDeleteAccount={onDeleteAccount}
         onReplayOnboarding={onReplayOnboarding}
+        onUpdateProfile={onUpdateProfile}
         onUserChange={onUserChange}
       />
     </section>
+  );
+}
+
+function ProfileEditor({
+  user,
+  onCancel,
+  onSave
+}: {
+  user: AuthUser;
+  onCancel: () => void;
+  onSave: (payload: { name: string; heightCm: number | null }) => Promise<string | null>;
+}) {
+  const [name, setName] = useState(user.name);
+  const [height, setHeight] = useState(user.heightCm ? String(user.heightCm) : "");
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError("");
+    const heightCm = height.trim() ? Number(height.replace(",", ".")) : null;
+
+    if (name.trim().length < 2) {
+      setError("Informe seu nome.");
+      return;
+    }
+
+    if (heightCm !== null && (!Number.isFinite(heightCm) || heightCm < 100 || heightCm > 250)) {
+      setError("Informe a altura em centimetros, entre 100 e 250.");
+      return;
+    }
+
+    setSaving(true);
+    const message = await onSave({ name: name.trim(), heightCm });
+    setSaving(false);
+
+    if (message) {
+      setError(message);
+      return;
+    }
+
+    onCancel();
+  }
+
+  return (
+    <form className="mt-3 space-y-3 rounded-xl border border-white/[0.08] p-4" onSubmit={submit}>
+      <label className="block">
+        <span className="mb-1 block text-xs text-white/55">Nome</span>
+        <input
+          className="glass-field h-10 w-full rounded-lg px-3 text-[15px] text-white outline-none"
+          maxLength={120}
+          onChange={(event) => setName(event.target.value)}
+          value={name}
+        />
+      </label>
+      <label className="block">
+        <span className="mb-1 block text-xs text-white/55">Altura (cm)</span>
+        <input
+          className="glass-field h-10 w-full rounded-lg px-3 text-[15px] tabular-nums text-white outline-none placeholder:text-white/30"
+          inputMode="numeric"
+          onChange={(event) => setHeight(event.target.value.replace(/[^\d.,]/g, "").slice(0, 5))}
+          placeholder="Ex.: 175"
+          value={height}
+        />
+      </label>
+      <p className="text-xs text-white/45">O peso e atualizado em Corpo, ao registrar uma medida.</p>
+      {error && (
+        <p className="text-sm text-red-300" role="alert">
+          {error}
+        </p>
+      )}
+      <div className="grid grid-cols-2 gap-2">
+        <button
+          className="h-10 rounded-xl border border-white/10 text-sm font-medium text-white/80 transition hover:bg-white/[0.05]"
+          disabled={saving}
+          onClick={onCancel}
+          type="button"
+        >
+          Cancelar
+        </button>
+        <button className="btn-primary flex h-10 items-center justify-center gap-2 rounded-xl text-sm font-semibold" disabled={saving} type="submit">
+          {saving && <Loader2 className="animate-spin" size={16} />}
+          Salvar
+        </button>
+      </div>
+    </form>
   );
 }
 
@@ -2362,15 +2640,18 @@ function AccountSection({
   user,
   onDeleteAccount,
   onReplayOnboarding,
+  onUpdateProfile,
   onUserChange
 }: {
   authToken: string;
   user: AuthUser;
   onDeleteAccount: (password: string) => Promise<string | null>;
   onReplayOnboarding: () => void;
+  onUpdateProfile: (payload: { name: string; heightCm: number | null }) => Promise<string | null>;
   onUserChange: (user: AuthUser) => void;
 }) {
   const email = user.email;
+  const [editingProfile, setEditingProfile] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -2391,7 +2672,20 @@ function AccountSection({
   return (
     <section className="border-t border-white/[0.07] pt-5">
       <h3 className="text-sm font-medium text-white/80">Conta</h3>
-      <p className="mt-1 truncate text-sm text-white/55">{email}</p>
+      <p className="mt-1 truncate text-sm text-white/55">
+        {user.name} · {email}
+      </p>
+      {editingProfile ? (
+        <ProfileEditor user={user} onCancel={() => setEditingProfile(false)} onSave={onUpdateProfile} />
+      ) : (
+        <button
+          className="mt-2 block text-sm text-white/70 underline underline-offset-4 transition hover:text-white"
+          onClick={() => setEditingProfile(true)}
+          type="button"
+        >
+          Editar perfil
+        </button>
+      )}
       <ProfessionalSection authToken={authToken} user={user} onUserChange={onUserChange} />
       <a
         className="mt-4 block text-sm text-white/70 underline underline-offset-4 transition hover:text-white"

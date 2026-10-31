@@ -3,9 +3,9 @@ import { getCurrentUser } from "@/lib/auth";
 import { badRequest, json, tooManyRequests, unauthorized } from "@/lib/http";
 import { verifyPassword } from "@/lib/password";
 import { prisma } from "@/lib/prisma";
-import { toPublicUser } from "@/lib/public-user";
+import { latestRequestInclude, toPublicUser } from "@/lib/public-user";
 import { checkRateLimit, limits, recordAttempt } from "@/lib/rate-limit";
-import { deleteAccountSchema } from "@/lib/schemas";
+import { deleteAccountSchema, profileUpdateSchema } from "@/lib/schemas";
 
 export async function GET(request: NextRequest) {
   const user = await getCurrentUser(request);
@@ -15,6 +15,27 @@ export async function GET(request: NextRequest) {
   }
 
   return json({ user: toPublicUser(user) });
+}
+
+export async function PATCH(request: NextRequest) {
+  const user = await getCurrentUser(request);
+
+  if (!user) {
+    return unauthorized();
+  }
+
+  try {
+    const payload = profileUpdateSchema.parse(await request.json());
+    const updated = await prisma.user.update({
+      where: { id: user.id },
+      data: { name: payload.name, heightCm: payload.heightCm },
+      include: latestRequestInclude
+    });
+
+    return json({ user: toPublicUser(updated) });
+  } catch (error) {
+    return badRequest(error);
+  }
 }
 
 export async function DELETE(request: NextRequest) {

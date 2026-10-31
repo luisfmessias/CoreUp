@@ -134,11 +134,19 @@ export const logSetSchema = z.object({
 
 export const workoutLogSchema = z.object({
   workoutId: z.string().optional(),
+  title: z.string().trim().max(120).optional(),
   performedAt: z.string().datetime().optional(),
   durationMin: z.number().int().positive().optional(),
   notes: z.string().max(1000).optional(),
-  sets: z.array(logSetSchema).default([])
+  sets: z.array(logSetSchema).max(300).default([])
 });
+
+export const profileUpdateSchema = z
+  .object({
+    name: z.string().trim().min(2, "Informe seu nome.").max(120).optional(),
+    heightCm: z.number().min(100, "Informe a altura em centimetros.").max(250).nullable().optional()
+  })
+  .refine((value) => value.name !== undefined || value.heightCm !== undefined, "Nada para atualizar.");
 
 export const bodyMetricSchema = z.object({
   weightKg: z.number().positive().optional(),

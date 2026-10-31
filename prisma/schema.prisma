@@ -153,6 +153,7 @@ model WorkoutLog {
   id          String   @id @default(cuid())
   userId      String
   workoutId   String?
+  title       String?
   performedAt DateTime @default(now())
   durationMin Int?
   notes       String?
