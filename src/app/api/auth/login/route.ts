@@ -3,7 +3,7 @@ import { createSession } from "@/lib/auth";
 import { badRequest, json, tooManyRequests } from "@/lib/http";
 import { verifyPassword } from "@/lib/password";
 import { prisma } from "@/lib/prisma";
-import { toPublicUser } from "@/lib/public-user";
+import { latestRequestInclude, toPublicUser } from "@/lib/public-user";
 import { checkRateLimit, clearAttempts, getClientIp, limits, recordAttempt } from "@/lib/rate-limit";
 import { loginSchema } from "@/lib/schemas";
 
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
 
     const user = await prisma.user.findUnique({
       where: { email: payload.email },
-      include: { professional: true }
+      include: latestRequestInclude
     });
 
     if (!user || !(await verifyPassword(payload.password, user.passwordHash))) {

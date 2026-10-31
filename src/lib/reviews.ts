@@ -5,8 +5,12 @@ export const reviewInclude = {
     select: {
       id: true,
       name: true,
-      professional: {
-        select: { crefNumber: true, crefState: true, specialty: true, verificationStatus: true }
+      accountType: true,
+      professionalRequests: {
+        where: { status: "APPROVED" },
+        orderBy: { reviewedAt: "desc" },
+        take: 1,
+        select: { crefNumber: true, crefState: true, specialty: true }
       }
     }
   }
@@ -15,7 +19,8 @@ export const reviewInclude = {
 type ReviewWithProfessional = Prisma.WorkoutReviewGetPayload<{ include: typeof reviewInclude }>;
 
 export function serializeReview(review: ReviewWithProfessional, currentUserId: string) {
-  const profile = review.professional.professional;
+  const profile = review.professional.professionalRequests[0];
+  const isAdmin = review.professional.accountType === "ADMIN";
 
   return {
     id: review.id,
@@ -30,12 +35,10 @@ export function serializeReview(review: ReviewWithProfessional, currentUserId: s
     isMine: review.professionalId === currentUserId,
     professional: {
       name: review.professional.name,
-      specialty: profile?.specialty ?? "",
+      role: isAdmin && !profile ? ("ADMIN" as const) : ("PROFESSIONAL" as const),
+      specialty: profile?.specialty ?? (isAdmin ? "Administrador do app" : ""),
       crefNumber: profile?.crefNumber ?? "",
-      crefState: profile?.crefState ?? "",
-      verificationStatus: profile?.verificationStatus ?? "PENDING"
+      crefState: profile?.crefState ?? ""
     }
   };
 }
-
-export type PublicReview = ReturnType<typeof serializeReview>;

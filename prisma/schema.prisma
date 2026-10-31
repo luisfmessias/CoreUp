@@ -9,39 +9,65 @@ datasource db {
 }
 
 model User {
-  id                String               @id @default(cuid())
-  name              String
-  email             String               @unique
-  passwordHash      String
-  heightCm          Float?
-  weightKg          Float?
-  preferences       Json?
-  privacyAcceptedAt DateTime?
-  accountType       AccountType          @default(USER)
-  createdAt         DateTime             @default(now())
-  updatedAt         DateTime             @updatedAt
-  sessions          AuthSession[]
-  workouts          Workout[]
-  history           WorkoutLog[]
-  bodyMetrics       BodyMetric[]
-  professional      ProfessionalProfile?
-  workoutReviews    WorkoutReview[]
+  id                   String                @id @default(cuid())
+  name                 String
+  email                String                @unique
+  passwordHash         String
+  heightCm             Float?
+  weightKg             Float?
+  preferences          Json?
+  privacyAcceptedAt    DateTime?
+  accountType          AccountType           @default(USER)
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  sessions             AuthSession[]
+  workouts             Workout[]
+  history              WorkoutLog[]
+  bodyMetrics          BodyMetric[]
+  professionalRequests ProfessionalRequest[] @relation("RequestOwner")
+  reviewedRequests     ProfessionalRequest[] @relation("RequestReviewer")
+  notifications        Notification[]
+  workoutReviews       WorkoutReview[]
 }
 
-// Sem integracao com o CREF: todo cadastro nasce PENDING e so muda apos conferencia manual.
-model ProfessionalProfile {
-  id                 String             @id @default(cuid())
-  userId             String             @unique
-  crefNumber         String
-  crefState          String
-  specialty          String
-  education          String
-  verificationStatus VerificationStatus @default(PENDING)
-  createdAt          DateTime           @default(now())
-  updatedAt          DateTime           @updatedAt
-  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+// Nao use onDelete: Cascade em userId: a solicitacao sobrevive a exclusao da conta para manter o CREF bloqueado.
+model ProfessionalRequest {
+  id              String             @id @default(cuid())
+  userId          String?
+  fullName        String
+  crefNumber      String
+  crefState       String
+  crefKey         String             @unique
+  specialty       String
+  education       String
+  status          VerificationStatus @default(PENDING) @map("verificationStatus")
+  rejectionReason String?
+  reviewedAt      DateTime?
+  reviewedById    String?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  user            User?              @relation("RequestOwner", fields: [userId], references: [id], onDelete: SetNull)
+  reviewedBy      User?              @relation("RequestReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  notifications   Notification[]
 
-  @@unique([crefNumber, crefState])
+  @@index([userId])
+  @@index([status, createdAt])
+  @@map("ProfessionalProfile")
+}
+
+model Notification {
+  id        String               @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  message   String
+  requestId String?
+  readAt    DateTime?
+  createdAt DateTime             @default(now())
+  user      User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  request   ProfessionalRequest? @relation(fields: [requestId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
 }
 
 model WorkoutReview {
@@ -64,12 +90,19 @@ model WorkoutReview {
 enum AccountType {
   USER
   PROFESSIONAL
+  ADMIN
 }
 
 enum VerificationStatus {
   PENDING
-  VERIFIED
+  APPROVED
   REJECTED
+}
+
+enum NotificationType {
+  PROFESSIONAL_REQUEST_CREATED
+  PROFESSIONAL_REQUEST_APPROVED
+  PROFESSIONAL_REQUEST_REJECTED
 }
 
 model AuthSession {

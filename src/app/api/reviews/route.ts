@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
   }
 
   const reviews = await prisma.workoutReview.findMany({
-    where: { professional: { accountType: "PROFESSIONAL" } },
+    where: { professional: { accountType: { in: ["PROFESSIONAL", "ADMIN"] } } },
     include: reviewInclude,
     orderBy: { updatedAt: "desc" }
   });

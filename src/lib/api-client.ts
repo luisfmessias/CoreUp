@@ -1,3 +1,5 @@
+import type { RequestStatus } from "@/lib/professional";
+
 export function apiFetch(token: string, path: string, init: RequestInit = {}) {
   return fetch(path, {
     ...init,
@@ -9,16 +11,17 @@ export function apiFetch(token: string, path: string, init: RequestInit = {}) {
   });
 }
 
-export type AccountType = "USER" | "PROFESSIONAL";
-
-export type VerificationStatus = "PENDING" | "VERIFIED" | "REJECTED";
+export type AccountType = "USER" | "PROFESSIONAL" | "ADMIN";
 
 export type ProfessionalInfo = {
+  status: RequestStatus;
   crefNumber: string;
   crefState: string;
   specialty: string;
   education: string;
-  verificationStatus: VerificationStatus;
+  rejectionReason: string | null;
+  createdAt: string;
+  reviewedAt: string | null;
 };
 
 export type AuthUser = {
@@ -30,3 +33,28 @@ export type AuthUser = {
   accountType: AccountType;
   professional: ProfessionalInfo | null;
 };
+
+export type AppNotification = {
+  id: string;
+  type: "PROFESSIONAL_REQUEST_CREATED" | "PROFESSIONAL_REQUEST_APPROVED" | "PROFESSIONAL_REQUEST_REJECTED";
+  title: string;
+  message: string;
+  requestId: string | null;
+  readAt: string | null;
+  createdAt: string;
+  request: { status: RequestStatus; crefNumber: string; crefState: string; fullName: string } | null;
+};
+
+export function canReviewWorkouts(user: Pick<AuthUser, "accountType">) {
+  return user.accountType === "PROFESSIONAL" || user.accountType === "ADMIN";
+}
+
+export function formatDateTime(value: string) {
+  return new Date(value).toLocaleString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+}

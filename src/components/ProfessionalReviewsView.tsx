@@ -3,8 +3,8 @@
 import { ChevronLeft, ChevronRight, CircleAlert, CircleCheck, Lightbulb, Loader2, Star, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
 import { reviewableWorkouts, type ReviewableWorkout } from "@/data/reviewable-workouts";
-import { apiFetch, type AuthUser, type VerificationStatus } from "@/lib/api-client";
-import { verificationLabels } from "@/lib/professional";
+import { apiFetch, canReviewWorkouts, type AuthUser } from "@/lib/api-client";
+import { ProfessionalStatusCard } from "@/components/ProfessionalStatus";
 import { generateWorkoutPlan, generatorOptions, type TrainingGoal, type TrainingLevel } from "@/lib/workout-generator";
 import type { Exercise, WorkoutDay } from "@/types/fitness";
 import { Badge } from "@/components/ui/Badge";
@@ -26,7 +26,7 @@ type ApiReview = {
     specialty: string;
     crefNumber: string;
     crefState: string;
-    verificationStatus: VerificationStatus;
+    role: "PROFESSIONAL" | "ADMIN";
   };
 };
 
@@ -71,7 +71,7 @@ export function ProfessionalReviewsView({
   authToken: string;
   user: AuthUser;
 }) {
-  const isProfessional = user.accountType === "PROFESSIONAL";
+  const isProfessional = canReviewWorkouts(user);
   const [reviews, setReviews] = useState<ApiReview[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
@@ -205,6 +205,10 @@ export function ProfessionalReviewsView({
           </p>
         )}
       </div>
+
+      {!isProfessional && user.professional && user.professional.status !== "APPROVED" && (
+        <ProfessionalStatusCard professional={user.professional} />
+      )}
 
       <div className="space-y-3">
         <FilterRow label="Objetivo">
@@ -369,13 +373,13 @@ function ProfessionalLine({ professional }: { professional: ApiReview["professio
     <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 border-t border-white/[0.07] pt-3">
       <span className="text-sm font-medium">{professional.name}</span>
       <span className="text-xs text-white/45">{professional.specialty}</span>
-      <VerificationBadge status={professional.verificationStatus} />
+      <RoleBadge role={professional.role} />
     </div>
   );
 }
 
-function VerificationBadge({ status }: { status: VerificationStatus }) {
-  return <Badge tone={status === "VERIFIED" ? "green" : "muted"}>{verificationLabels[status]}</Badge>;
+function RoleBadge({ role }: { role: ApiReview["professional"]["role"] }) {
+  return <Badge tone={role === "PROFESSIONAL" ? "green" : "muted"}>{role === "PROFESSIONAL" ? "CREF aprovado" : "Administrador"}</Badge>;
 }
 
 function Stars({ rating, size = 15 }: { rating: number; size?: number }) {
@@ -504,11 +508,12 @@ function ReviewArticle({ review }: { review: ApiReview }) {
     <article className="glass rounded-2xl p-4">
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-sm font-semibold">{professional.name}</span>
-        <VerificationBadge status={professional.verificationStatus} />
+        <RoleBadge role={professional.role} />
         {review.isMine && <span className="text-xs text-accent">Sua avaliacao</span>}
       </div>
       <p className="mt-0.5 text-xs text-white/50">
-        {professional.specialty} · CREF {professional.crefNumber}/{professional.crefState}
+        {professional.specialty}
+        {professional.crefNumber && ` · CREF ${professional.crefNumber}/${professional.crefState}`}
       </p>
 
       <div className="mt-3 flex items-center gap-2">

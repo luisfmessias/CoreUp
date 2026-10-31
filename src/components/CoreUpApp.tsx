@@ -18,14 +18,16 @@ import {
   Plus,
   RotateCcw,
   Search,
+  ShieldCheck,
   Sparkles,
+  Bell,
   Trash2,
   UserPlus,
   UserRound
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
-import { apiFetch, type AccountType, type AuthUser } from "@/lib/api-client";
-import { brazilianStates, verificationLabels } from "@/lib/professional";
+import { apiFetch, type AccountType, type AppNotification, type AuthUser } from "@/lib/api-client";
+import { brazilianStates } from "@/lib/professional";
 import { exerciseMap, getTodayWorkout, summarizeGroups } from "@/lib/exercise-view";
 import { toPlanDays, toWorkoutDay, type ApiWorkout } from "@/lib/plan-mapping";
 import {
@@ -38,6 +40,9 @@ import {
   type GeneratorPreferences
 } from "@/lib/workout-generator";
 import type { Exercise, WorkoutDay } from "@/types/fitness";
+import { AdminRequestsView } from "@/components/AdminRequestsView";
+import { NotificationsView } from "@/components/NotificationsView";
+import { ProfessionalRequestForm, ProfessionalStatusCard } from "@/components/ProfessionalStatus";
 import { ProfessionalReviewsView } from "@/components/ProfessionalReviewsView";
 import { Badge } from "@/components/ui/Badge";
 import { IconButton } from "@/components/ui/IconButton";
@@ -96,10 +101,18 @@ const tabs = [
   { id: "plan", label: "Treino", icon: CalendarDays },
   { id: "library", label: "Exerc.", icon: Library },
   { id: "reviews", label: "Aval.", icon: BadgeCheck },
-  { id: "progress", label: "Evol.", icon: BarChart3 }
+  { id: "progress", label: "Evol.", icon: BarChart3 },
+  { id: "admin", label: "Admin", icon: ShieldCheck }
 ] as const;
 
-type TabId = (typeof tabs)[number]["id"];
+type NavTab = (typeof tabs)[number];
+type TabId = NavTab["id"] | "notifications";
+
+function tabsFor(user: AuthUser) {
+  return tabs.filter((tab) => tab.id !== "admin" || user.accountType === "ADMIN");
+}
+
+const refreshIntervalMs = 30_000;
 
 export function CoreUpApp({ exercises }: CoreUpAppProps) {
   const [authToken, setAuthToken] = useState<string | null>(null);
@@ -122,6 +135,11 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
   const [activeDayId, setActiveDayId] = useState("");
   const [query, setQuery] = useState("");
   const [selectedGroup, setSelectedGroup] = useState("Todos");
+  const [notifications, setNotifications] = useState<AppNotification[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [adminRequestId, setAdminRequestId] = useState<string | null>(null);
+  const [justRequested, setJustRequested] = useState(false);
+  const [tabResetKey, setTabResetKey] = useState(0);
 
   const byId = useMemo(() => exerciseMap(exercises), [exercises]);
   const savedPlan = useMemo<GeneratedPlan>(() => {
@@ -217,6 +235,52 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
       cancelled = true;
     };
   }, [authToken, exercises]);
+
+  useEffect(() => {
+    if (!authToken) {
+      return;
+    }
+
+    let cancelled = false;
+
+    async function refreshAccount() {
+      const [meResponse, notificationsResponse] = await Promise.all([
+        apiFetch(authToken!, "/api/me"),
+        apiFetch(authToken!, "/api/notifications")
+      ]).catch(() => [null, null]);
+
+      if (cancelled || !meResponse || !notificationsResponse) {
+        return;
+      }
+
+      if (meResponse.status === 401) {
+        clearSession();
+        return;
+      }
+
+      if (meResponse.ok) {
+        setUser(((await meResponse.json()) as { user: AuthUser }).user);
+      }
+
+      if (notificationsResponse.ok) {
+        const data = (await notificationsResponse.json()) as { notifications: AppNotification[]; unreadCount: number };
+        setNotifications(data.notifications);
+        setUnreadCount(data.unreadCount);
+      }
+    }
+
+    void refreshAccount();
+    const interval = window.setInterval(refreshAccount, refreshIntervalMs);
+    const onFocus = () => void refreshAccount();
+    window.addEventListener("focus", onFocus);
+
+    return () => {
+      cancelled = true;
+      window.clearInterval(interval);
+      window.removeEventListener("focus", onFocus);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authToken]);
 
   useEffect(() => {
     if (!authToken || !preferencesDirty.current) {
@@ -399,6 +463,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
       window.localStorage.setItem(authStorageKey, data.token);
       setAuthToken(data.token);
       setUser(data.user);
+      setJustRequested(authMode === "register" && data.user.professional?.status === "PENDING");
       setAuthForm(emptyAuthForm);
     } catch (error) {
       setAuthError(error instanceof Error ? error.message : "Nao foi possivel entrar.");
@@ -434,6 +499,57 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
     setPlanLoaded(false);
     setPreferences(defaultPreferences);
     setGeneratedPlan(generateWorkoutPlan(exercises, defaultPreferences));
+    setNotifications([]);
+    setUnreadCount(0);
+    setAdminRequestId(null);
+    setJustRequested(false);
+  }
+
+  async function reloadNotifications() {
+    if (!authToken) {
+      return;
+    }
+
+    const response = await apiFetch(authToken, "/api/notifications").catch(() => null);
+
+    if (response?.ok) {
+      const data = (await response.json()) as { notifications: AppNotification[]; unreadCount: number };
+      setNotifications(data.notifications);
+      setUnreadCount(data.unreadCount);
+    }
+  }
+
+  async function markNotificationsRead(ids?: string[]) {
+    if (!authToken) {
+      return;
+    }
+
+    await apiFetch(authToken, "/api/notifications", { method: "PATCH", body: JSON.stringify({ ids }) }).catch(() => null);
+    await reloadNotifications();
+  }
+
+  function openNotification(notification: AppNotification) {
+    if (!notification.readAt) {
+      void markNotificationsRead([notification.id]);
+    }
+
+    if (user?.accountType === "ADMIN" && notification.type === "PROFESSIONAL_REQUEST_CREATED" && notification.requestId) {
+      setAdminRequestId(notification.requestId);
+      setActiveTab("admin");
+      return;
+    }
+
+    setActiveTab("progress");
+  }
+
+  function changeTab(tab: TabId) {
+    setAdminRequestId(null);
+
+    if (tab === activeTab) {
+      setTabResetKey((key) => key + 1);
+    }
+
+    setActiveTab(tab);
   }
 
   if (checkingSession || (authToken && user && !planLoaded)) {
@@ -464,12 +580,23 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
   return (
     <div className="min-h-dvh">
       <div className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col">
-        <AppHeader user={user} onLogout={handleLogout} />
+        <AppHeader
+          notificationsOpen={activeTab === "notifications"}
+          unreadCount={unreadCount}
+          user={user}
+          onLogout={handleLogout}
+          onOpenNotifications={() => changeTab("notifications")}
+        />
 
-        <main key={activeTab} className="flex-1 animate-fade-up px-4 pb-32">
+        <main key={`${activeTab}-${tabResetKey}`} className="flex-1 animate-fade-up px-4 pb-32">
           {planError && (
             <div className="mb-4">
               <Alert tone="error">{planError}</Alert>
+            </div>
+          )}
+          {activeTab === "home" && user.professional && user.professional.status !== "APPROVED" && (
+            <div className="mb-5">
+              <ProfessionalStatusCard justSubmitted={justRequested} professional={user.professional} />
             </div>
           )}
           {activeTab === "home" && (
@@ -478,8 +605,8 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
               byId={byId}
               groupSummary={groupSummary}
               savedPlan={savedPlan}
-              onOpenPlan={() => setActiveTab("plan")}
-              onOpenBuilder={() => setActiveTab("builder")}
+              onOpenPlan={() => changeTab("plan")}
+              onOpenBuilder={() => changeTab("builder")}
             />
           )}
           {activeTab === "builder" && (
@@ -492,7 +619,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
               saving={planSaving}
               onChange={updatePreferences}
               onFavoriteToggle={toggleFavorite}
-              onOpenPlan={() => setActiveTab("plan")}
+              onOpenPlan={() => changeTab("plan")}
               onSavePlan={saveGeneratedPlan}
             />
           )}
@@ -504,7 +631,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
               plan={plan}
               savedPlan={savedPlan}
               onSelectDay={setActiveDayId}
-              onOpenBuilder={() => setActiveTab("builder")}
+              onOpenBuilder={() => changeTab("builder")}
               onRemoveDay={removeWorkoutDay}
             />
           )}
@@ -521,10 +648,33 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
             />
           )}
           {activeTab === "reviews" && <ProfessionalReviewsView authToken={authToken} exercises={exercises} user={user} />}
-          {activeTab === "progress" && <ProgressView savedPlan={savedPlan} user={user} onDeleteAccount={deleteAccount} />}
+          {activeTab === "progress" && (
+            <ProgressView
+              authToken={authToken}
+              savedPlan={savedPlan}
+              user={user}
+              onDeleteAccount={deleteAccount}
+              onUserChange={setUser}
+            />
+          )}
+          {activeTab === "notifications" && (
+            <NotificationsView
+              notifications={notifications}
+              unreadCount={unreadCount}
+              onMarkAllRead={() => void markNotificationsRead()}
+              onOpen={openNotification}
+            />
+          )}
+          {activeTab === "admin" && user.accountType === "ADMIN" && (
+            <AdminRequestsView
+              authToken={authToken}
+              initialRequestId={adminRequestId}
+              onChanged={() => void reloadNotifications()}
+            />
+          )}
         </main>
 
-        <BottomNavigation activeTab={activeTab} onChange={setActiveTab} />
+        <BottomNavigation activeTab={activeTab} tabs={tabsFor(user)} onChange={changeTab} />
       </div>
     </div>
   );
@@ -695,8 +845,8 @@ function AuthView({
                   value={authForm.education}
                 />
                 <p className="text-xs leading-relaxed text-white/50">
-                  O app ainda nao consulta o CREF automaticamente. Seu cadastro fica com verificacao pendente, e isso
-                  aparece junto das suas avaliacoes.
+                  Sua conta e criada na hora e voce ja pode usar o app. As funcoes profissionais, como avaliar
+                  treinos, sao liberadas depois que o administrador conferir o seu CREF.
                 </p>
               </fieldset>
             )}
@@ -747,7 +897,7 @@ function AuthView({
               type="submit"
             >
               {authLoading && <Loader2 size={18} className="animate-spin" />}
-              {isRegister ? "Criar e entrar" : "Entrar"}
+              {!isRegister ? "Entrar" : isProfessional ? "Criar conta e enviar solicitacao" : "Criar e entrar"}
             </button>
           </form>
 
@@ -932,7 +1082,19 @@ function parseOptionalNumber(value: string) {
   return Number.isFinite(parsed) ? parsed : undefined;
 }
 
-function AppHeader({ user, onLogout }: { user: AuthUser; onLogout: () => void }) {
+function AppHeader({
+  user,
+  unreadCount,
+  notificationsOpen,
+  onLogout,
+  onOpenNotifications
+}: {
+  user: AuthUser;
+  unreadCount: number;
+  notificationsOpen: boolean;
+  onLogout: () => void;
+  onOpenNotifications: () => void;
+}) {
   const firstName = user.name.trim().split(/\s+/)[0];
 
   return (
@@ -945,9 +1107,24 @@ function AppHeader({ user, onLogout }: { user: AuthUser; onLogout: () => void })
             <h1 className="truncate text-lg font-semibold leading-tight">{firstName}</h1>
           </div>
         </div>
-        <IconButton label="Sair" onClick={onLogout}>
-          <LogOut size={19} />
-        </IconButton>
+        <div className="flex items-center gap-2">
+          <IconButton
+            aria-current={notificationsOpen ? "page" : undefined}
+            className={`relative ${notificationsOpen ? "text-accent" : ""}`}
+            label={unreadCount ? `Notificacoes, ${unreadCount} nao lidas` : "Notificacoes"}
+            onClick={onOpenNotifications}
+          >
+            <Bell size={19} />
+            {unreadCount > 0 && (
+              <span className="absolute -right-0.5 -top-0.5 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-accent px-1 text-[10px] font-semibold leading-none text-on-accent">
+                {unreadCount > 9 ? "9+" : unreadCount}
+              </span>
+            )}
+          </IconButton>
+          <IconButton label="Sair" onClick={onLogout}>
+            <LogOut size={19} />
+          </IconButton>
+        </div>
       </div>
     </header>
   );
@@ -1579,13 +1756,17 @@ function FavoriteRow({
 }
 
 function ProgressView({
+  authToken,
   savedPlan,
   user,
-  onDeleteAccount
+  onDeleteAccount,
+  onUserChange
 }: {
+  authToken: string;
   savedPlan: GeneratedPlan;
   user: AuthUser;
   onDeleteAccount: (password: string) => Promise<string | null>;
+  onUserChange: (user: AuthUser) => void;
 }) {
   const weeklySets = Object.values(savedPlan.coverage).reduce((total, amount) => total + amount, 0);
   const weight = user.weightKg ? `${user.weightKg} kg` : "-- kg";
@@ -1644,45 +1825,83 @@ function ProgressView({
         </div>
       </section>
 
-      <AccountSection user={user} onDeleteAccount={onDeleteAccount} />
+      <AccountSection authToken={authToken} user={user} onDeleteAccount={onDeleteAccount} onUserChange={onUserChange} />
     </section>
   );
 }
 
-function ProfessionalProfileSummary({ professional }: { professional: NonNullable<AuthUser["professional"]> }) {
-  const verified = professional.verificationStatus === "VERIFIED";
+function ProfessionalSection({
+  authToken,
+  user,
+  onUserChange
+}: {
+  authToken: string;
+  user: AuthUser;
+  onUserChange: (user: AuthUser) => void;
+}) {
+  const [requesting, setRequesting] = useState(false);
+  const professional = user.professional;
+  const canRequest = user.accountType === "USER" && professional?.status !== "PENDING";
 
   return (
-    <div className="mt-4 rounded-xl border border-white/[0.08] p-4">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="text-sm font-medium">Profissional de Educacao Fisica</p>
-        <Badge tone={verified ? "green" : "muted"}>{verificationLabels[professional.verificationStatus]}</Badge>
-      </div>
-      <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-sm">
-        <dt className="text-white/45">CREF</dt>
-        <dd className="tabular-nums">
-          {professional.crefNumber}/{professional.crefState}
-        </dd>
-        <dt className="text-white/45">Especialidade</dt>
-        <dd>{professional.specialty}</dd>
-        <dt className="text-white/45">Formacao</dt>
-        <dd>{professional.education}</dd>
-      </dl>
-      {!verified && (
-        <p className="mt-3 text-xs leading-relaxed text-white/45">
-          O registro informado ainda nao foi conferido junto ao CREF.
-        </p>
+    <div className="mt-4 space-y-3">
+      {user.accountType === "ADMIN" && (
+        <div className="flex items-center gap-2 rounded-xl border border-white/[0.08] px-3 py-2.5 text-sm">
+          <ShieldCheck className="text-accent" size={16} />
+          Administrador do app
+        </div>
       )}
+
+      {professional && (
+        <>
+          <ProfessionalStatusCard professional={professional} />
+          {professional.status === "APPROVED" && (
+            <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 px-1 text-sm">
+              <dt className="text-white/45">Especialidade</dt>
+              <dd>{professional.specialty}</dd>
+              <dt className="text-white/45">Formacao</dt>
+              <dd>{professional.education}</dd>
+            </dl>
+          )}
+        </>
+      )}
+
+      {canRequest &&
+        (requesting ? (
+          <ProfessionalRequestForm
+            authToken={authToken}
+            defaultName={user.name}
+            onCancel={() => setRequesting(false)}
+            onSubmitted={(updated) => {
+              onUserChange(updated);
+              setRequesting(false);
+            }}
+          />
+        ) : (
+          <button
+            className="text-sm text-white/70 underline underline-offset-4 transition hover:text-white"
+            onClick={() => setRequesting(true)}
+            type="button"
+          >
+            {professional?.status === "REJECTED"
+              ? "Enviar nova solicitacao com outro CREF"
+              : "Sou profissional de Educacao Fisica"}
+          </button>
+        ))}
     </div>
   );
 }
 
 function AccountSection({
+  authToken,
   user,
-  onDeleteAccount
+  onDeleteAccount,
+  onUserChange
 }: {
+  authToken: string;
   user: AuthUser;
   onDeleteAccount: (password: string) => Promise<string | null>;
+  onUserChange: (user: AuthUser) => void;
 }) {
   const email = user.email;
   const [confirming, setConfirming] = useState(false);
@@ -1706,9 +1925,9 @@ function AccountSection({
     <section className="border-t border-white/[0.07] pt-5">
       <h3 className="text-sm font-medium text-white/80">Conta</h3>
       <p className="mt-1 truncate text-sm text-white/55">{email}</p>
-      {user.professional && <ProfessionalProfileSummary professional={user.professional} />}
+      <ProfessionalSection authToken={authToken} user={user} onUserChange={onUserChange} />
       <a
-        className="mt-3 inline-block text-sm text-white/70 underline underline-offset-4 transition hover:text-white"
+        className="mt-4 block text-sm text-white/70 underline underline-offset-4 transition hover:text-white"
         href="/privacidade"
         target="_blank"
       >
@@ -1797,11 +2016,22 @@ function MiniStat({ label, value }: { label: string; value: string }) {
   );
 }
 
-function BottomNavigation({ activeTab, onChange }: { activeTab: TabId; onChange: (tab: TabId) => void }) {
+function BottomNavigation({
+  activeTab,
+  tabs: visibleTabs,
+  onChange
+}: {
+  activeTab: TabId;
+  tabs: NavTab[];
+  onChange: (tab: TabId) => void;
+}) {
   return (
     <nav className="fixed inset-x-0 bottom-0 z-10 mx-auto max-w-[430px] px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-      <div className="glass-nav grid grid-cols-6 gap-0.5 rounded-full p-1.5">
-        {tabs.map((tab) => {
+      <div
+        className="glass-nav grid gap-0.5 rounded-full p-1.5"
+        style={{ gridTemplateColumns: `repeat(${visibleTabs.length}, minmax(0, 1fr))` }}
+      >
+        {visibleTabs.map((tab) => {
           const active = activeTab === tab.id;
 
           return (

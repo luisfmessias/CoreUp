@@ -3,6 +3,7 @@ import { reviewableWorkoutKeys } from "@/data/reviewable-workouts";
 import { getCurrentUser } from "@/lib/auth";
 import { badRequest, forbidden, json, notFound, unauthorized } from "@/lib/http";
 import { prisma } from "@/lib/prisma";
+import { canReviewWorkouts } from "@/lib/professional-requests";
 import { reviewInclude, serializeReview } from "@/lib/reviews";
 import { workoutReviewSchema } from "@/lib/schemas";
 
@@ -15,8 +16,8 @@ export async function PUT(request: NextRequest, context: Context) {
     return unauthorized();
   }
 
-  if (user.accountType !== "PROFESSIONAL" || !user.professional) {
-    return json({ error: "Apenas profissionais de Educacao Fisica podem avaliar treinos." }, 403);
+  if (!canReviewWorkouts(user)) {
+    return json({ error: "Apenas profissionais de Educacao Fisica aprovados podem avaliar treinos." }, 403);
   }
 
   const { workoutKey } = await context.params;
@@ -47,7 +48,7 @@ export async function DELETE(request: NextRequest, context: Context) {
     return unauthorized();
   }
 
-  if (user.accountType !== "PROFESSIONAL") {
+  if (!canReviewWorkouts(user)) {
     return forbidden();
   }
 

@@ -45,9 +45,9 @@ export default function PrivacyPage() {
               tempo, equipamentos), exercícios favoritos e registros de treinos realizados.
             </li>
             <li>
-              <strong>Dados profissionais (só para contas de profissional de Educação Física):</strong> nome completo,
-              número e UF do registro no CREF, especialidade, formação acadêmica e as avaliações de treino que você
-              escrever.
+              <strong>Dados profissionais (só para quem solicita conta de profissional de Educação Física):</strong>{" "}
+              nome completo, número e UF do registro no CREF, especialidade, formação acadêmica, o andamento da
+              solicitação (data, decisão e motivo, quando houver) e as avaliações de treino que você escrever.
             </li>
             <li>
               <strong>Dados de segurança:</strong> endereço IP e e-mail usados em tentativas de login e cadastro,
@@ -75,15 +75,16 @@ export default function PrivacyPage() {
               <strong>Segurança da conta e prevenção de fraudes:</strong> legítimo interesse (art. 7º, IX).
             </li>
             <li>
+              <strong>Analisar a solicitação de conta profissional:</strong> execução do serviço (art. 7º, V). O
+              administrador do app vê os dados profissionais e o e-mail informados no cadastro e confere o registro
+              manualmente no CONFEF ou no CREF do estado, já que o app não tem integração com o conselho.
+            </li>
+            <li>
               <strong>Identificar o profissional nas avaliações:</strong> execução do serviço (art. 7º, V). Ao avaliar
-              um treino, o seu nome, especialidade, número e UF do CREF e o status de verificação ficam visíveis para
-              os outros usuários do app, junto com a avaliação. O e-mail e a formação acadêmica não são exibidos.
+              um treino, o seu nome, especialidade e número e UF do CREF ficam visíveis para os outros usuários do
+              app, junto com a avaliação. O e-mail e a formação acadêmica não são exibidos.
             </li>
           </ul>
-          <p>
-            O app ainda não confere o registro CREF junto ao conselho. Por isso, todo cadastro de profissional aparece
-            com verificação pendente.
-          </p>
           <p>Não vendemos os seus dados e não os usamos para publicidade.</p>
         </Section>
 
@@ -105,9 +106,15 @@ export default function PrivacyPage() {
         <Section title="5. Por quanto tempo guardamos">
           <p>
             Os seus dados ficam guardados enquanto a sua conta existir. Quando você exclui a conta, todos os dados
-            ligados a ela (cadastro, medidas, planos, histórico e sessões) são apagados do banco de dados na hora.
-            Cópias de segurança automáticas do provedor podem manter esses dados por um curto período adicional, até
-            serem substituídas.
+            ligados a ela (cadastro, medidas, planos, histórico, avaliações, notificações e sessões) são apagados do
+            banco de dados na hora. Cópias de segurança automáticas do provedor podem manter esses dados por um curto
+            período adicional, até serem substituídas.
+          </p>
+          <p>
+            A exceção é a solicitação de conta profissional: o nome completo, o número e a UF do CREF, a especialidade,
+            a formação e a decisão do administrador continuam guardados mesmo depois da exclusão da conta, sem o
+            e-mail. Isso impede que o mesmo registro seja usado de novo para burlar uma análise já feita, com base no
+            legítimo interesse de prevenção a fraudes (art. 7º, IX).
           </p>
         </Section>
 

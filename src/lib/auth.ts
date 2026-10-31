@@ -2,6 +2,7 @@ import { createHash, randomBytes } from "node:crypto";
 import jwt from "jsonwebtoken";
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { latestRequestInclude } from "@/lib/public-user";
 
 type SessionPayload = {
   sub: string;
@@ -65,7 +66,7 @@ export async function getCurrentUser(request: NextRequest) {
 
   const session = await prisma.authSession.findUnique({
     where: { tokenHash: hashToken(token) },
-    include: { user: { include: { professional: true } } }
+    include: { user: { include: latestRequestInclude } }
   });
 
   if (!session || session.userId !== payload.sub || session.expiresAt <= new Date()) {

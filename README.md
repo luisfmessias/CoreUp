@@ -33,6 +33,7 @@ npm install
 cp .env.example .env   # preencha com as URLs do Neon
 npm run prisma:deploy  # aplica as migrations no banco
 npm run prisma:generate
+npm run admin:create   # cria a conta de administrador (primeiro acesso)
 npm run dev
 ```
 
@@ -72,7 +73,7 @@ Rotas autenticadas esperam o cabecalho `Authorization: Bearer <token>`.
 | `POST` | `/api/auth/login` | nao | autentica e devolve token e usuario, com o `accountType` salvo no cadastro |
 | `POST` | `/api/auth/logout` | sim | revoga a sessao atual |
 | `GET` | `/api/me` | sim | dados do usuario logado |
-| `DELETE` | `/api/me` | sim | exclui a conta e todos os dados, exige `password` no corpo |
+| `DELETE` | `/api/me` | sim | exclui a conta e os dados dela (a solicitacao profissional e mantida sem e-mail), exige `password` no corpo |
 | `GET` | `/api/exercises` | nao | catalogo, filtra por `q`, `grupoMuscular`, `nivel` |
 | `GET` | `/api/exercises/[id]` | nao | exercicio unico |
 | `GET` | `/api/plan` | sim | plano semanal salvo e preferencias do gerador |
@@ -88,8 +89,15 @@ Rotas autenticadas esperam o cabecalho `Authorization: Bearer <token>`.
 | `GET` | `/api/body-metrics` | sim | ultimas 100 medicoes |
 | `POST` | `/api/body-metrics` | sim | registra medicao e atualiza o perfil |
 | `GET` | `/api/reviews` | sim | avaliacoes profissionais dos treinos do catalogo |
-| `PUT` | `/api/reviews/[workoutKey]` | profissional | cria ou edita a avaliacao do profissional logado |
-| `DELETE` | `/api/reviews/[workoutKey]` | profissional | remove a avaliacao do profissional logado |
+| `PUT` | `/api/reviews/[workoutKey]` | profissional ou admin | cria ou edita a avaliacao do usuario logado |
+| `DELETE` | `/api/reviews/[workoutKey]` | profissional ou admin | remove a avaliacao do usuario logado |
+| `POST` | `/api/professional-requests` | sim | nova solicitacao profissional de quem ja tem conta (ex.: apos rejeicao, com outro CREF) |
+| `GET` | `/api/notifications` | sim | ultimas 50 notificacoes e total de nao lidas |
+| `PATCH` | `/api/notifications` | sim | marca como lidas as notificacoes em `ids` (ou todas) |
+| `GET` | `/api/admin/professional-requests` | admin | solicitacoes, filtra por `status`, com contagem por status |
+| `GET` | `/api/admin/professional-requests/[id]` | admin | detalhes de uma solicitacao |
+| `POST` | `/api/admin/professional-requests/[id]/approve` | admin | aprova; exige `crefChecked: true` |
+| `POST` | `/api/admin/professional-requests/[id]/reject` | admin | rejeita; `reason` opcional |
 | `GET` | `/api/health` | nao | healthcheck |
 
 ## Como o gerador monta o treino
@@ -142,16 +150,53 @@ ja que nao existe chave estrangeira cobrindo essa relacao.
 - **Exclusao de conta:** aba Evolucao, secao Conta. Apaga o usuario e, em
   cascata, sessoes, treinos, historico e medidas.
 
-## Contas de profissional
+## Papeis e aprovacao de profissionais
 
-- O tipo de conta (`User.accountType`) e definido no cadastro e lido do banco
-  em toda requisicao. O login nao pede o tipo: ele vem da conta salva.
-- Os dados do registro ficam em `ProfessionalProfile`. Um mesmo CREF + UF nao
-  pode estar em duas contas.
-- Nao ha integracao com o CONFEF/CREF: todo cadastro nasce com
-  `verificationStatus = PENDING` e a interface mostra "Verificacao pendente".
-  Para marcar um registro como conferido, altere o status para `VERIFIED` no
-  banco depois de checar o CREF manualmente.
-- Os treinos avaliaveis estao em `src/data/reviewable-workouts.ts`. A chave de
-  cada treino liga as avaliacoes gravadas em `WorkoutReview`; nao altere uma
-  chave existente.
+| Papel (`User.accountType`) | Acesso |
+| --- | --- |
+| `USER` | todas as funcionalidades comuns |
+| `PROFESSIONAL` | tudo do `USER` + avaliar treinos; so existe depois de aprovado |
+| `ADMIN` | tudo dos anteriores + area administrativa (aba Admin) |
+
+O papel e lido do banco em toda requisicao. O login nao pede o tipo de conta.
+
+### Primeiro acesso do administrador
+
+```bash
+npm run admin:create
+```
+
+O script pede e-mail, nome e senha no terminal (a senha nao aparece ao digitar)
+e cria a conta ja como `ADMIN`. Tambem aceita `ADMIN_EMAIL`, `ADMIN_NAME` e
+`ADMIN_PASSWORD` como variaveis de ambiente. Se o e-mail ja existir, a conta e
+promovida a `ADMIN` sem trocar a senha. Depois disso, entre pelo login normal.
+O cadastro do app nunca cria administradores.
+
+### Fluxo do cadastro profissional
+
+1. A pessoa escolhe "Profissional de Educacao Fisica" no cadastro. A conta e
+   criada como `USER` e uma `ProfessionalRequest` fica `PENDING`.
+2. Todo `ADMIN` recebe uma notificacao persistida (`Notification`).
+3. Na aba Admin, o administrador confere o CREF no CONFEF/CREF do estado e
+   aprova (precisa marcar a confirmacao) ou rejeita (motivo opcional). Data e
+   responsavel ficam registrados.
+4. Ao aprovar, a conta vira `PROFESSIONAL`. Nas duas decisoes, o profissional
+   recebe uma notificacao. O app relê a conta a cada 30 s e quando a janela
+   volta ao foco, entao o status muda sem novo cadastro.
+
+### Regras do CREF
+
+- O numero e normalizado para o formato oficial `000000-G` (6 digitos e
+  categoria G ou P); aceita variacoes como `cref 12345 g/sp`.
+- `ProfessionalRequest.crefKey` (`000000/UF`) e unico no banco e ignora a
+  categoria, entao trocar G por P ou usar outro e-mail nao libera o registro.
+  Cadastros simultaneos com o mesmo CREF esbarram nesse indice.
+- Uma solicitacao `PENDING`, `APPROVED` ou `REJECTED` bloqueia o CREF para
+  sempre. Excluir a conta nao apaga a solicitacao (`userId` vira `null`).
+- Quem foi rejeitado pode enviar uma nova solicitacao com outro CREF pela secao
+  Conta (aba Evolucao).
+
+### Treinos avaliaveis
+
+Ficam em `src/data/reviewable-workouts.ts`. A chave de cada treino liga as
+avaliacoes gravadas em `WorkoutReview`; nao altere uma chave existente.

@@ -14,6 +14,7 @@ const passwordSchema = z
   .string()
   .regex(passwordRegex, "A senha precisa ter 8 caracteres, letra maiuscula, letra minuscula, numero e simbolo.");
 
+// O cadastro nunca cria ADMIN: essa conta so nasce pelo script admin:create.
 const accountTypeSchema = z.enum(["USER", "PROFESSIONAL"]);
 
 export const professionalProfileSchema = z.object({
@@ -24,7 +25,7 @@ export const professionalProfileSchema = z.object({
       const normalized = normalizeCref(value);
 
       if (!normalized) {
-        context.addIssue({ code: "custom", message: "Informe o numero do CREF, por exemplo 012345-G." });
+        context.addIssue({ code: "custom", message: "Informe o CREF com numero e categoria, por exemplo 012345-G." });
         return z.NEVER;
       }
 
@@ -59,6 +60,27 @@ export const registerSchema = z
       context.addIssue({ code: "custom", path: ["name"], message: "Informe seu nome completo." });
     }
   });
+
+const fullNameSchema = z
+  .string()
+  .trim()
+  .min(2)
+  .max(120)
+  .refine((value) => value.split(/\s+/).length >= 2, "Informe seu nome completo.");
+
+export const professionalRequestSchema = professionalProfileSchema.extend({ fullName: fullNameSchema });
+
+export const approveRequestSchema = z.object({
+  crefChecked: z.literal(true, { error: "Confirme que o CREF foi analisado e considerado valido." })
+});
+
+export const rejectRequestSchema = z.object({
+  reason: z.string().trim().max(500).optional()
+});
+
+export const markNotificationsSchema = z.object({
+  ids: z.array(z.string().min(1)).max(100).optional()
+});
 
 export const deleteAccountSchema = z.object({
   password: z.string().min(1, "Informe sua senha.")
