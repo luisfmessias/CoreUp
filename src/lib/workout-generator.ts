@@ -3,7 +3,20 @@ import { normalizeText } from "@/lib/exercises";
 
 export type TrainingGoal = "hipertrofia" | "forca" | "emagrecimento" | "saude";
 export type TrainingLevel = "iniciante" | "intermediario" | "avancado";
-export type TrainingPreset = "ppl" | "superiores-inferiores" | "peito" | "costas" | "pernas" | "livre";
+export type TrainingPreset =
+  | "ppl"
+  | "superiores-inferiores"
+  | "peito"
+  | "costas"
+  | "pernas"
+  | "full-body"
+  | "abc"
+  | "abcd"
+  | "abcde"
+  | "gluteos"
+  | "bracos"
+  | "funcional"
+  | "livre";
 
 export type GeneratorPreferences = {
   goal: TrainingGoal;
@@ -21,6 +34,7 @@ type DayBlueprint = {
   focus: string;
   groups: string[];
   intensity: WorkoutDay["intensity"];
+  keepFocus?: boolean;
 };
 
 export type GeneratedPlan = {
@@ -29,7 +43,7 @@ export type GeneratedPlan = {
   notes: string[];
 };
 
-const dayLabels = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
+const dayLabels = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab", "Dom"];
 
 const mustCoverGroups = ["Peito", "Costas", "Quadríceps", "Posterior de Coxa", "Glúteos", "Ombros", "Abdômen"];
 
@@ -62,6 +76,13 @@ export const generatorOptions = {
     { id: "peito", label: "Foco em peito" },
     { id: "costas", label: "Foco em costas" },
     { id: "pernas", label: "Foco em pernas" },
+    { id: "full-body", label: "Corpo inteiro" },
+    { id: "abc", label: "ABC" },
+    { id: "abcd", label: "ABCD" },
+    { id: "abcde", label: "ABCDE" },
+    { id: "gluteos", label: "Foco em gluteos" },
+    { id: "bracos", label: "Foco em bracos" },
+    { id: "funcional", label: "Funcional e condicionamento" },
     { id: "livre", label: "Livre" }
   ] satisfies Array<{ id: TrainingPreset; label: string }>
 };
@@ -107,7 +128,7 @@ export function generateWorkoutPlan(exercises: Exercise[], preferences: Generato
     return {
       id: `gerado-${dayIndex + 1}`,
       label: dayLabels[dayIndex] ?? `D${dayIndex + 1}`,
-      focus: getWorkoutTitle(blueprint.groups, blueprint.focus),
+      focus: blueprint.keepFocus ? blueprint.focus : getWorkoutTitle(blueprint.groups, blueprint.focus),
       duration: `${preferences.minutesPerSession} min`,
       intensity: blueprint.intensity,
       exercises: dayExercises
@@ -128,7 +149,12 @@ export function getEquipmentList(exercises: Exercise[]) {
 }
 
 function getBlueprints(preferences: GeneratorPreferences): DayBlueprint[] {
-  const daysPerWeek = preferences.daysPerWeek;
+  const daysPerWeek = Math.min(Math.max(preferences.daysPerWeek, 1), 7);
+
+  if (daysPerWeek === 1) {
+    return [singleFullBody];
+  }
+
   const presetBlueprints = getPresetBlueprints(preferences.planPreset, daysPerWeek);
 
   if (presetBlueprints.length) {
@@ -157,54 +183,138 @@ function getBlueprints(preferences: GeneratorPreferences): DayBlueprint[] {
       { id: "legs", label: "Qua", focus: "Pernas", groups: ["Quadríceps", "Posterior de Coxa", "Glúteos", "Panturrilhas"], intensity: "Forte" },
       { id: "upper", label: "Qui", focus: "Superiores leve", groups: ["Costas", "Peito", "Ombros", "Abdômen"], intensity: "Moderado" },
       { id: "full", label: "Sex", focus: "Corpo todo", groups: ["Glúteos", "Quadríceps", "Costas", "Cardio", "Abdômen"], intensity: "Moderado" }
+    ],
+    6: [
+      { id: "push", label: "Seg", focus: "Peito, ombro e triceps", groups: ["Peito", "Ombros", "Tríceps"], intensity: "Forte" },
+      { id: "pull", label: "Ter", focus: "Costas e biceps", groups: ["Costas", "Bíceps", "Antebraço"], intensity: "Forte" },
+      { id: "legs", label: "Qua", focus: "Pernas", groups: ["Quadríceps", "Posterior de Coxa", "Glúteos", "Panturrilhas"], intensity: "Forte" },
+      { id: "push-b", label: "Qui", focus: "Peito, ombro e triceps", groups: ["Peito", "Ombros", "Tríceps"], intensity: "Moderado" },
+      { id: "pull-b", label: "Sex", focus: "Costas e biceps", groups: ["Costas", "Bíceps", "Antebraço"], intensity: "Moderado" },
+      { id: "legs-b", label: "Sab", focus: "Pernas", groups: ["Posterior de Coxa", "Glúteos", "Quadríceps", "Abdômen"], intensity: "Moderado" }
     ]
   };
 
-  return blueprints[Math.min(Math.max(daysPerWeek, 2), 5)];
+  if (daysPerWeek === 7) {
+    return [...blueprints[6], recoveryDay];
+  }
+
+  return blueprints[Math.max(daysPerWeek, 2)];
 }
 
-function getPresetBlueprints(preset: TrainingPreset, daysPerWeek: number): DayBlueprint[] {
-  const count = Math.min(Math.max(daysPerWeek, 2), 5);
-  const presets: Record<TrainingPreset, DayBlueprint[]> = {
-    ppl: [
-      { id: "push", label: "Seg", focus: "Push", groups: ["Peito", "Ombros", "Tríceps"], intensity: "Forte" },
-      { id: "pull", label: "Ter", focus: "Pull", groups: ["Costas", "Bíceps", "Antebraço"], intensity: "Forte" },
-      { id: "legs", label: "Qua", focus: "Legs", groups: ["Quadríceps", "Posterior de Coxa", "Glúteos", "Panturrilhas"], intensity: "Forte" },
-      { id: "push-b", label: "Qui", focus: "Push B", groups: ["Peito", "Ombros", "Tríceps"], intensity: "Moderado" },
-      { id: "pull-b", label: "Sex", focus: "Pull B", groups: ["Costas", "Bíceps", "Antebraço"], intensity: "Moderado" }
-    ],
-    "superiores-inferiores": [
-      { id: "upper-a", label: "Seg", focus: "Superiores A", groups: ["Peito", "Costas", "Ombros", "Bíceps", "Tríceps"], intensity: "Forte" },
-      { id: "lower-a", label: "Ter", focus: "Inferiores A", groups: ["Quadríceps", "Posterior de Coxa", "Glúteos", "Panturrilhas"], intensity: "Forte" },
-      { id: "upper-b", label: "Qui", focus: "Superiores B", groups: ["Costas", "Peito", "Ombros", "Antebraço"], intensity: "Moderado" },
-      { id: "lower-b", label: "Sex", focus: "Inferiores B", groups: ["Glúteos", "Posterior de Coxa", "Quadríceps", "Abdômen"], intensity: "Moderado" },
-      { id: "core", label: "Sab", focus: "Complementar", groups: ["Abdômen", "Cardio", "Corpo Inteiro / Funcionais"], intensity: "Leve" }
-    ],
-    peito: [
-      { id: "chest-a", label: "Seg", focus: "Peito", groups: ["Peito", "Ombros", "Tríceps"], intensity: "Forte" },
-      { id: "back", label: "Ter", focus: "Costas", groups: ["Costas", "Bíceps", "Antebraço"], intensity: "Moderado" },
-      { id: "legs", label: "Qua", focus: "Pernas", groups: ["Quadríceps", "Posterior de Coxa", "Glúteos"], intensity: "Forte" },
-      { id: "chest-b", label: "Qui", focus: "Peito", groups: ["Peito", "Ombros", "Tríceps"], intensity: "Moderado" },
-      { id: "full", label: "Sex", focus: "Corpo todo", groups: ["Costas", "Peito", "Abdômen"], intensity: "Leve" }
-    ],
-    costas: [
-      { id: "back-a", label: "Seg", focus: "Costas", groups: ["Costas", "Bíceps", "Antebraço"], intensity: "Forte" },
-      { id: "push", label: "Ter", focus: "Peito", groups: ["Peito", "Ombros", "Tríceps"], intensity: "Moderado" },
-      { id: "legs", label: "Qua", focus: "Pernas", groups: ["Quadríceps", "Posterior de Coxa", "Glúteos"], intensity: "Forte" },
-      { id: "back-b", label: "Qui", focus: "Costas", groups: ["Costas", "Bíceps", "Antebraço"], intensity: "Moderado" },
-      { id: "core", label: "Sex", focus: "Centro", groups: ["Abdômen", "Cardio"], intensity: "Leve" }
-    ],
-    pernas: [
-      { id: "legs-a", label: "Seg", focus: "Pernas", groups: ["Quadríceps", "Glúteos", "Panturrilhas"], intensity: "Forte" },
-      { id: "upper", label: "Ter", focus: "Superiores", groups: ["Peito", "Costas", "Ombros"], intensity: "Moderado" },
-      { id: "legs-b", label: "Qua", focus: "Pernas", groups: ["Posterior de Coxa", "Glúteos", "Abdômen"], intensity: "Forte" },
-      { id: "pull", label: "Qui", focus: "Costas", groups: ["Costas", "Bíceps", "Antebraço"], intensity: "Moderado" },
-      { id: "legs-c", label: "Sex", focus: "Pernas", groups: ["Quadríceps", "Posterior de Coxa", "Panturrilhas"], intensity: "Moderado" }
-    ],
-    livre: []
-  };
+const singleFullBody: DayBlueprint = {
+  id: "full",
+  label: "Seg",
+  focus: "Corpo todo",
+  groups: ["Quadríceps", "Peito", "Costas", "Ombros", "Posterior de Coxa", "Abdômen"],
+  intensity: "Moderado",
+  keepFocus: true
+};
 
-  return presets[preset].slice(0, count);
+const recoveryDay: DayBlueprint = {
+  id: "recovery",
+  label: "Dom",
+  focus: "Recuperacao ativa",
+  groups: ["Abdômen", "Cardio", "Corpo Inteiro / Funcionais"],
+  intensity: "Leve"
+};
+
+const presetBlueprints: Record<TrainingPreset, DayBlueprint[]> = {
+  ppl: [
+    { id: "push", label: "Seg", focus: "Push", groups: ["Peito", "Ombros", "Tríceps"], intensity: "Forte" },
+    { id: "pull", label: "Ter", focus: "Pull", groups: ["Costas", "Bíceps", "Antebraço"], intensity: "Forte" },
+    { id: "legs", label: "Qua", focus: "Legs", groups: ["Quadríceps", "Posterior de Coxa", "Glúteos", "Panturrilhas"], intensity: "Forte" },
+    { id: "push-b", label: "Qui", focus: "Push B", groups: ["Peito", "Ombros", "Tríceps"], intensity: "Moderado" },
+    { id: "pull-b", label: "Sex", focus: "Pull B", groups: ["Costas", "Bíceps", "Antebraço"], intensity: "Moderado" },
+    { id: "legs-b", label: "Sab", focus: "Legs B", groups: ["Posterior de Coxa", "Glúteos", "Quadríceps", "Panturrilhas"], intensity: "Moderado" }
+  ],
+  "superiores-inferiores": [
+    { id: "upper-a", label: "Seg", focus: "Superiores A", groups: ["Peito", "Costas", "Ombros", "Bíceps", "Tríceps"], intensity: "Forte" },
+    { id: "lower-a", label: "Ter", focus: "Inferiores A", groups: ["Quadríceps", "Posterior de Coxa", "Glúteos", "Panturrilhas"], intensity: "Forte" },
+    { id: "upper-b", label: "Qui", focus: "Superiores B", groups: ["Costas", "Peito", "Ombros", "Antebraço"], intensity: "Moderado" },
+    { id: "lower-b", label: "Sex", focus: "Inferiores B", groups: ["Glúteos", "Posterior de Coxa", "Quadríceps", "Abdômen"], intensity: "Moderado" },
+    { id: "core", label: "Sab", focus: "Complementar", groups: ["Abdômen", "Cardio", "Corpo Inteiro / Funcionais"], intensity: "Leve" }
+  ],
+  peito: [
+    { id: "chest-a", label: "Seg", focus: "Peito", groups: ["Peito", "Ombros", "Tríceps"], intensity: "Forte" },
+    { id: "back", label: "Ter", focus: "Costas", groups: ["Costas", "Bíceps", "Antebraço"], intensity: "Moderado" },
+    { id: "legs", label: "Qua", focus: "Pernas", groups: ["Quadríceps", "Posterior de Coxa", "Glúteos"], intensity: "Forte" },
+    { id: "chest-b", label: "Qui", focus: "Peito", groups: ["Peito", "Ombros", "Tríceps"], intensity: "Moderado" },
+    { id: "full", label: "Sex", focus: "Corpo todo", groups: ["Costas", "Peito", "Abdômen"], intensity: "Leve" }
+  ],
+  costas: [
+    { id: "back-a", label: "Seg", focus: "Costas", groups: ["Costas", "Bíceps", "Antebraço"], intensity: "Forte" },
+    { id: "push", label: "Ter", focus: "Peito", groups: ["Peito", "Ombros", "Tríceps"], intensity: "Moderado" },
+    { id: "legs", label: "Qua", focus: "Pernas", groups: ["Quadríceps", "Posterior de Coxa", "Glúteos"], intensity: "Forte" },
+    { id: "back-b", label: "Qui", focus: "Costas", groups: ["Costas", "Bíceps", "Antebraço"], intensity: "Moderado" },
+    { id: "core", label: "Sex", focus: "Centro", groups: ["Abdômen", "Cardio"], intensity: "Leve" }
+  ],
+  pernas: [
+    { id: "legs-a", label: "Seg", focus: "Pernas", groups: ["Quadríceps", "Glúteos", "Panturrilhas"], intensity: "Forte" },
+    { id: "upper", label: "Ter", focus: "Superiores", groups: ["Peito", "Costas", "Ombros"], intensity: "Moderado" },
+    { id: "legs-b", label: "Qua", focus: "Pernas", groups: ["Posterior de Coxa", "Glúteos", "Abdômen"], intensity: "Forte" },
+    { id: "pull", label: "Qui", focus: "Costas", groups: ["Costas", "Bíceps", "Antebraço"], intensity: "Moderado" },
+    { id: "legs-c", label: "Sex", focus: "Pernas", groups: ["Quadríceps", "Posterior de Coxa", "Panturrilhas"], intensity: "Moderado" }
+  ],
+  "full-body": [
+    { id: "full-a", label: "Seg", focus: "Corpo todo A", groups: ["Quadríceps", "Peito", "Costas", "Ombros", "Abdômen"], intensity: "Moderado", keepFocus: true },
+    { id: "full-b", label: "Ter", focus: "Corpo todo B", groups: ["Posterior de Coxa", "Glúteos", "Costas", "Peito", "Panturrilhas"], intensity: "Moderado", keepFocus: true },
+    { id: "full-c", label: "Qua", focus: "Corpo todo C", groups: ["Quadríceps", "Ombros", "Costas", "Bíceps", "Tríceps"], intensity: "Moderado", keepFocus: true }
+  ],
+  abc: [
+    { id: "a", label: "Seg", focus: "Treino A: peito e triceps", groups: ["Peito", "Tríceps"], intensity: "Forte", keepFocus: true },
+    { id: "b", label: "Ter", focus: "Treino B: costas e biceps", groups: ["Costas", "Bíceps"], intensity: "Forte", keepFocus: true },
+    { id: "c", label: "Qua", focus: "Treino C: pernas e ombros", groups: ["Quadríceps", "Posterior de Coxa", "Glúteos", "Ombros"], intensity: "Forte", keepFocus: true }
+  ],
+  abcd: [
+    { id: "a", label: "Seg", focus: "Treino A: peito e triceps", groups: ["Peito", "Tríceps"], intensity: "Forte", keepFocus: true },
+    { id: "b", label: "Ter", focus: "Treino B: costas e biceps", groups: ["Costas", "Bíceps"], intensity: "Forte", keepFocus: true },
+    { id: "c", label: "Qua", focus: "Treino C: pernas", groups: ["Quadríceps", "Posterior de Coxa", "Glúteos", "Panturrilhas"], intensity: "Forte", keepFocus: true },
+    { id: "d", label: "Qui", focus: "Treino D: ombros e abdomen", groups: ["Ombros", "Abdômen", "Antebraço"], intensity: "Moderado", keepFocus: true }
+  ],
+  abcde: [
+    { id: "a", label: "Seg", focus: "Peito", groups: ["Peito"], intensity: "Forte", keepFocus: true },
+    { id: "b", label: "Ter", focus: "Costas", groups: ["Costas"], intensity: "Forte", keepFocus: true },
+    { id: "c", label: "Qua", focus: "Pernas", groups: ["Quadríceps", "Posterior de Coxa", "Glúteos", "Panturrilhas"], intensity: "Forte", keepFocus: true },
+    { id: "d", label: "Qui", focus: "Ombros e abdomen", groups: ["Ombros", "Abdômen"], intensity: "Moderado", keepFocus: true },
+    { id: "e", label: "Sex", focus: "Bracos", groups: ["Bíceps", "Tríceps", "Antebraço"], intensity: "Moderado", keepFocus: true }
+  ],
+  gluteos: [
+    { id: "glutes-a", label: "Seg", focus: "Gluteos e posterior", groups: ["Glúteos", "Posterior de Coxa"], intensity: "Forte", keepFocus: true },
+    { id: "upper", label: "Ter", focus: "Superiores", groups: ["Peito", "Costas", "Ombros"], intensity: "Moderado", keepFocus: true },
+    { id: "glutes-b", label: "Qua", focus: "Gluteos e quadriceps", groups: ["Glúteos", "Quadríceps", "Panturrilhas"], intensity: "Forte", keepFocus: true },
+    { id: "pull", label: "Qui", focus: "Costas e bracos", groups: ["Costas", "Bíceps", "Tríceps"], intensity: "Moderado", keepFocus: true },
+    { id: "glutes-c", label: "Sex", focus: "Gluteos e abdomen", groups: ["Glúteos", "Abdômen"], intensity: "Moderado", keepFocus: true }
+  ],
+  bracos: [
+    { id: "arms-a", label: "Seg", focus: "Bracos", groups: ["Bíceps", "Tríceps", "Antebraço"], intensity: "Forte", keepFocus: true },
+    { id: "legs", label: "Ter", focus: "Pernas", groups: ["Quadríceps", "Posterior de Coxa", "Glúteos"], intensity: "Forte", keepFocus: true },
+    { id: "upper", label: "Qua", focus: "Peito e costas", groups: ["Peito", "Costas"], intensity: "Moderado", keepFocus: true },
+    { id: "arms-b", label: "Qui", focus: "Bracos", groups: ["Tríceps", "Bíceps", "Antebraço"], intensity: "Moderado", keepFocus: true },
+    { id: "shoulders", label: "Sex", focus: "Ombros e abdomen", groups: ["Ombros", "Abdômen"], intensity: "Moderado", keepFocus: true }
+  ],
+  funcional: [
+    { id: "func-a", label: "Seg", focus: "Funcional e cardio", groups: ["Corpo Inteiro / Funcionais", "Cardio", "Abdômen"], intensity: "Moderado", keepFocus: true },
+    { id: "strength", label: "Ter", focus: "Forca geral", groups: ["Quadríceps", "Costas", "Peito", "Glúteos"], intensity: "Moderado", keepFocus: true },
+    { id: "func-b", label: "Qua", focus: "Funcional e cardio", groups: ["Corpo Inteiro / Funcionais", "Glúteos", "Cardio"], intensity: "Moderado", keepFocus: true }
+  ],
+  livre: []
+};
+
+// Ate 5 dias o resultado precisa continuar igual: os treinos avaliados por profissionais dependem dele.
+function getPresetBlueprints(preset: TrainingPreset, daysPerWeek: number): DayBlueprint[] {
+  const base = presetBlueprints[preset];
+
+  if (!base.length) {
+    return [];
+  }
+
+  const trainingDays = daysPerWeek === 7 ? 6 : daysPerWeek;
+  const days = Array.from({ length: trainingDays }, (_, index) => {
+    const blueprint = base[index % base.length];
+    return index < base.length ? blueprint : { ...blueprint, id: `${blueprint.id}-${index}`, intensity: "Moderado" as const };
+  });
+
+  return daysPerWeek === 7 ? [...days, recoveryDay] : days;
 }
 
 function getWorkoutTitle(groups: string[], fallback: string) {
@@ -257,14 +367,14 @@ function getAllowedEquipment(selectedEquipment: string[]) {
 }
 
 function getTargetExerciseCount(minutes: number, level: TrainingLevel) {
-  const base = minutes >= 60 ? 6 : minutes >= 45 ? 5 : 4;
+  const base = minutes >= 120 ? 8 : minutes >= 90 ? 7 : minutes >= 60 ? 6 : minutes >= 45 ? 5 : minutes >= 30 ? 4 : 3;
 
   if (level === "iniciante") {
-    return Math.max(4, base - 1);
+    return Math.max(Math.min(4, base), base - 1);
   }
 
   if (level === "avancado") {
-    return Math.min(7, base + 1);
+    return Math.min(9, base + 1);
   }
 
   return base;

@@ -1,23 +1,29 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { formatDateTime, type AppNotification } from "@/lib/api-client";
 import { requestStatusLabels } from "@/lib/professional";
 import { Badge } from "@/components/ui/Badge";
+import { IconButton } from "@/components/ui/IconButton";
 
 export function NotificationsView({
   notifications,
   unreadCount,
   onOpen,
-  onMarkAllRead
+  onMarkAllRead,
+  onBack
 }: {
   notifications: AppNotification[];
   unreadCount: number;
   onOpen: (notification: AppNotification) => void;
   onMarkAllRead: () => void;
+  onBack: () => void;
 }) {
   return (
     <section className="space-y-5">
+      <IconButton label="Voltar" onClick={onBack}>
+        <ChevronLeft size={20} />
+      </IconButton>
       <div className="flex items-end justify-between gap-3">
         <div>
           <p className="text-sm text-white/45">{unreadCount ? `${unreadCount} nao lidas` : "Tudo lido"}</p>

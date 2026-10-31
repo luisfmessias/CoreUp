@@ -151,9 +151,23 @@ export const bodyMetricSchema = z.object({
 export const preferencesSchema = z.object({
   goal: z.enum(["hipertrofia", "forca", "emagrecimento", "saude"]),
   level: z.enum(["iniciante", "intermediario", "avancado"]),
-  planPreset: z.enum(["ppl", "superiores-inferiores", "peito", "costas", "pernas", "livre"]),
-  daysPerWeek: z.number().int().min(2).max(5),
-  minutesPerSession: z.number().int().min(35).max(70),
+  planPreset: z.enum([
+    "ppl",
+    "superiores-inferiores",
+    "peito",
+    "costas",
+    "pernas",
+    "full-body",
+    "abc",
+    "abcd",
+    "abcde",
+    "gluteos",
+    "bracos",
+    "funcional",
+    "livre"
+  ]),
+  daysPerWeek: z.number().int().min(1).max(7),
+  minutesPerSession: z.number().int().min(15).max(180),
   availableEquipment: z.array(z.string().max(40)).max(20),
   favoriteExerciseIds: z.array(z.number().int().positive()).max(200)
 });

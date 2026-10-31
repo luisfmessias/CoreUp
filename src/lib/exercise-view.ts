@@ -4,17 +4,11 @@ export function exerciseMap(exercises: Exercise[]) {
   return new Map(exercises.map((exercise) => [exercise.id, exercise]));
 }
 
-export function getTodayWorkout(plan: WorkoutDay[]) {
-  const today = new Date().getDay();
-  const indexByDay = new Map([
-    [1, 0],
-    [2, 1],
-    [3, 2],
-    [4, 3],
-    [5, 4]
-  ]);
+const weekdayLabels = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
 
-  return plan[indexByDay.get(today) ?? 0] ?? plan[0];
+export function getTodayWorkout(plan: WorkoutDay[]) {
+  const today = weekdayLabels[new Date().getDay()];
+  return plan.find((day) => day.label === today) ?? plan[0];
 }
 
 export function summarizeGroups(exercises: Exercise[]) {

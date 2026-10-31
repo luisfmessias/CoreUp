@@ -16,8 +16,8 @@ import {
   LogOut,
   Mail,
   Plus,
-  RotateCcw,
   Search,
+  ChevronDown,
   ShieldCheck,
   Sparkles,
   Bell,
@@ -113,6 +113,7 @@ function tabsFor(user: AuthUser) {
 }
 
 const refreshIntervalMs = 30_000;
+const favoritesFilter = "Favoritos";
 
 export function CoreUpApp({ exercises }: CoreUpAppProps) {
   const [authToken, setAuthToken] = useState<string | null>(null);
@@ -140,6 +141,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
   const [adminRequestId, setAdminRequestId] = useState<string | null>(null);
   const [justRequested, setJustRequested] = useState(false);
   const [tabResetKey, setTabResetKey] = useState(0);
+  const [returnTab, setReturnTab] = useState<TabId>("home");
 
   const byId = useMemo(() => exerciseMap(exercises), [exercises]);
   const savedPlan = useMemo<GeneratedPlan>(() => {
@@ -150,10 +152,10 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
   const todayWorkout = useMemo(() => (plan.length ? getTodayWorkout(plan) : null), [plan]);
   const selectedDay = plan.find((day) => day.id === activeDayId) ?? todayWorkout;
   const groupSummary = useMemo(() => summarizeGroups(exercises), [exercises]);
-  const groups = useMemo(() => ["Todos", ...Object.keys(groupSummary)], [groupSummary]);
+  const groups = useMemo(() => ["Todos", favoritesFilter, ...Object.keys(groupSummary)], [groupSummary]);
   const equipment = useMemo(() => getEquipmentList(exercises), [exercises]);
   const favoriteExercises = useMemo(
-    () => exercises.filter((exercise) => preferences.favoriteExerciseIds.includes(exercise.id)).slice(0, 8),
+    () => exercises.filter((exercise) => preferences.favoriteExerciseIds.includes(exercise.id)),
     [exercises, preferences.favoriteExerciseIds]
   );
 
@@ -304,17 +306,23 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
       .replace(/[\u0300-\u036f]/g, "")
       .toLowerCase();
 
-    return exercises
-      .filter((exercise) => selectedGroup === "Todos" || exercise.grupoMuscular === selectedGroup)
+    const showFavorites = selectedGroup === favoritesFilter;
+    const matches = exercises
+      .filter((exercise) =>
+        showFavorites
+          ? preferences.favoriteExerciseIds.includes(exercise.id)
+          : selectedGroup === "Todos" || exercise.grupoMuscular === selectedGroup
+      )
       .filter((exercise) =>
         exercise.nome
           .normalize("NFD")
           .replace(/[\u0300-\u036f]/g, "")
           .toLowerCase()
           .includes(term)
-      )
-      .slice(0, 18);
-  }, [exercises, query, selectedGroup]);
+      );
+
+    return showFavorites ? matches : matches.slice(0, 18);
+  }, [exercises, query, selectedGroup, preferences.favoriteExerciseIds]);
 
   function updatePreferences(nextPreferences: GeneratorPreferences) {
     preferencesDirty.current = true;
@@ -369,6 +377,27 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
     const nextDays = savedDays.filter((day) => day.id !== dayId);
     setSavedDays(nextDays);
     setActiveDayId(nextDays[0]?.id ?? "");
+  }
+
+  async function clearPlan() {
+    if (!authToken) {
+      return false;
+    }
+
+    setPlanError("");
+    const response = await apiFetch(authToken, "/api/plan", {
+      method: "PUT",
+      body: JSON.stringify({ preferences, days: [] })
+    }).catch(() => null);
+
+    if (!response?.ok) {
+      setPlanError("Nao foi possivel limpar o treino.");
+      return false;
+    }
+
+    setSavedDays([]);
+    setActiveDayId("");
+    return true;
   }
 
   async function deleteAccount(password: string) {
@@ -545,6 +574,15 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
   function changeTab(tab: TabId) {
     setAdminRequestId(null);
 
+    if (tab === "notifications" && activeTab === "notifications") {
+      setActiveTab(returnTab);
+      return;
+    }
+
+    if (tab === "notifications") {
+      setReturnTab(activeTab);
+    }
+
     if (tab === activeTab) {
       setTabResetKey((key) => key + 1);
     }
@@ -611,15 +649,16 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
           )}
           {activeTab === "builder" && (
             <BuilderView
-              exercises={exercises}
+              byId={byId}
               equipment={equipment}
+              exercises={exercises}
               favoriteExercises={favoriteExercises}
-              preferences={preferences}
               generatedPlan={generatedPlan}
+              hasSavedPlan={savedDays.length > 0}
+              preferences={preferences}
               saving={planSaving}
               onChange={updatePreferences}
               onFavoriteToggle={toggleFavorite}
-              onOpenPlan={() => changeTab("plan")}
               onSavePlan={saveGeneratedPlan}
             />
           )}
@@ -632,6 +671,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
               savedPlan={savedPlan}
               onSelectDay={setActiveDayId}
               onOpenBuilder={() => changeTab("builder")}
+              onClearPlan={clearPlan}
               onRemoveDay={removeWorkoutDay}
             />
           )}
@@ -661,6 +701,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
             <NotificationsView
               notifications={notifications}
               unreadCount={unreadCount}
+              onBack={() => changeTab(returnTab)}
               onMarkAllRead={() => void markNotificationsRead()}
               onOpen={openNotification}
             />
@@ -1073,6 +1114,10 @@ function Alert({ tone, children }: { tone: "error" | "success"; children: ReactN
   );
 }
 
+function formatPrescription(item: { sets: number; reps: string }) {
+  return item.reps.endsWith("min") ? item.reps : `${item.sets} × ${item.reps}`;
+}
+
 function parseOptionalNumber(value: string) {
   if (!value.trim()) {
     return undefined;
@@ -1242,7 +1287,7 @@ function TodayWorkout({ workout, byId, notes, weeklySets, onOpenPlan }: TodayWor
                 <p className="text-xs text-white/45">{exercise?.grupoMuscular}</p>
               </div>
               <p className="shrink-0 text-sm tabular-nums text-white/70">
-                {item.sets} × {item.reps}
+                {formatPrescription(item)}
               </p>
             </li>
           );
@@ -1268,12 +1313,80 @@ type BuilderViewProps = {
   favoriteExercises: Exercise[];
   preferences: GeneratorPreferences;
   generatedPlan: GeneratedPlan;
+  byId: Map<number, Exercise>;
+  hasSavedPlan: boolean;
   saving: boolean;
   onChange: (preferences: GeneratorPreferences) => void;
   onFavoriteToggle: (exerciseId: number) => void;
-  onOpenPlan: () => void;
   onSavePlan: () => void;
 };
+
+const builderSteps = [
+  { title: "Seu objetivo", description: "O que voce quer alcancar e ha quanto tempo treina." },
+  { title: "Sua rotina", description: "Quantos dias e quanto tempo voce tem para treinar." },
+  { title: "Equipamentos e favoritos", description: "Opcional: ajuste ao que voce tem disponivel." },
+  { title: "Revise e salve", description: "Confira a semana montada antes de salvar." }
+];
+
+const goalDescriptions: Record<GeneratorPreferences["goal"], string> = {
+  hipertrofia: "Ganhar massa muscular",
+  forca: "Levantar mais peso",
+  emagrecimento: "Perder gordura, com cardio no treino",
+  saude: "Condicionamento e bem-estar"
+};
+
+const levelDescriptions: Record<GeneratorPreferences["level"], string> = {
+  iniciante: "Treina ha menos de 6 meses",
+  intermediario: "Treina de 6 meses a 2 anos",
+  avancado: "Treina ha mais de 2 anos"
+};
+
+const presetDescriptions: Record<GeneratorPreferences["planPreset"], string> = {
+  livre: "O app escolhe a melhor divisao para os seus dias",
+  "full-body": "Todos os grupos em cada treino, alternando A, B e C",
+  abc: "A: peito e triceps · B: costas e biceps · C: pernas e ombros",
+  abcd: "A: peito e triceps · B: costas e biceps · C: pernas · D: ombros",
+  abcde: "Um grupo por dia: peito, costas, pernas, ombros e bracos",
+  ppl: "Empurrar, puxar e pernas em dias separados",
+  "superiores-inferiores": "Alterna parte de cima e parte de baixo do corpo",
+  peito: "Mais volume para o peitoral",
+  costas: "Mais volume para as costas",
+  pernas: "Mais volume para as pernas",
+  gluteos: "Mais volume para gluteos e posteriores",
+  bracos: "Mais volume para biceps e triceps",
+  funcional: "Exercicios funcionais e cardio para condicionamento"
+};
+
+const presetOrder: GeneratorPreferences["planPreset"][] = [
+  "livre",
+  "full-body",
+  "abc",
+  "abcd",
+  "ppl",
+  "superiores-inferiores",
+  "abcde",
+  "peito",
+  "costas",
+  "pernas",
+  "gluteos",
+  "bracos",
+  "funcional"
+];
+
+const visiblePresetCount = 6;
+const visibleFavoriteCount = 6;
+const dayPresets = [2, 3, 4, 5, 6];
+const minutePresets = [30, 45, 60, 90];
+
+function formatDuration(minutes: number) {
+  if (minutes < 60) {
+    return `${minutes} min`;
+  }
+
+  const hours = Math.floor(minutes / 60);
+  const rest = minutes % 60;
+  return rest ? `${hours}h${String(rest).padStart(2, "0")}` : `${hours}h`;
+}
 
 function BuilderView({
   exercises,
@@ -1281,15 +1394,29 @@ function BuilderView({
   favoriteExercises,
   preferences,
   generatedPlan,
+  byId,
+  hasSavedPlan,
   saving,
   onChange,
   onFavoriteToggle,
-  onOpenPlan,
   onSavePlan
 }: BuilderViewProps) {
+  const [step, setStep] = useState(0);
+  const isLastStep = step === builderSteps.length - 1;
   const suggestedFavorites = exercises
     .filter((exercise) => ["Peito", "Costas", "Quadríceps", "Glúteos", "Abdômen"].includes(exercise.grupoMuscular))
-    .slice(0, 10);
+    .slice(0, 6);
+  const [showAllPresets, setShowAllPresets] = useState(
+    () => presetOrder.indexOf(preferences.planPreset) >= visiblePresetCount
+  );
+  const visiblePresets = showAllPresets ? presetOrder : presetOrder.slice(0, visiblePresetCount);
+  const [showAllFavorites, setShowAllFavorites] = useState(false);
+  const favoriteList = favoriteExercises.length
+    ? showAllFavorites
+      ? favoriteExercises
+      : favoriteExercises.slice(0, visibleFavoriteCount)
+    : suggestedFavorites;
+  const goalLabel = generatorOptions.goals.find((goal) => goal.id === preferences.goal)?.label ?? "";
 
   const update = (patch: Partial<GeneratorPreferences>) => onChange({ ...preferences, ...patch });
 
@@ -1301,155 +1428,408 @@ function BuilderView({
     update({ availableEquipment: nextEquipment.length ? nextEquipment : ["Peso corporal"] });
   };
 
+  function goTo(nextStep: number) {
+    setStep(nextStep);
+    window.scrollTo({ top: 0 });
+  }
+
   return (
-    <section className="space-y-5">
-      <div className="flex items-end justify-between gap-3">
-        <div>
-          <p className="text-sm text-white/45">Gerador inteligente</p>
-          <h2 className="text-2xl font-semibold tracking-tight">Montar treino</h2>
+    <section className="space-y-6">
+      <div>
+        <p className="text-sm text-white/45">
+          Passo {step + 1} de {builderSteps.length}
+        </p>
+        <h2 className="text-2xl font-semibold tracking-tight">{builderSteps[step].title}</h2>
+        <p className="mt-1 text-sm text-white/55">{builderSteps[step].description}</p>
+        <div className="mt-4 grid grid-cols-4 gap-1.5" aria-hidden="true">
+          {builderSteps.map((item, index) => (
+            <span
+              key={item.title}
+              className={`h-1 rounded-full transition ${index <= step ? "bg-accent" : "bg-white/10"}`}
+            />
+          ))}
         </div>
-        <IconButton label="Abrir plano" className="text-accent" onClick={onOpenPlan}>
-          <ChevronRight size={20} />
-        </IconButton>
       </div>
 
-      <section className="glass-strong rounded-2xl p-5">
-        <p className="text-xs font-medium text-accent">Previa do plano</p>
-        <h3 className="mt-2 text-xl font-semibold tracking-tight">
-          {generatedPlan.days.length} dias · {Object.keys(generatedPlan.coverage).length} grupos musculares
-        </h3>
-        <p className="mt-1 text-sm leading-relaxed text-white/55">
-          O aluno escolhe o que prefere, e o app completa a semana para nao deixar grupos importantes de fora.
-        </p>
-        <button
-          className="btn-primary mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-xl px-4 text-[15px] font-semibold"
-          disabled={saving || !generatedPlan.days.length}
-          onClick={onSavePlan}
-          type="button"
-        >
-          {saving && <Loader2 size={18} className="animate-spin" />}
-          {saving ? "Salvando plano" : "Usar esse plano"}
-        </button>
-        <p className="mt-2 text-center text-xs text-white/45">
-          Substitui o plano atual da aba Treino.
-        </p>
-      </section>
+      {step === 0 && (
+        <>
+          <BuilderSection title="Qual e o seu objetivo?">
+            <div className="grid grid-cols-2 gap-2">
+              {generatorOptions.goals.map((goal) => (
+                <OptionCard
+                  key={goal.id}
+                  active={preferences.goal === goal.id}
+                  description={goalDescriptions[goal.id]}
+                  label={goal.label}
+                  onClick={() => update({ goal: goal.id })}
+                />
+              ))}
+            </div>
+          </BuilderSection>
+          <BuilderSection title="Qual e o seu nivel?">
+            <div className="space-y-2">
+              {generatorOptions.levels.map((level) => (
+                <OptionCard
+                  key={level.id}
+                  active={preferences.level === level.id}
+                  description={levelDescriptions[level.id]}
+                  label={level.label}
+                  onClick={() => update({ level: level.id })}
+                />
+              ))}
+            </div>
+          </BuilderSection>
+        </>
+      )}
 
-      <ControlBlock title="Catalogo">
-        <div className="grid grid-cols-2 gap-2">
-          {generatorOptions.presets.map((preset) => (
-            <ChoiceButton
-              key={preset.id}
-              active={preferences.planPreset === preset.id}
-              label={preset.label}
-              onClick={() => update({ planPreset: preset.id })}
+      {step === 1 && (
+        <>
+          <BuilderSection title="Quantos dias por semana?">
+            <div className="grid grid-cols-5 gap-2">
+              {dayPresets.map((days) => (
+                <ChipButton
+                  key={days}
+                  active={preferences.daysPerWeek === days}
+                  label={`${days}`}
+                  onClick={() => update({ daysPerWeek: days })}
+                />
+              ))}
+            </div>
+            <CustomNumberField
+              key={`dias-${dayPresets.includes(preferences.daysPerWeek)}`}
+              label="Outro numero de dias"
+              max={7}
+              min={1}
+              presets={dayPresets}
+              unit="dias"
+              value={preferences.daysPerWeek}
+              onChange={(daysPerWeek) => update({ daysPerWeek })}
             />
-          ))}
-        </div>
-      </ControlBlock>
-
-      <ControlBlock title="Objetivo">
-        <SegmentedGrid>
-          {generatorOptions.goals.map((goal) => (
-            <ChoiceButton
-              key={goal.id}
-              active={preferences.goal === goal.id}
-              label={goal.label}
-              onClick={() => update({ goal: goal.id })}
-            />
-          ))}
-        </SegmentedGrid>
-      </ControlBlock>
-
-      <section className="grid grid-cols-2 gap-3">
-        <ControlBlock title="Nivel">
-          <div className="space-y-2">
-            {generatorOptions.levels.map((level) => (
-              <ChoiceButton
-                key={level.id}
-                active={preferences.level === level.id}
-                label={level.label}
-                onClick={() => update({ level: level.id })}
-              />
-            ))}
-          </div>
-        </ControlBlock>
-
-        <ControlBlock title="Semana">
-          <Stepper
-            label="dias"
-            max={5}
-            min={2}
-            value={preferences.daysPerWeek}
-            onChange={(value) => update({ daysPerWeek: value })}
-          />
-          <div className="mt-3">
-            <Stepper
-              label="min"
-              max={70}
-              min={35}
-              step={5}
+          </BuilderSection>
+          <BuilderSection title="Quanto tempo por treino?">
+            <div className="grid grid-cols-4 gap-2">
+              {minutePresets.map((minutes) => (
+                <ChipButton
+                  key={minutes}
+                  active={preferences.minutesPerSession === minutes}
+                  label={formatDuration(minutes)}
+                  onClick={() => update({ minutesPerSession: minutes })}
+                />
+              ))}
+            </div>
+            <CustomNumberField
+              key={`minutos-${minutePresets.includes(preferences.minutesPerSession)}`}
+              hint="Ex.: 75 para 1h15. Mais tempo, mais exercicios por dia."
+              label="Outro tempo"
+              max={180}
+              min={15}
+              presets={minutePresets}
+              unit="minutos"
               value={preferences.minutesPerSession}
-              onChange={(value) => update({ minutesPerSession: value })}
+              onChange={(minutesPerSession) => update({ minutesPerSession })}
             />
-          </div>
-        </ControlBlock>
-      </section>
-
-      <ControlBlock title="Equipamentos">
-        <div className="flex gap-2 overflow-x-auto pb-1">
-          {[...generatorOptions.equipment, ...equipment.filter((item) => !generatorOptions.equipment.includes(item))].map(
-            (item) => (
+          </BuilderSection>
+          <BuilderSection title="Como dividir os treinos?">
+            {preferences.daysPerWeek === 1 && (
+              <p className="-mt-1 mb-3 rounded-xl border border-white/[0.08] px-3 py-2.5 text-xs leading-relaxed text-white/60">
+                Com 1 dia por semana o treino e sempre de corpo inteiro, para nao deixar nenhum grupo de fora.
+              </p>
+            )}
+            <div className="space-y-2">
+              {visiblePresets.map((presetId) => (
+                <OptionCard
+                  key={presetId}
+                  active={preferences.planPreset === presetId}
+                  description={presetDescriptions[presetId]}
+                  label={
+                    presetId === "livre"
+                      ? "Automatica (recomendado)"
+                      : generatorOptions.presets.find((preset) => preset.id === presetId)?.label ?? presetId
+                  }
+                  onClick={() => update({ planPreset: presetId })}
+                />
+              ))}
+            </div>
+            {!showAllPresets && (
               <button
-                key={item}
-                className={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition ${
-                  preferences.availableEquipment.includes(item)
-                    ? "chip-active"
-                    : "border-white/10 bg-white/[0.04] text-white/65"
-                }`}
-                onClick={() => toggleEquipment(item)}
+                className="mt-3 flex h-10 w-full items-center justify-center gap-1.5 rounded-xl text-sm font-medium text-white/70 transition hover:bg-white/[0.04] hover:text-white"
+                onClick={() => setShowAllPresets(true)}
                 type="button"
               >
-                {item}
+                Ver mais divisoes ({presetOrder.length - visiblePresetCount})
+                <ChevronDown size={16} />
               </button>
-            )
+            )}
+          </BuilderSection>
+        </>
+      )}
+
+      {step === 2 && (
+        <>
+          <BuilderSection title="Onde voce treina?">
+            <div className="flex flex-wrap gap-2">
+              {[...generatorOptions.equipment, ...equipment.filter((item) => !generatorOptions.equipment.includes(item))].map(
+                (item) => (
+                  <button
+                    key={item}
+                    aria-pressed={preferences.availableEquipment.includes(item)}
+                    className={`rounded-full border px-3.5 py-1.5 text-sm font-medium transition ${
+                      preferences.availableEquipment.includes(item)
+                        ? "chip-active"
+                        : "border-white/[0.08] text-white/60 hover:border-white/20 hover:text-white"
+                    }`}
+                    onClick={() => toggleEquipment(item)}
+                    type="button"
+                  >
+                    {item}
+                  </button>
+                )
+              )}
+            </div>
+            <p className="mt-2 text-xs text-white/45">O treino so usa exercicios com o que voce marcar.</p>
+          </BuilderSection>
+          <BuilderSection title="Exercicios favoritos">
+            <p className="-mt-1 mb-2 text-xs leading-relaxed text-white/45">
+              Os marcados entram primeiro no seu treino. Voce pode favoritar outros na aba Exercicios.
+            </p>
+            <div className="divide-y divide-white/[0.06]">
+              {favoriteList.map((exercise) => (
+                <FavoriteRow
+                  key={exercise.id}
+                  exercise={exercise}
+                  active={preferences.favoriteExerciseIds.includes(exercise.id)}
+                  onToggle={() => onFavoriteToggle(exercise.id)}
+                />
+              ))}
+            </div>
+            {favoriteExercises.length > visibleFavoriteCount && (
+              <button
+                className="mt-2 flex h-10 w-full items-center justify-center gap-1.5 rounded-xl text-sm font-medium text-white/70 transition hover:bg-white/[0.04] hover:text-white"
+                onClick={() => setShowAllFavorites((visible) => !visible)}
+                type="button"
+              >
+                {showAllFavorites ? "Mostrar menos" : `Ver todos os favoritos (${favoriteExercises.length})`}
+                <ChevronDown size={16} className={showAllFavorites ? "rotate-180" : ""} />
+              </button>
+            )}
+          </BuilderSection>
+        </>
+      )}
+
+      {step === 3 && (
+        <>
+          <section className="glass-strong rounded-2xl p-5">
+            <p className="text-xs font-medium text-accent">Seu treino</p>
+            <h3 className="mt-2 text-xl font-semibold tracking-tight">
+              {generatedPlan.days.length} {generatedPlan.days.length === 1 ? "treino" : "treinos"} por semana
+            </h3>
+            <p className="mt-1 text-sm text-white/55">
+              {goalLabel} · {levelDescriptions[preferences.level].toLowerCase()} · {formatDuration(preferences.minutesPerSession)} por
+              treino
+            </p>
+            {hasSavedPlan && (
+              <p className="mt-3 text-xs leading-relaxed text-white/50">
+                Ao salvar, este treino substitui o que esta na aba Treino.
+              </p>
+            )}
+          </section>
+
+          <div className="space-y-3">
+            {generatedPlan.days.map((day) => (
+              <article key={day.id} className="glass rounded-2xl p-4">
+                <div className="flex items-baseline justify-between gap-3">
+                  <h4 className="text-[15px] font-semibold">
+                    <span className="mr-2 text-accent">{day.label}</span>
+                    {day.focus}
+                  </h4>
+                  <span className="shrink-0 text-xs text-white/45">{day.duration}</span>
+                </div>
+                <ul className="mt-3 space-y-2">
+                  {day.exercises.map((item) => (
+                    <li key={item.exerciseId} className="flex items-baseline justify-between gap-3 text-sm">
+                      <span className="min-w-0 truncate text-white/80">{byId.get(item.exerciseId)?.nome}</span>
+                      <span className="shrink-0 tabular-nums text-white/45">
+                        {formatPrescription(item)}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
+
+          <section className="border-t border-white/[0.07] pt-5">
+            <h3 className="text-sm font-medium text-white/80">Grupos trabalhados na semana</h3>
+            <p className="mb-4 text-xs text-white/45">Total de series por grupo muscular.</p>
+            <GroupBars groupSummary={generatedPlan.coverage} />
+            <ul className="mt-5 space-y-2 border-l border-white/10 pl-3">
+              {generatedPlan.notes.map((note) => (
+                <li key={note} className="text-xs leading-relaxed text-white/55">
+                  {note}
+                </li>
+              ))}
+            </ul>
+          </section>
+        </>
+      )}
+
+      <div className="glass-nav sticky bottom-[calc(5.75rem+env(safe-area-inset-bottom))] z-10 rounded-2xl p-3">
+        <p className="mb-2 text-center text-xs text-white/50">
+          {generatedPlan.days.length} {generatedPlan.days.length === 1 ? "dia" : "dias"} · {formatDuration(preferences.minutesPerSession)} · {goalLabel}
+        </p>
+        <div className="grid grid-cols-[auto_1fr] gap-2">
+          <button
+            className="h-11 rounded-xl border border-white/10 px-4 text-sm font-medium text-white/80 transition hover:bg-white/[0.05] disabled:opacity-40"
+            disabled={step === 0 || saving}
+            onClick={() => goTo(step - 1)}
+            type="button"
+          >
+            Voltar
+          </button>
+          {isLastStep ? (
+            <button
+              className="btn-primary flex h-11 items-center justify-center gap-2 rounded-xl px-4 text-[15px] font-semibold"
+              disabled={saving || !generatedPlan.days.length}
+              onClick={onSavePlan}
+              type="button"
+            >
+              {saving ? <Loader2 size={18} className="animate-spin" /> : <Check size={18} />}
+              {saving ? "Salvando treino" : "Salvar treino"}
+            </button>
+          ) : (
+            <button
+              className="btn-primary flex h-11 items-center justify-center gap-1.5 rounded-xl px-4 text-[15px] font-semibold"
+              onClick={() => goTo(step + 1)}
+              type="button"
+            >
+              {step === builderSteps.length - 2 ? "Ver meu treino" : "Proximo"}
+              <ChevronRight size={18} />
+            </button>
           )}
         </div>
-      </ControlBlock>
-
-      <ControlBlock title="Favoritos do aluno">
-        <div className="-my-1 divide-y divide-white/[0.06]">
-          {(favoriteExercises.length ? favoriteExercises : suggestedFavorites.slice(0, 5)).map((exercise) => (
-            <FavoriteRow
-              key={exercise.id}
-              exercise={exercise}
-              active={preferences.favoriteExerciseIds.includes(exercise.id)}
-              onToggle={() => onFavoriteToggle(exercise.id)}
-            />
-          ))}
-        </div>
-      </ControlBlock>
-
-      <section className="border-t border-white/[0.07] pt-5">
-        <div className="mb-4 flex items-center justify-between">
-          <div>
-            <h3 className="text-sm font-medium text-white/80">Cobertura semanal</h3>
-            <p className="text-xs text-white/45">{Object.keys(generatedPlan.coverage).length} grupos no plano</p>
-          </div>
-          <IconButton label="Recalcular" onClick={() => onChange({ ...preferences })}>
-            <RotateCcw size={18} />
-          </IconButton>
-        </div>
-        <GroupBars groupSummary={generatedPlan.coverage} />
-        <ul className="mt-5 space-y-2 border-l border-white/10 pl-3">
-          {generatedPlan.notes.map((note) => (
-            <li key={note} className="text-xs leading-relaxed text-white/55">
-              {note}
-            </li>
-          ))}
-        </ul>
-      </section>
+      </div>
     </section>
+  );
+}
+
+function BuilderSection({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <section>
+      <h3 className="mb-3 text-sm font-medium text-white/85">{title}</h3>
+      {children}
+    </section>
+  );
+}
+
+function OptionCard({
+  active,
+  label,
+  description,
+  onClick
+}: {
+  active: boolean;
+  label: string;
+  description: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      aria-pressed={active}
+      className={`flex w-full items-start gap-3 rounded-xl border p-3 text-left transition active:scale-[0.99] ${
+        active ? "chip-active" : "border-white/[0.08] hover:border-white/20"
+      }`}
+      onClick={onClick}
+      type="button"
+    >
+      <span
+        aria-hidden="true"
+        className={`mt-0.5 grid size-4 shrink-0 place-items-center rounded-full border ${active ? "border-accent" : "border-white/30"}`}
+      >
+        {active && <span className="size-2 rounded-full bg-accent" />}
+      </span>
+      <span className="min-w-0">
+        <span className="block text-sm font-medium leading-tight text-white">{label}</span>
+        <span className="mt-0.5 block text-xs leading-snug text-white/50">{description}</span>
+      </span>
+    </button>
+  );
+}
+
+function CustomNumberField({
+  label,
+  hint,
+  min,
+  max,
+  unit,
+  presets,
+  value,
+  onChange
+}: {
+  label: string;
+  hint?: string;
+  min: number;
+  max: number;
+  unit: string;
+  presets: number[];
+  value: number;
+  onChange: (value: number) => void;
+}) {
+  const [text, setText] = useState(presets.includes(value) ? "" : String(value));
+  const parsed = Number(text);
+  const invalid = text !== "" && (!Number.isInteger(parsed) || parsed < min || parsed > max);
+  const custom = text !== "" && !invalid;
+
+  return (
+    <label className="mt-3 block">
+      <span className="mb-1.5 block text-xs text-white/55">{label}</span>
+      <span
+        className={`glass-field flex h-11 items-center gap-2 rounded-xl px-3 ${custom ? "border-accent/50" : ""} ${
+          invalid ? "border-red-400/50" : ""
+        }`}
+      >
+        <input
+          className="w-full min-w-0 bg-transparent text-[15px] tabular-nums text-white outline-none placeholder:text-white/35"
+          inputMode="numeric"
+          max={max}
+          min={min}
+          onChange={(event) => {
+            const next = event.target.value.replace(/\D/g, "").slice(0, 3);
+            setText(next);
+            const number = Number(next);
+
+            if (next !== "" && number >= min && number <= max) {
+              onChange(number);
+            }
+          }}
+          placeholder={`De ${min} a ${max}`}
+          type="text"
+          value={text}
+        />
+        <span className="shrink-0 text-sm text-white/45">{unit}</span>
+      </span>
+      {invalid ? (
+        <span className="mt-1.5 block text-xs text-red-300" role="alert">
+          Digite um valor de {min} a {max}.
+        </span>
+      ) : (
+        hint && <span className="mt-1.5 block text-xs text-white/45">{hint}</span>
+      )}
+    </label>
+  );
+}
+
+function ChipButton({ active, label, onClick }: { active: boolean; label: string; onClick: () => void }) {
+  return (
+    <button
+      aria-pressed={active}
+      className={`h-11 rounded-xl border text-sm font-medium tabular-nums transition active:scale-[0.98] ${
+        active ? "chip-active" : "border-white/[0.08] text-white/65 hover:border-white/20 hover:text-white"
+      }`}
+      onClick={onClick}
+      type="button"
+    >
+      {label}
+    </button>
   );
 }
 
@@ -1461,10 +1841,42 @@ type PlanViewProps = {
   savedPlan: GeneratedPlan;
   onSelectDay: (dayId: string) => void;
   onOpenBuilder: () => void;
-  onRemoveDay: (dayId: string) => void;
+  onRemoveDay: (dayId: string) => Promise<void>;
+  onClearPlan: () => Promise<boolean>;
 };
 
-function PlanView({ selectedDay, activeDayId, byId, plan, savedPlan, onSelectDay, onOpenBuilder, onRemoveDay }: PlanViewProps) {
+function PlanView({
+  selectedDay,
+  activeDayId,
+  byId,
+  plan,
+  savedPlan,
+  onSelectDay,
+  onOpenBuilder,
+  onRemoveDay,
+  onClearPlan
+}: PlanViewProps) {
+  const [confirmingClear, setConfirmingClear] = useState(false);
+  const [clearing, setClearing] = useState(false);
+  const [confirmRemoveId, setConfirmRemoveId] = useState<string | null>(null);
+  const [removing, setRemoving] = useState(false);
+
+  async function handleClear() {
+    setClearing(true);
+    const cleared = await onClearPlan();
+
+    if (!cleared) {
+      setClearing(false);
+    }
+  }
+
+  async function handleRemoveDay(dayId: string) {
+    setRemoving(true);
+    await onRemoveDay(dayId);
+    setRemoving(false);
+    setConfirmRemoveId(null);
+  }
+
   if (!selectedDay) {
     return (
       <section className="space-y-5">
@@ -1484,12 +1896,34 @@ function PlanView({ selectedDay, activeDayId, byId, plan, savedPlan, onSelectDay
           <p className="text-sm text-white/45">Rotina semanal</p>
           <h2 className="text-2xl font-semibold tracking-tight">Treinos</h2>
         </div>
-        <IconButton label="Ajustar treino" className="text-accent" onClick={onOpenBuilder}>
-          <Plus size={20} />
-        </IconButton>
+        <div className="flex items-center gap-1">
+          <IconButton label="Ajustar treino" className="text-accent" onClick={onOpenBuilder}>
+            <Plus size={20} />
+          </IconButton>
+          <button
+            aria-label="Limpar treino"
+            className="flex h-10 items-center gap-1.5 whitespace-nowrap rounded-full px-3 text-sm font-medium text-red-300/90 transition hover:bg-red-500/10"
+            onClick={() => setConfirmingClear(true)}
+            title="Limpar treino"
+            type="button"
+          >
+            <Trash2 size={16} />
+          </button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-5 gap-2">
+      {confirmingClear && (
+        <ConfirmPanel
+          busy={clearing}
+          confirmLabel="Apagar treino"
+          description="Todos os dias da sua semana serao removidos. Seu historico e suas preferencias do gerador continuam salvos, e voce pode montar um novo treino quando quiser."
+          title={"Limpar treino"}
+          onCancel={() => setConfirmingClear(false)}
+          onConfirm={() => void handleClear()}
+        />
+      )}
+
+      <div className="grid gap-1.5" style={{ gridTemplateColumns: `repeat(${Math.max(plan.length, 4)}, minmax(0, 1fr))` }}>
         {plan.map((day) => (
           <button
             key={day.id}
@@ -1516,7 +1950,7 @@ function PlanView({ selectedDay, activeDayId, byId, plan, savedPlan, onSelectDay
         </div>
         <div className="mt-4 grid grid-cols-2 gap-2">
           <button
-            className="flex h-10 items-center justify-center gap-2 rounded-xl border border-white/10 px-3 text-sm font-medium text-white/85 transition hover:bg-white/[0.05]"
+            className="flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-white/10 px-3 text-sm font-medium text-white/85 transition hover:bg-white/[0.05]"
             onClick={onOpenBuilder}
             type="button"
           >
@@ -1524,14 +1958,26 @@ function PlanView({ selectedDay, activeDayId, byId, plan, savedPlan, onSelectDay
             Criar novo
           </button>
           <button
-            className="flex h-10 items-center justify-center gap-2 rounded-xl px-3 text-sm font-medium text-red-300/90 transition hover:bg-red-500/10"
-            onClick={() => onRemoveDay(selectedDay.id)}
+            className="flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-xl px-3 text-sm font-medium text-red-300/90 transition hover:bg-red-500/10"
+            onClick={() => setConfirmRemoveId(selectedDay.id)}
             type="button"
           >
             <Trash2 size={16} />
-            Remover dia
           </button>
         </div>
+
+        {confirmRemoveId === selectedDay.id && (
+          <div className="mt-4">
+            <ConfirmPanel
+              busy={removing}
+              confirmLabel="Remover dia"
+              description="Esse dia sai da sua semana. Os outros dias do treino continuam iguais."
+              title={"Remover dia de treino"}
+              onCancel={() => setConfirmRemoveId(null)}
+              onConfirm={() => void handleRemoveDay(selectedDay.id)}
+            />
+          </div>
+        )}
 
         <div className="mt-5 divide-y divide-white/[0.07] border-t border-white/[0.07]">
           {selectedDay.exercises.map((item, index) => {
@@ -1614,16 +2060,27 @@ function LibraryView({
         {groups.map((group) => (
           <button
             key={group}
-            className={`shrink-0 rounded-full border px-3.5 py-1.5 text-sm font-medium transition ${
+            aria-pressed={group === selectedGroup}
+            className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm font-medium transition ${
               group === selectedGroup ? "chip-active" : "border-white/[0.08] text-white/60 hover:border-white/20 hover:text-white"
             }`}
             onClick={() => onGroupChange(group)}
             type="button"
           >
+            {group === favoritesFilter && <Heart size={14} fill="currentColor" className="text-accent" />}
             {group}
+            {group === favoritesFilter && <span className="tabular-nums text-white/50">{favoriteExerciseIds.length}</span>}
           </button>
         ))}
       </div>
+
+      {selectedGroup === favoritesFilter && exercises.length === 0 && (
+        <p className="rounded-2xl border border-white/[0.07] p-5 text-center text-sm leading-relaxed text-white/55">
+          {favoriteExerciseIds.length
+            ? "Nenhum favorito com esse nome."
+            : "Voce ainda nao favoritou nenhum exercicio. Toque no coracao ao lado de um exercicio para salva-lo aqui."}
+        </p>
+      )}
 
       <div className="divide-y divide-white/[0.07] border-y border-white/[0.07]">
         {exercises.map((exercise) => (
@@ -1651,72 +2108,42 @@ function LibraryView({
   );
 }
 
-function ControlBlock({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <section className="border-t border-white/[0.07] pt-5">
-      <h3 className="mb-3 text-sm font-medium text-white/80">{title}</h3>
-      {children}
-    </section>
-  );
-}
-
-function SegmentedGrid({ children }: { children: ReactNode }) {
-  return <div className="grid grid-cols-2 gap-2">{children}</div>;
-}
-
-function ChoiceButton({ active, label, onClick }: { active: boolean; label: string; onClick: () => void }) {
-  return (
-    <button
-      className={`min-h-11 rounded-xl border px-3 py-2 text-sm font-medium transition active:scale-[0.98] ${
-        active ? "chip-active" : "border-white/[0.08] text-white/65 hover:border-white/20 hover:text-white"
-      }`}
-      onClick={onClick}
-      type="button"
-    >
-      {label}
-    </button>
-  );
-}
-
-function Stepper({
-  label,
-  min,
-  max,
-  step = 1,
-  value,
-  onChange
+function ConfirmPanel({
+  title,
+  description,
+  confirmLabel,
+  busy,
+  onCancel,
+  onConfirm
 }: {
-  label: string;
-  min: number;
-  max: number;
-  step?: number;
-  value: number;
-  onChange: (value: number) => void;
+  title: string;
+  description: string;
+  confirmLabel: string;
+  busy: boolean;
+  onCancel: () => void;
+  onConfirm: () => void;
 }) {
-  const change = (direction: number) => {
-    onChange(Math.min(max, Math.max(min, value + direction * step)));
-  };
-
   return (
-    <div className="rounded-xl border border-white/[0.08] p-3">
-      <p className="text-xs text-white/45">{label}</p>
-      <div className="mt-2 flex items-center justify-between gap-2">
+    <div aria-label={title} className="space-y-3 rounded-xl border border-red-400/20 bg-red-500/[0.06] p-4" role="alertdialog">
+      <p className="text-sm font-medium text-red-100">{title}</p>
+      <p className="text-xs leading-relaxed text-white/55">{description}</p>
+      <div className="grid grid-cols-2 gap-2">
         <button
-          aria-label={`Reduzir ${label}`}
-          className="grid size-8 place-items-center rounded-full bg-white/[0.06] text-base text-white/75 transition hover:bg-white/10"
-          onClick={() => change(-1)}
+          className="h-11 rounded-xl border border-white/10 text-sm font-medium text-white/80 transition hover:bg-white/[0.05]"
+          disabled={busy}
+          onClick={onCancel}
           type="button"
         >
-          -
+          Cancelar
         </button>
-        <p className="text-lg font-semibold tabular-nums">{value}</p>
         <button
-          aria-label={`Aumentar ${label}`}
-          className="grid size-8 place-items-center rounded-full bg-white/[0.06] text-base text-white/75 transition hover:bg-white/10"
-          onClick={() => change(1)}
+          className="flex h-11 items-center justify-center gap-2 rounded-xl bg-red-500/85 text-sm font-medium text-white transition hover:bg-red-500 disabled:opacity-50"
+          disabled={busy}
+          onClick={onConfirm}
           type="button"
         >
-          +
+          {busy && <Loader2 className="animate-spin" size={16} />}
+          {confirmLabel}
         </button>
       </div>
     </div>
