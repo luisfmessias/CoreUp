@@ -2,7 +2,6 @@ import type { WorkoutDay } from "@/types/fitness";
 
 export type Weekday = "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
 
-// Formato devolvido por /api/plan e /api/workouts.
 export type ApiWorkout = {
   id: string;
   title: string;
@@ -51,7 +50,6 @@ export function toWorkoutDay(workout: ApiWorkout): WorkoutDay {
   };
 }
 
-// Converte os dias gerados no front para o corpo aceito por PUT /api/plan.
 export function toPlanDays(days: WorkoutDay[]) {
   return days.map((day) => ({
     title: day.focus,

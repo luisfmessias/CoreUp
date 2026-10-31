@@ -5,8 +5,6 @@ type BadgeProps = {
   tone?: "dark" | "green" | "blue" | "muted";
 };
 
-// "green" e o unico tom com cor: marca o que esta ativo ou e do dia.
-// Os demais sao neutros, so variando o contraste.
 const tones = {
   dark: "border-white/15 text-white/85",
   green: "border-accent/35 bg-accent/10 text-accent",

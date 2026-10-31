@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { badRequest, json, tooManyRequests, unauthorized } from "@/lib/http";
 import { verifyPassword } from "@/lib/password";
 import { prisma } from "@/lib/prisma";
+import { toPublicUser } from "@/lib/public-user";
 import { checkRateLimit, limits, recordAttempt } from "@/lib/rate-limit";
 import { deleteAccountSchema } from "@/lib/schemas";
 
@@ -13,20 +14,9 @@ export async function GET(request: NextRequest) {
     return unauthorized();
   }
 
-  return json({
-    user: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      heightCm: user.heightCm,
-      weightKg: user.weightKg,
-      createdAt: user.createdAt
-    }
-  });
+  return json({ user: toPublicUser(user) });
 }
 
-// Exclusao definitiva da conta (LGPD, art. 18, VI). As relacoes do schema usam
-// onDelete: Cascade, entao sessoes, treinos, historico e medidas vao junto.
 export async function DELETE(request: NextRequest) {
   const user = await getCurrentUser(request);
 

@@ -4,6 +4,7 @@ import { createSession } from "@/lib/auth";
 import { badRequest, json, tooManyRequests } from "@/lib/http";
 import { hashPassword } from "@/lib/password";
 import { prisma } from "@/lib/prisma";
+import { toPublicUser } from "@/lib/public-user";
 import { checkRateLimit, getClientIp, limits, recordAttempt } from "@/lib/rate-limit";
 import { registerSchema } from "@/lib/schemas";
 
@@ -19,6 +20,7 @@ export async function POST(request: NextRequest) {
 
     await recordAttempt(ipLimit);
 
+    const isProfessional = payload.accountType === "PROFESSIONAL" && payload.professional;
     const user = await prisma.user.create({
       data: {
         name: payload.name,
@@ -26,23 +28,24 @@ export async function POST(request: NextRequest) {
         passwordHash: await hashPassword(payload.password),
         heightCm: payload.heightCm,
         weightKg: payload.weightKg,
-        privacyAcceptedAt: new Date()
+        privacyAcceptedAt: new Date(),
+        accountType: isProfessional ? "PROFESSIONAL" : "USER",
+        professional: isProfessional ? { create: payload.professional } : undefined
       },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        heightCm: true,
-        weightKg: true,
-        createdAt: true
-      }
+      include: { professional: true }
     });
 
     const token = await createSession(user.id);
 
-    return json({ user, token }, 201);
+    return json({ user: toPublicUser(user), token }, 201);
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+      const target = String(error.meta?.target ?? "");
+
+      if (target.includes("crefNumber")) {
+        return json({ error: "Este registro CREF ja esta cadastrado em outra conta." }, 409);
+      }
+
       return json({ error: "Ja existe um usuario com este e-mail." }, 409);
     }
 

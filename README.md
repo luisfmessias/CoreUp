@@ -23,7 +23,8 @@ e navegacao inferior em cinco abas, no formato de um app nativo.
 | Montar | gerador de plano a partir de objetivo, nivel, dias, tempo, equipamentos e favoritos |
 | Treino | plano salvo da semana, com remocao de dias |
 | Exercicios | busca no catalogo de 200 exercicios, com filtro por grupo |
-| Evolucao | peso, altura, series por dia e cobertura muscular do plano |
+| Aval. | avaliacoes de treinos do catalogo feitas por profissionais de Educacao Fisica |
+| Evolucao | peso, altura, series por dia, cobertura muscular e dados da conta |
 
 ## Como rodar
 
@@ -67,8 +68,8 @@ Rotas autenticadas esperam o cabecalho `Authorization: Bearer <token>`.
 
 | Metodo | Rota | Auth | Descricao |
 | --- | --- | --- | --- |
-| `POST` | `/api/auth/register` | nao | cria conta e ja devolve sessao, exige `acceptPrivacy: true` |
-| `POST` | `/api/auth/login` | nao | autentica e devolve token |
+| `POST` | `/api/auth/register` | nao | cria conta e ja devolve sessao, exige `acceptPrivacy: true`; `accountType: "PROFESSIONAL"` exige `professional` (CREF, UF, especialidade, formacao) |
+| `POST` | `/api/auth/login` | nao | autentica e devolve token e usuario, com o `accountType` salvo no cadastro |
 | `POST` | `/api/auth/logout` | sim | revoga a sessao atual |
 | `GET` | `/api/me` | sim | dados do usuario logado |
 | `DELETE` | `/api/me` | sim | exclui a conta e todos os dados, exige `password` no corpo |
@@ -86,6 +87,9 @@ Rotas autenticadas esperam o cabecalho `Authorization: Bearer <token>`.
 | `POST` | `/api/history` | sim | registra treino executado |
 | `GET` | `/api/body-metrics` | sim | ultimas 100 medicoes |
 | `POST` | `/api/body-metrics` | sim | registra medicao e atualiza o perfil |
+| `GET` | `/api/reviews` | sim | avaliacoes profissionais dos treinos do catalogo |
+| `PUT` | `/api/reviews/[workoutKey]` | profissional | cria ou edita a avaliacao do profissional logado |
+| `DELETE` | `/api/reviews/[workoutKey]` | profissional | remove a avaliacao do profissional logado |
 | `GET` | `/api/health` | nao | healthcheck |
 
 ## Como o gerador monta o treino
@@ -137,3 +141,17 @@ ja que nao existe chave estrangeira cobrindo essa relacao.
   data de atualizacao ficam em `src/lib/legal.ts`.
 - **Exclusao de conta:** aba Evolucao, secao Conta. Apaga o usuario e, em
   cascata, sessoes, treinos, historico e medidas.
+
+## Contas de profissional
+
+- O tipo de conta (`User.accountType`) e definido no cadastro e lido do banco
+  em toda requisicao. O login nao pede o tipo: ele vem da conta salva.
+- Os dados do registro ficam em `ProfessionalProfile`. Um mesmo CREF + UF nao
+  pode estar em duas contas.
+- Nao ha integracao com o CONFEF/CREF: todo cadastro nasce com
+  `verificationStatus = PENDING` e a interface mostra "Verificacao pendente".
+  Para marcar um registro como conferido, altere o status para `VERIFIED` no
+  banco depois de checar o CREF manualmente.
+- Os treinos avaliaveis estao em `src/data/reviewable-workouts.ts`. A chave de
+  cada treino liga as avaliacoes gravadas em `WorkoutReview`; nao altere uma
+  chave existente.

@@ -45,6 +45,11 @@ export default function PrivacyPage() {
               tempo, equipamentos), exercícios favoritos e registros de treinos realizados.
             </li>
             <li>
+              <strong>Dados profissionais (só para contas de profissional de Educação Física):</strong> nome completo,
+              número e UF do registro no CREF, especialidade, formação acadêmica e as avaliações de treino que você
+              escrever.
+            </li>
+            <li>
               <strong>Dados de segurança:</strong> endereço IP e e-mail usados em tentativas de login e cadastro,
               guardados por pouco tempo apenas para bloquear tentativas abusivas.
             </li>
@@ -69,7 +74,16 @@ export default function PrivacyPage() {
             <li>
               <strong>Segurança da conta e prevenção de fraudes:</strong> legítimo interesse (art. 7º, IX).
             </li>
+            <li>
+              <strong>Identificar o profissional nas avaliações:</strong> execução do serviço (art. 7º, V). Ao avaliar
+              um treino, o seu nome, especialidade, número e UF do CREF e o status de verificação ficam visíveis para
+              os outros usuários do app, junto com a avaliação. O e-mail e a formação acadêmica não são exibidos.
+            </li>
           </ul>
+          <p>
+            O app ainda não confere o registro CREF junto ao conselho. Por isso, todo cadastro de profissional aparece
+            com verificação pendente.
+          </p>
           <p>Não vendemos os seus dados e não os usamos para publicidade.</p>
         </Section>
 

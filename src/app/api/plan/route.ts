@@ -30,8 +30,6 @@ export async function GET(request: NextRequest) {
   });
 }
 
-// Substitui o plano inteiro do usuario: apaga os treinos atuais e grava os novos
-// na mesma transacao. O historico de execucao e preservado (workoutId vira null).
 export async function PUT(request: NextRequest) {
   const user = await getCurrentUser(request);
 

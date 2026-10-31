@@ -3,6 +3,7 @@ import { createSession } from "@/lib/auth";
 import { badRequest, json, tooManyRequests } from "@/lib/http";
 import { verifyPassword } from "@/lib/password";
 import { prisma } from "@/lib/prisma";
+import { toPublicUser } from "@/lib/public-user";
 import { checkRateLimit, clearAttempts, getClientIp, limits, recordAttempt } from "@/lib/rate-limit";
 import { loginSchema } from "@/lib/schemas";
 
@@ -17,7 +18,10 @@ export async function POST(request: NextRequest) {
       return tooManyRequests(retryAfter);
     }
 
-    const user = await prisma.user.findUnique({ where: { email: payload.email } });
+    const user = await prisma.user.findUnique({
+      where: { email: payload.email },
+      include: { professional: true }
+    });
 
     if (!user || !(await verifyPassword(payload.password, user.passwordHash))) {
       await recordAttempt(emailLimit, ipLimit);
@@ -27,16 +31,7 @@ export async function POST(request: NextRequest) {
     await clearAttempts(emailLimit);
     const token = await createSession(user.id);
 
-    return json({
-      token,
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        heightCm: user.heightCm,
-        weightKg: user.weightKg
-      }
-    });
+    return json({ token, user: toPublicUser(user) });
   } catch (error) {
     return badRequest(error);
   }

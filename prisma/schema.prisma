@@ -9,22 +9,67 @@ datasource db {
 }
 
 model User {
-  id                String        @id @default(cuid())
+  id                String               @id @default(cuid())
   name              String
-  email             String        @unique
+  email             String               @unique
   passwordHash      String
   heightCm          Float?
   weightKg          Float?
   preferences       Json?
-  // Momento em que o usuario aceitou a Politica de Privacidade e autorizou o
-  // tratamento dos dados de saude (LGPD, art. 11). Nulo em contas antigas.
   privacyAcceptedAt DateTime?
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
+  accountType       AccountType          @default(USER)
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
   sessions          AuthSession[]
   workouts          Workout[]
   history           WorkoutLog[]
   bodyMetrics       BodyMetric[]
+  professional      ProfessionalProfile?
+  workoutReviews    WorkoutReview[]
+}
+
+// Sem integracao com o CREF: todo cadastro nasce PENDING e so muda apos conferencia manual.
+model ProfessionalProfile {
+  id                 String             @id @default(cuid())
+  userId             String             @unique
+  crefNumber         String
+  crefState          String
+  specialty          String
+  education          String
+  verificationStatus VerificationStatus @default(PENDING)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([crefNumber, crefState])
+}
+
+model WorkoutReview {
+  id              String   @id @default(cuid())
+  professionalId  String
+  workoutKey      String
+  rating          Int
+  comment         String
+  strengths       String[]
+  limitations     String[]
+  recommendations String[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  professional    User     @relation(fields: [professionalId], references: [id], onDelete: Cascade)
+
+  @@unique([professionalId, workoutKey])
+  @@index([workoutKey])
+}
+
+enum AccountType {
+  USER
+  PROFESSIONAL
+}
+
+enum VerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
 }
 
 model AuthSession {
@@ -110,9 +155,7 @@ model BodyMetric {
   @@index([userId, measuredAt])
 }
 
-// Tentativas registradas para limitar abuso (login errado, cadastro, exclusao
-// de conta). Fica no banco porque na Vercel cada requisicao pode cair numa
-// instancia diferente, entao contador em memoria nao funciona.
+// No banco porque, na Vercel, um contador em memoria nao e compartilhado entre instancias.
 model AuthAttempt {
   id        String   @id @default(cuid())
   key       String

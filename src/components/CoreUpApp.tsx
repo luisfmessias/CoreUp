@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  BadgeCheck,
   BarChart3,
   CalendarDays,
   Check,
@@ -23,6 +24,8 @@ import {
   UserRound
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { apiFetch, type AccountType, type AuthUser } from "@/lib/api-client";
+import { brazilianStates, verificationLabels } from "@/lib/professional";
 import { exerciseMap, getTodayWorkout, summarizeGroups } from "@/lib/exercise-view";
 import { toPlanDays, toWorkoutDay, type ApiWorkout } from "@/lib/plan-mapping";
 import {
@@ -35,19 +38,12 @@ import {
   type GeneratorPreferences
 } from "@/lib/workout-generator";
 import type { Exercise, WorkoutDay } from "@/types/fitness";
+import { ProfessionalReviewsView } from "@/components/ProfessionalReviewsView";
 import { Badge } from "@/components/ui/Badge";
 import { IconButton } from "@/components/ui/IconButton";
 
 type CoreUpAppProps = {
   exercises: Exercise[];
-};
-
-type AuthUser = {
-  id: string;
-  name: string;
-  email: string;
-  heightCm?: number | null;
-  weightKg?: number | null;
 };
 
 type AuthMode = "login" | "register";
@@ -60,6 +56,26 @@ type AuthForm = {
   heightCm: string;
   weightKg: string;
   acceptPrivacy: boolean;
+  accountType: AccountType;
+  crefNumber: string;
+  crefState: string;
+  specialty: string;
+  education: string;
+};
+
+const emptyAuthForm: AuthForm = {
+  name: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+  heightCm: "",
+  weightKg: "",
+  acceptPrivacy: false,
+  accountType: "USER",
+  crefNumber: "",
+  crefState: "",
+  specialty: "",
+  education: ""
 };
 
 const authStorageKey = "coreup.auth.token";
@@ -74,22 +90,12 @@ const defaultPreferences: GeneratorPreferences = {
   favoriteExerciseIds: []
 };
 
-function apiFetch(token: string, path: string, init: RequestInit = {}) {
-  return fetch(path, {
-    ...init,
-    headers: {
-      ...(init.body ? { "Content-Type": "application/json" } : {}),
-      Authorization: `Bearer ${token}`,
-      ...init.headers
-    }
-  });
-}
-
 const tabs = [
   { id: "home", label: "Inicio", icon: Home },
   { id: "builder", label: "Montar", icon: Sparkles },
   { id: "plan", label: "Treino", icon: CalendarDays },
   { id: "library", label: "Exerc.", icon: Library },
+  { id: "reviews", label: "Aval.", icon: BadgeCheck },
   { id: "progress", label: "Evol.", icon: BarChart3 }
 ] as const;
 
@@ -99,15 +105,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
   const [authToken, setAuthToken] = useState<string | null>(null);
   const [user, setUser] = useState<AuthUser | null>(null);
   const [authMode, setAuthMode] = useState<AuthMode>("login");
-  const [authForm, setAuthForm] = useState<AuthForm>({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    heightCm: "",
-    weightKg: "",
-    acceptPrivacy: false
-  });
+  const [authForm, setAuthForm] = useState<AuthForm>(emptyAuthForm);
   const [authError, setAuthError] = useState("");
   const [authNotice, setAuthNotice] = useState("");
   const [authLoading, setAuthLoading] = useState(false);
@@ -115,8 +113,6 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
   const [checkingSession, setCheckingSession] = useState(true);
   const [activeTab, setActiveTab] = useState<TabId>("home");
   const [preferences, setPreferences] = useState<GeneratorPreferences>(defaultPreferences);
-  // Rascunho da aba Montar: muda ao vivo conforme as preferencias e so vai
-  // para o banco quando o aluno confirma em "Usar esse plano".
   const [generatedPlan, setGeneratedPlan] = useState(() => generateWorkoutPlan(exercises, defaultPreferences));
   const [savedDays, setSavedDays] = useState<WorkoutDay[]>([]);
   const [planLoaded, setPlanLoaded] = useState(false);
@@ -222,8 +218,6 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
     };
   }, [authToken, exercises]);
 
-  // Salva as preferencias do gerador com atraso, para nao disparar uma
-  // requisicao a cada clique nos botoes de ajuste.
   useEffect(() => {
     if (!authToken || !preferencesDirty.current) {
       return;
@@ -303,7 +297,6 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
     setPlanError("");
     const response = await apiFetch(authToken, `/api/workouts/${dayId}`, { method: "DELETE" }).catch(() => null);
 
-    // 404 significa que o treino ja nao existe no banco: basta tirar da tela.
     if (!response || (!response.ok && response.status !== 404)) {
       setPlanError("Nao foi possivel remover o treino.");
       return;
@@ -314,7 +307,6 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
     setActiveDayId(nextDays[0]?.id ?? "");
   }
 
-  // Devolve a mensagem de erro, ou null quando a conta foi excluida.
   async function deleteAccount(password: string) {
     if (!authToken) {
       return "Sessao expirada. Entre novamente.";
@@ -352,6 +344,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
     setAuthError("");
     setAuthNotice("");
 
+    const isProfessional = authForm.accountType === "PROFESSIONAL";
     const body =
       authMode === "login"
         ? {
@@ -364,7 +357,16 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
             password: authForm.password,
             heightCm: parseOptionalNumber(authForm.heightCm),
             weightKg: parseOptionalNumber(authForm.weightKg),
-            acceptPrivacy: authForm.acceptPrivacy
+            acceptPrivacy: authForm.acceptPrivacy,
+            accountType: authForm.accountType,
+            professional: isProfessional
+              ? {
+                  crefNumber: authForm.crefNumber,
+                  crefState: authForm.crefState,
+                  specialty: authForm.specialty,
+                  education: authForm.education
+                }
+              : undefined
           };
 
     try {
@@ -374,6 +376,10 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
 
       if (authMode === "register" && !authForm.acceptPrivacy) {
         throw new Error("Aceite a Politica de Privacidade para criar a conta.");
+      }
+
+      if (authMode === "register" && isProfessional && !authForm.crefState) {
+        throw new Error("Selecione a UF do registro CREF.");
       }
 
       const response = await fetch(`/api/auth/${authMode === "login" ? "login" : "register"}`, {
@@ -393,7 +399,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
       window.localStorage.setItem(authStorageKey, data.token);
       setAuthToken(data.token);
       setUser(data.user);
-      setAuthForm({ name: "", email: "", password: "", confirmPassword: "", heightCm: "", weightKg: "", acceptPrivacy: false });
+      setAuthForm(emptyAuthForm);
     } catch (error) {
       setAuthError(error instanceof Error ? error.message : "Nao foi possivel entrar.");
     } finally {
@@ -416,8 +422,6 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
     clearSession();
   }
 
-  // Zera tudo que pertence ao usuario, para o proximo login no mesmo
-  // navegador nao herdar o plano ou as preferencias do anterior.
   function clearSession() {
     window.localStorage.removeItem(authStorageKey);
     preferencesDirty.current = false;
@@ -516,6 +520,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
               onFavoriteToggle={toggleFavorite}
             />
           )}
+          {activeTab === "reviews" && <ProfessionalReviewsView authToken={authToken} exercises={exercises} user={user} />}
           {activeTab === "progress" && <ProgressView savedPlan={savedPlan} user={user} onDeleteAccount={deleteAccount} />}
         </main>
 
@@ -571,6 +576,7 @@ function AuthView({
   onSubmit
 }: AuthViewProps) {
   const isRegister = authMode === "register";
+  const isProfessional = authForm.accountType === "PROFESSIONAL";
   const passwordToggle = (
     <button
       aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
@@ -603,14 +609,21 @@ function AuthView({
             <AuthModeButton active={isRegister} label="Cadastrar" onClick={() => onModeChange("register")} />
           </div>
 
+          {isRegister && (
+            <AccountTypePicker
+              value={authForm.accountType}
+              onChange={(accountType) => onFormChange({ ...authForm, accountType })}
+            />
+          )}
+
           <form className="space-y-4" onSubmit={onSubmit}>
             {isRegister && (
               <AuthInput
                 autoComplete="name"
                 icon={<UserRound size={18} />}
-                label="Nome"
+                label={isProfessional ? "Nome completo" : "Nome"}
                 onChange={(name) => onFormChange({ ...authForm, name })}
-                placeholder="Seu nome"
+                placeholder={isProfessional ? "Como consta no registro CREF" : "Seu nome"}
                 value={authForm.name}
               />
             )}
@@ -644,6 +657,48 @@ function AuthView({
                 type={showPassword ? "text" : "password"}
                 value={authForm.confirmPassword}
               />
+            )}
+            {isRegister && isProfessional && (
+              <fieldset className="min-w-0 space-y-4 border-t border-white/10 pt-4">
+                <legend className="sr-only">Registro profissional</legend>
+                <div>
+                  <p className="text-sm font-medium text-white/85">Registro profissional</p>
+                  <p className="mt-0.5 text-xs leading-relaxed text-white/50">
+                    Registro no CREF (Conselho Regional de Educacao Fisica). Ele aparece nas suas avaliacoes de treino.
+                  </p>
+                </div>
+                <div className="grid grid-cols-[1fr_96px] gap-3">
+                  <AuthInput
+                    label="Numero do CREF"
+                    onChange={(crefNumber) => onFormChange({ ...authForm, crefNumber })}
+                    placeholder="012345-G"
+                    value={authForm.crefNumber}
+                  />
+                  <AuthSelect
+                    label="UF"
+                    onChange={(crefState) => onFormChange({ ...authForm, crefState })}
+                    options={brazilianStates}
+                    placeholder="UF"
+                    value={authForm.crefState}
+                  />
+                </div>
+                <AuthInput
+                  label="Especialidade ou area de atuacao"
+                  onChange={(specialty) => onFormChange({ ...authForm, specialty })}
+                  placeholder="Ex.: Musculacao e hipertrofia"
+                  value={authForm.specialty}
+                />
+                <AuthInput
+                  label="Formacao academica"
+                  onChange={(education) => onFormChange({ ...authForm, education })}
+                  placeholder="Ex.: Bacharelado em Educacao Fisica"
+                  value={authForm.education}
+                />
+                <p className="text-xs leading-relaxed text-white/50">
+                  O app ainda nao consulta o CREF automaticamente. Seu cadastro fica com verificacao pendente, e isso
+                  aparece junto das suas avaliacoes.
+                </p>
+              </fieldset>
             )}
             {isRegister && (
               <div className="grid grid-cols-2 gap-3">
@@ -708,6 +763,94 @@ function AuthView({
         </a>
       </main>
     </div>
+  );
+}
+
+const accountTypeOptions: Array<{ id: AccountType; label: string; description: string }> = [
+  {
+    id: "USER",
+    label: "Usuario comum",
+    description: "Organize seus treinos e acompanhe sua rotina."
+  },
+  {
+    id: "PROFESSIONAL",
+    label: "Profissional de Educacao Fisica",
+    description: "Formado e registrado no CREF. Usa o app e tambem avalia treinos."
+  }
+];
+
+function AccountTypePicker({ value, onChange }: { value: AccountType; onChange: (value: AccountType) => void }) {
+  return (
+    <div className="mb-5">
+      <p className="mb-1.5 px-1 text-sm font-medium text-white/85">Tipo de conta</p>
+      <div aria-label="Tipo de conta" className="space-y-2" role="radiogroup">
+        {accountTypeOptions.map((option) => {
+          const active = value === option.id;
+
+          return (
+            <button
+              key={option.id}
+              aria-checked={active}
+              className={`flex w-full items-start gap-3 rounded-xl border p-3 text-left transition ${
+                active ? "chip-active" : "border-white/[0.08] hover:border-white/20"
+              }`}
+              onClick={() => onChange(option.id)}
+              role="radio"
+              type="button"
+            >
+              <span
+                aria-hidden="true"
+                className={`mt-0.5 grid size-4 shrink-0 place-items-center rounded-full border ${
+                  active ? "border-accent" : "border-white/30"
+                }`}
+              >
+                {active && <span className="size-2 rounded-full bg-accent" />}
+              </span>
+              <span className="min-w-0">
+                <span className="block text-sm font-medium leading-tight text-white">{option.label}</span>
+                <span className="mt-0.5 block text-xs leading-relaxed text-white/50">{option.description}</span>
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function AuthSelect({
+  label,
+  onChange,
+  options,
+  placeholder,
+  value
+}: {
+  label: string;
+  onChange: (value: string) => void;
+  options: readonly string[];
+  placeholder: string;
+  value: string;
+}) {
+  return (
+    <label className="block">
+      <span className="mb-1.5 block px-1 text-sm font-medium text-white/85">{label}</span>
+      <span className="glass-field flex h-13 items-center rounded-xl px-3 text-white">
+        <select
+          className="w-full bg-transparent text-[15px] outline-none [&>option]:bg-[#161a18]"
+          onChange={(event) => onChange(event.target.value)}
+          value={value}
+        >
+          <option disabled value="">
+            {placeholder}
+          </option>
+          {options.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+      </span>
+    </label>
   );
 }
 
@@ -1501,18 +1644,47 @@ function ProgressView({
         </div>
       </section>
 
-      <AccountSection email={user.email} onDeleteAccount={onDeleteAccount} />
+      <AccountSection user={user} onDeleteAccount={onDeleteAccount} />
     </section>
   );
 }
 
+function ProfessionalProfileSummary({ professional }: { professional: NonNullable<AuthUser["professional"]> }) {
+  const verified = professional.verificationStatus === "VERIFIED";
+
+  return (
+    <div className="mt-4 rounded-xl border border-white/[0.08] p-4">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="text-sm font-medium">Profissional de Educacao Fisica</p>
+        <Badge tone={verified ? "green" : "muted"}>{verificationLabels[professional.verificationStatus]}</Badge>
+      </div>
+      <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-sm">
+        <dt className="text-white/45">CREF</dt>
+        <dd className="tabular-nums">
+          {professional.crefNumber}/{professional.crefState}
+        </dd>
+        <dt className="text-white/45">Especialidade</dt>
+        <dd>{professional.specialty}</dd>
+        <dt className="text-white/45">Formacao</dt>
+        <dd>{professional.education}</dd>
+      </dl>
+      {!verified && (
+        <p className="mt-3 text-xs leading-relaxed text-white/45">
+          O registro informado ainda nao foi conferido junto ao CREF.
+        </p>
+      )}
+    </div>
+  );
+}
+
 function AccountSection({
-  email,
+  user,
   onDeleteAccount
 }: {
-  email: string;
+  user: AuthUser;
   onDeleteAccount: (password: string) => Promise<string | null>;
 }) {
+  const email = user.email;
   const [confirming, setConfirming] = useState(false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -1524,7 +1696,6 @@ function AccountSection({
     setError("");
     const message = await onDeleteAccount(password);
 
-    // Em caso de sucesso o componente e desmontado junto com a sessao.
     if (message) {
       setError(message);
       setDeleting(false);
@@ -1535,6 +1706,7 @@ function AccountSection({
     <section className="border-t border-white/[0.07] pt-5">
       <h3 className="text-sm font-medium text-white/80">Conta</h3>
       <p className="mt-1 truncate text-sm text-white/55">{email}</p>
+      {user.professional && <ProfessionalProfileSummary professional={user.professional} />}
       <a
         className="mt-3 inline-block text-sm text-white/70 underline underline-offset-4 transition hover:text-white"
         href="/privacidade"
@@ -1628,7 +1800,7 @@ function MiniStat({ label, value }: { label: string; value: string }) {
 function BottomNavigation({ activeTab, onChange }: { activeTab: TabId; onChange: (tab: TabId) => void }) {
   return (
     <nav className="fixed inset-x-0 bottom-0 z-10 mx-auto max-w-[430px] px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-      <div className="glass-nav grid grid-cols-5 gap-1 rounded-full p-1.5">
+      <div className="glass-nav grid grid-cols-6 gap-0.5 rounded-full p-1.5">
         {tabs.map((tab) => {
           const active = activeTab === tab.id;
 
@@ -1636,7 +1808,7 @@ function BottomNavigation({ activeTab, onChange }: { activeTab: TabId; onChange:
             <button
               key={tab.id}
               aria-current={active ? "page" : undefined}
-              className={`flex h-14 flex-col items-center justify-center gap-0.5 rounded-full text-[11px] font-medium transition ${
+              className={`flex h-14 min-w-0 flex-col items-center justify-center gap-1 rounded-full font-medium transition ${
                 active
                   ? "bg-white/[0.12] text-accent shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]"
                   : "text-white/55 hover:text-white/85"
@@ -1644,8 +1816,9 @@ function BottomNavigation({ activeTab, onChange }: { activeTab: TabId; onChange:
               onClick={() => onChange(tab.id)}
               type="button"
             >
-              <tab.icon size={20} strokeWidth={active ? 2.2 : 1.8} />
-              {tab.label}
+              <tab.icon size={19} strokeWidth={active ? 2.2 : 1.8} />
+              {/* Fonte no span: o "button { font: inherit }" global anula classes de fonte no botao. */}
+              <span className="max-w-full truncate text-[11px] leading-none">{tab.label}</span>
             </button>
           );
         })}

@@ -65,7 +65,7 @@ export async function getCurrentUser(request: NextRequest) {
 
   const session = await prisma.authSession.findUnique({
     where: { tokenHash: hashToken(token) },
-    include: { user: true }
+    include: { user: { include: { professional: true } } }
   });
 
   if (!session || session.userId !== payload.sub || session.expiresAt <= new Date()) {

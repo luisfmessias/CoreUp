@@ -22,7 +22,6 @@ export function getClientIp(request: NextRequest) {
   return forwarded?.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "desconhecido";
 }
 
-// Devolve quantos segundos faltam para liberar, ou 0 se nenhum limite estourou.
 export async function checkRateLimit(...checks: Limit[]) {
   for (const limit of checks) {
     const attempts = await prisma.authAttempt.findMany({
@@ -49,8 +48,6 @@ export async function recordAttempt(...checks: Limit[]) {
     data: checks.map((limit) => ({ key: limit.key }))
   });
 
-  // Limpeza oportunista: sem cron, de vez em quando uma requisicao apaga
-  // os registros que ja nao entram em nenhuma janela.
   if (Math.random() < 0.05) {
     await prisma.authAttempt.deleteMany({
       where: { createdAt: { lt: new Date(Date.now() - CLEANUP_AFTER_MS) } }

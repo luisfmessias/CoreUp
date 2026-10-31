@@ -3,8 +3,6 @@
 @theme {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --color-ink: #0b0d0c;
-  /* Cor de destaque unica: verde-salvia, menos saturado que o esmeralda
-     padrao. Usada so para acao principal, estado ativo e dados. */
   --color-accent: #7cc6a0;
   --color-accent-strong: #93d3b1;
   --color-on-accent: #0a1a12;
@@ -46,8 +44,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Uma unica luz suave no topo: da profundidade ao vidro da navegacao sem
-   competir com o conteudo. */
 body::before {
   content: "";
   position: fixed;
@@ -87,16 +83,11 @@ button:disabled {
   height: 0;
 }
 
-/* ---------- Superficies ---------- */
-
-/* Superficie padrao: plana, so um tom acima do fundo. */
 @utility glass {
   background: rgba(255, 255, 255, 0.035);
   border: 1px solid rgba(255, 255, 255, 0.07);
 }
 
-/* Superficie de destaque (bloco principal da tela, login). Um pouco mais
-   clara; e a unica que usa desfoque alem da navegacao. */
 @utility glass-strong {
   background: rgba(255, 255, 255, 0.055);
   border: 1px solid rgba(255, 255, 255, 0.09);
@@ -104,7 +95,6 @@ button:disabled {
   -webkit-backdrop-filter: blur(20px);
 }
 
-/* Barra de navegacao: vidro denso, porque o conteudo rola por baixo dela. */
 @utility glass-nav {
   background: rgba(16, 19, 17, 0.82);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -113,13 +103,11 @@ button:disabled {
   -webkit-backdrop-filter: blur(20px) saturate(140%);
 }
 
-/* Superficie interna, usada com moderacao (segmentos, campos secundarios). */
 @utility glass-inset {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-/* Campo de formulario. */
 @utility glass-field {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.09);
@@ -133,7 +121,6 @@ button:disabled {
   }
 }
 
-/* Botao principal: cor solida, sem degrade nem brilho. */
 @utility btn-primary {
   background: var(--color-accent);
   color: var(--color-on-accent);
@@ -154,20 +141,16 @@ button:disabled {
   }
 }
 
-/* Opcao selecionada (chips, segmentos, dias). */
 @utility chip-active {
   background: rgba(124, 198, 160, 0.12);
   border-color: rgba(124, 198, 160, 0.45);
   color: #ffffff;
 }
 
-/* Barra de progresso preenchida. */
 @utility bar-fill {
   background: var(--color-accent);
 }
 
-/* Sem suporte a backdrop-filter (ou com transparencia reduzida pelo sistema):
-   troca o vidro por superficies solidas para manter a leitura. */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .glass-strong,
   .glass-nav {
