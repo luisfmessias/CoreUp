@@ -1,5 +1,5 @@
 import type { Exercise, WorkoutDay, WorkoutExercise } from "@/types/fitness";
-import { normalizeText } from "@/lib/exercises";
+import { normalizeText } from "@/lib/text";
 
 export type TrainingGoal = "hipertrofia" | "forca" | "emagrecimento" | "saude";
 export type TrainingLevel = "iniciante" | "intermediario" | "avancado";
@@ -48,7 +48,28 @@ const dayLabels = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab", "Dom"];
 const mustCoverGroups = ["Peito", "Costas", "Quadríceps", "Posterior de Coxa", "Glúteos", "Ombros", "Abdômen"];
 
 const equipmentAliases: Record<string, string[]> = {
-  Academia: ["Barra", "Halteres", "Máquina", "Polia", "Peso corporal", "Elástico", "Kettlebell"],
+  Academia: [
+    "Barra",
+    "Barra W",
+    "Trap bar",
+    "Halteres",
+    "Máquina",
+    "Smith",
+    "Polia",
+    "Anilha",
+    "Peso corporal",
+    "Elástico",
+    "Kettlebell",
+    "Medicine ball",
+    "Corda",
+    "Corda naval",
+    "Roda abdominal",
+    "Bola",
+    "Esteira",
+    "Bicicleta ergométrica",
+    "Ergômetro",
+    "Hand gripper"
+  ],
   Casa: ["Peso corporal", "Elástico", "Halteres", "Kettlebell"],
   "Peso corporal": ["Peso corporal"],
   Halteres: ["Halteres", "Peso corporal"],

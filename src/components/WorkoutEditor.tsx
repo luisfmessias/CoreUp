@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowDown, ArrowUp, Loader2, Plus, Repeat, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import type { Exercise, WorkoutDay } from "@/types/fitness";
 import { ExercisePicker } from "@/components/ExerciseSheets";
 
@@ -24,6 +24,163 @@ export type EditorPayload = Array<{
 
 type PickerState = { mode: "replace"; index: number } | { mode: "add" } | null;
 
+export function toEditedExercises(items: WorkoutDay["exercises"]): EditedExercise[] {
+  return items.map((item) => ({
+    exerciseId: item.exerciseId,
+    sets: String(item.sets || 3),
+    reps: item.reps && item.reps !== "--" ? item.reps : "8-12",
+    rest: String(Number.parseInt(item.rest, 10) || ""),
+    note: item.note
+  }));
+}
+
+export function findInvalidExercise(items: EditedExercise[], byId: Map<number, Exercise>) {
+  const invalid = items.find((item) => {
+    const sets = Number(item.sets);
+    return !Number.isInteger(sets) || sets < 1 || sets > 10 || !item.reps.trim() || item.reps.length > 40;
+  });
+
+  return invalid ? `Confira ${byId.get(invalid.exerciseId)?.nome}: series de 1 a 10 e repeticoes preenchidas.` : null;
+}
+
+export function toEditorPayload(items: EditedExercise[]): EditorPayload {
+  return items.map((item, index) => {
+    const rest = Number(item.rest);
+    return {
+      exerciseId: item.exerciseId,
+      order: index,
+      sets: Number(item.sets),
+      reps: item.reps.trim(),
+      restSeconds: Number.isInteger(rest) && rest > 0 && rest <= 600 ? rest : undefined,
+      notes: item.note
+    };
+  });
+}
+
+export function ExerciseListEditor({
+  items,
+  exercises,
+  byId,
+  onChange
+}: {
+  items: EditedExercise[];
+  exercises: Exercise[];
+  byId: Map<number, Exercise>;
+  onChange: (items: EditedExercise[]) => void;
+}) {
+  const [picker, setPicker] = useState<PickerState>(null);
+
+  const update = (index: number, patch: Partial<EditedExercise>) =>
+    onChange(items.map((item, position) => (position === index ? { ...item, ...patch } : item)));
+
+  const move = (index: number, direction: -1 | 1) => {
+    const next = [...items];
+    const target = index + direction;
+    [next[index], next[target]] = [next[target], next[index]];
+    onChange(next);
+  };
+
+  const pickerTitle = picker?.mode === "replace" ? "Trocar exercicio" : "Adicionar exercicio";
+  const pickerGroup =
+    picker?.mode === "replace" ? byId.get(items[picker.index].exerciseId)?.grupoMuscular ?? "Todos" : "Todos";
+
+  return (
+    <>
+      {items.length > 0 ? (
+        <ol className="space-y-3">
+          {items.map((item, index) => {
+            const exercise = byId.get(item.exerciseId);
+
+            return (
+              <li key={`${item.exerciseId}-${index}`} className="glass rounded-2xl p-4">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="truncate text-[15px] font-semibold">
+                      <span className="mr-2 tabular-nums text-white/35">{index + 1}</span>
+                      {exercise?.nome}
+                    </p>
+                    <p className="text-xs text-white/45">
+                      {exercise?.grupoMuscular} · {exercise?.equipamento}
+                    </p>
+                  </div>
+                  <div className="flex shrink-0 gap-1">
+                    <IconAction disabled={index === 0} label="Subir" onClick={() => move(index, -1)}>
+                      <ArrowUp size={16} />
+                    </IconAction>
+                    <IconAction disabled={index === items.length - 1} label="Descer" onClick={() => move(index, 1)}>
+                      <ArrowDown size={16} />
+                    </IconAction>
+                  </div>
+                </div>
+
+                <div className="mt-3 grid grid-cols-3 gap-2">
+                  <Field label="Series" value={item.sets} inputMode="numeric" onChange={(sets) => update(index, { sets: sets.replace(/\D/g, "").slice(0, 2) })} />
+                  <Field label="Reps" value={item.reps} onChange={(reps) => update(index, { reps: reps.slice(0, 20) })} />
+                  <Field label="Pausa (s)" value={item.rest} inputMode="numeric" onChange={(rest) => update(index, { rest: rest.replace(/\D/g, "").slice(0, 3) })} />
+                </div>
+
+                <div className="mt-3 flex gap-2">
+                  <button
+                    className="flex h-9 items-center gap-1.5 rounded-lg border border-white/10 px-3 text-sm text-white/80 transition hover:bg-white/[0.05]"
+                    onClick={() => setPicker({ mode: "replace", index })}
+                    type="button"
+                  >
+                    <Repeat size={15} />
+                    Trocar
+                  </button>
+                  <button
+                    className="flex h-9 items-center gap-1.5 rounded-lg px-3 text-sm text-red-300/90 transition hover:bg-red-500/10"
+                    onClick={() => onChange(items.filter((_, position) => position !== index))}
+                    type="button"
+                  >
+                    <Trash2 size={15} />
+                    Remover
+                  </button>
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+      ) : (
+        <p className="rounded-2xl border border-dashed border-white/15 p-5 text-center text-sm text-white/55">
+          Nenhum exercicio ainda. Toque em Adicionar exercicio para escolher o primeiro.
+        </p>
+      )}
+
+      <button
+        className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-dashed border-white/15 text-sm font-medium text-white/75 transition hover:border-white/30 hover:text-white"
+        onClick={() => setPicker({ mode: "add" })}
+        type="button"
+      >
+        <Plus size={16} />
+        Adicionar exercicio
+      </button>
+
+      {picker && (
+        <ExercisePicker
+          excludeIds={items.map((item) => item.exerciseId)}
+          exercises={exercises}
+          initialGroup={pickerGroup}
+          title={pickerTitle}
+          onClose={() => setPicker(null)}
+          onPick={(exercise) => {
+            if (picker.mode === "replace") {
+              update(picker.index, { exerciseId: exercise.id, note: undefined });
+            } else {
+              const last = items[items.length - 1];
+              onChange([
+                ...items,
+                { exerciseId: exercise.id, sets: last?.sets ?? "3", reps: last?.reps || "8-12", rest: last?.rest || "60" }
+              ]);
+            }
+            setPicker(null);
+          }}
+        />
+      )}
+    </>
+  );
+}
+
 export function WorkoutEditor({
   day,
   exercises,
@@ -37,29 +194,9 @@ export function WorkoutEditor({
   onCancel: () => void;
   onSave: (payload: EditorPayload) => Promise<string | null>;
 }) {
-  const [items, setItems] = useState<EditedExercise[]>(() =>
-    day.exercises.map((item) => ({
-      exerciseId: item.exerciseId,
-      sets: String(item.sets || 3),
-      reps: item.reps === "--" ? "" : item.reps,
-      rest: String(Number.parseInt(item.rest, 10) || ""),
-      note: item.note
-    }))
-  );
-  const [picker, setPicker] = useState<PickerState>(null);
+  const [items, setItems] = useState<EditedExercise[]>(() => toEditedExercises(day.exercises));
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-
-  const update = (index: number, patch: Partial<EditedExercise>) =>
-    setItems((current) => current.map((item, position) => (position === index ? { ...item, ...patch } : item)));
-
-  const move = (index: number, direction: -1 | 1) =>
-    setItems((current) => {
-      const next = [...current];
-      const target = index + direction;
-      [next[index], next[target]] = [next[target], next[index]];
-      return next;
-    });
 
   async function save() {
     setError("");
@@ -69,40 +206,21 @@ export function WorkoutEditor({
       return;
     }
 
-    const invalid = items.findIndex((item) => {
-      const sets = Number(item.sets);
-      return !Number.isInteger(sets) || sets < 1 || sets > 10 || !item.reps.trim() || item.reps.length > 40;
-    });
+    const invalid = findInvalidExercise(items, byId);
 
-    if (invalid >= 0) {
-      setError(`Confira ${byId.get(items[invalid].exerciseId)?.nome}: series de 1 a 10 e repeticoes preenchidas.`);
+    if (invalid) {
+      setError(invalid);
       return;
     }
 
     setSaving(true);
-    const message = await onSave(
-      items.map((item, index) => {
-        const rest = Number(item.rest);
-        return {
-          exerciseId: item.exerciseId,
-          order: index,
-          sets: Number(item.sets),
-          reps: item.reps.trim(),
-          restSeconds: Number.isInteger(rest) && rest > 0 && rest <= 600 ? rest : undefined,
-          notes: item.note
-        };
-      })
-    );
+    const message = await onSave(toEditorPayload(items));
     setSaving(false);
 
     if (message) {
       setError(message);
     }
   }
-
-  const pickerTitle = picker?.mode === "replace" ? "Trocar exercicio" : "Adicionar exercicio";
-  const pickerGroup =
-    picker?.mode === "replace" ? byId.get(items[picker.index].exerciseId)?.grupoMuscular ?? "Todos" : "Todos";
 
   return (
     <section className="space-y-4">
@@ -112,69 +230,7 @@ export function WorkoutEditor({
         <p className="mt-1 text-sm text-white/55">Troque exercicios, ajuste series e mude a ordem.</p>
       </div>
 
-      <ol className="space-y-3">
-        {items.map((item, index) => {
-          const exercise = byId.get(item.exerciseId);
-
-          return (
-            <li key={`${item.exerciseId}-${index}`} className="glass rounded-2xl p-4">
-              <div className="flex items-start justify-between gap-2">
-                <div className="min-w-0">
-                  <p className="truncate text-[15px] font-semibold">
-                    <span className="mr-2 tabular-nums text-white/35">{index + 1}</span>
-                    {exercise?.nome}
-                  </p>
-                  <p className="text-xs text-white/45">
-                    {exercise?.grupoMuscular} · {exercise?.equipamento}
-                  </p>
-                </div>
-                <div className="flex shrink-0 gap-1">
-                  <IconAction disabled={index === 0} label="Subir" onClick={() => move(index, -1)}>
-                    <ArrowUp size={16} />
-                  </IconAction>
-                  <IconAction disabled={index === items.length - 1} label="Descer" onClick={() => move(index, 1)}>
-                    <ArrowDown size={16} />
-                  </IconAction>
-                </div>
-              </div>
-
-              <div className="mt-3 grid grid-cols-3 gap-2">
-                <Field label="Series" value={item.sets} inputMode="numeric" onChange={(sets) => update(index, { sets: sets.replace(/\D/g, "").slice(0, 2) })} />
-                <Field label="Reps" value={item.reps} onChange={(reps) => update(index, { reps: reps.slice(0, 20) })} />
-                <Field label="Pausa (s)" value={item.rest} inputMode="numeric" onChange={(rest) => update(index, { rest: rest.replace(/\D/g, "").slice(0, 3) })} />
-              </div>
-
-              <div className="mt-3 flex gap-2">
-                <button
-                  className="flex h-9 items-center gap-1.5 rounded-lg border border-white/10 px-3 text-sm text-white/80 transition hover:bg-white/[0.05]"
-                  onClick={() => setPicker({ mode: "replace", index })}
-                  type="button"
-                >
-                  <Repeat size={15} />
-                  Trocar
-                </button>
-                <button
-                  className="flex h-9 items-center gap-1.5 rounded-lg px-3 text-sm text-red-300/90 transition hover:bg-red-500/10"
-                  onClick={() => setItems((current) => current.filter((_, position) => position !== index))}
-                  type="button"
-                >
-                  <Trash2 size={15} />
-                  Remover
-                </button>
-              </div>
-            </li>
-          );
-        })}
-      </ol>
-
-      <button
-        className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-dashed border-white/15 text-sm font-medium text-white/75 transition hover:border-white/30 hover:text-white"
-        onClick={() => setPicker({ mode: "add" })}
-        type="button"
-      >
-        <Plus size={16} />
-        Adicionar exercicio
-      </button>
+      <ExerciseListEditor byId={byId} exercises={exercises} items={items} onChange={setItems} />
 
       {error && (
         <p className="rounded-xl border border-red-400/25 bg-red-500/10 px-4 py-3 text-sm text-red-100" role="alert">
@@ -201,28 +257,6 @@ export function WorkoutEditor({
           Salvar dia
         </button>
       </div>
-
-      {picker && (
-        <ExercisePicker
-          excludeIds={items.map((item) => item.exerciseId)}
-          exercises={exercises}
-          initialGroup={pickerGroup}
-          title={pickerTitle}
-          onClose={() => setPicker(null)}
-          onPick={(exercise) => {
-            if (picker.mode === "replace") {
-              update(picker.index, { exerciseId: exercise.id, note: undefined });
-            } else {
-              const last = items[items.length - 1];
-              setItems((current) => [
-                ...current,
-                { exerciseId: exercise.id, sets: last?.sets ?? "3", reps: last?.reps || "8-12", rest: last?.rest ?? "60" }
-              ]);
-            }
-            setPicker(null);
-          }}
-        />
-      )}
     </section>
   );
 }
@@ -236,7 +270,7 @@ function IconAction({
   label: string;
   disabled: boolean;
   onClick: () => void;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <button

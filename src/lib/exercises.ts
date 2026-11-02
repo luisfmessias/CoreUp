@@ -1,4 +1,7 @@
 import exercises from "@/data/exercises.json";
+import { normalizeText } from "@/lib/text";
+
+export { normalizeText };
 
 export type Exercise = {
   id: number;
@@ -9,15 +12,46 @@ export type Exercise = {
   imagem: string;
 };
 
-export const exerciseList = exercises as Exercise[];
+const equipmentNames: Record<string, string> = {
+  barra: "Barra",
+  "barra w": "Barra W",
+  halteres: "Halteres",
+  halter: "Halteres",
+  polia: "Polia",
+  "polia unilateral": "Polia",
+  maquina: "Máquina",
+  "maquina assistida": "Máquina",
+  smith: "Smith",
+  "peso corporal": "Peso corporal",
+  kettlebell: "Kettlebell",
+  elastico: "Elástico",
+  anilha: "Anilha",
+  anilhas: "Anilha",
+  disco: "Anilha",
+  "medicine ball": "Medicine ball",
+  "corda naval": "Corda naval",
+  corda: "Corda",
+  esteira: "Esteira",
+  ergometrica: "Bicicleta ergométrica",
+  ergometro: "Ergômetro",
+  "trap bar": "Trap bar",
+  "hand gripper": "Hand gripper",
+  "roda abdominal": "Roda abdominal",
+  bola: "Bola"
+};
 
-export function findExercise(id: number) {
-  return exerciseList.find((exercise) => exercise.id === id) ?? null;
+export function normalizeEquipment(value: string) {
+  const trimmed = value.trim();
+  return equipmentNames[normalizeText(trimmed)] ?? trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
 }
 
-export function normalizeText(value: string) {
-  return value
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase();
+export const exerciseList: Exercise[] = (exercises as Exercise[]).map((exercise) => ({
+  ...exercise,
+  equipamento: normalizeEquipment(exercise.equipamento)
+}));
+
+const exerciseById = new Map(exerciseList.map((exercise) => [exercise.id, exercise]));
+
+export function findExercise(id: number) {
+  return exerciseById.get(id) ?? null;
 }

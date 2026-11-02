@@ -27,11 +27,13 @@ import {
   UserPlus,
   UserRound
 } from "lucide-react";
-import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useDeferredValue, useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { apiFetch, type AccountType, type AppNotification, type AuthUser } from "@/lib/api-client";
 import { brazilianStates } from "@/lib/professional";
 import { exerciseMap, getTodayWorkout, summarizeGroups } from "@/lib/exercise-view";
 import type { ApiBodyMetric, ApiWorkoutLog } from "@/lib/history";
+import { normalizeText } from "@/lib/text";
+import { useIncrementalList } from "@/lib/use-incremental-list";
 import { toPlanDays, toWorkoutDay, type ApiWorkout } from "@/lib/plan-mapping";
 import {
   buildPlanNotes,
@@ -44,6 +46,7 @@ import {
 } from "@/lib/workout-generator";
 import type { Exercise, WorkoutDay } from "@/types/fitness";
 import { AdminRequestsView } from "@/components/AdminRequestsView";
+import { CustomPlanBuilder } from "@/components/CustomPlanBuilder";
 import { ExerciseSheet } from "@/components/ExerciseSheets";
 import { NotificationsView } from "@/components/NotificationsView";
 import { Onboarding, type OnboardingDestination } from "@/components/Onboarding";
@@ -143,6 +146,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
   const [metrics, setMetrics] = useState<ApiBodyMetric[]>([]);
   const [sessionDayId, setSessionDayId] = useState<string | null>(null);
   const [exerciseSheetId, setExerciseSheetId] = useState<number | null>(null);
+  const [builderMode, setBuilderMode] = useState<"auto" | "custom">("auto");
   const [planLoaded, setPlanLoaded] = useState(false);
   const [planSaving, setPlanSaving] = useState(false);
   const [planError, setPlanError] = useState("");
@@ -317,29 +321,20 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
     return () => window.clearTimeout(timeout);
   }, [authToken, preferences]);
 
+  const searchIndex = useMemo(() => new Map(exercises.map((exercise) => [exercise.id, normalizeText(exercise.nome)])), [exercises]);
+  const deferredQuery = useDeferredValue(query);
+
   const filteredExercises = useMemo(() => {
-    const term = query
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase();
-
+    const term = normalizeText(deferredQuery.trim());
     const showFavorites = selectedGroup === favoritesFilter;
-    const matches = exercises
-      .filter((exercise) =>
-        showFavorites
-          ? preferences.favoriteExerciseIds.includes(exercise.id)
-          : selectedGroup === "Todos" || exercise.grupoMuscular === selectedGroup
-      )
-      .filter((exercise) =>
-        exercise.nome
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .toLowerCase()
-          .includes(term)
-      );
+    const favorites = new Set(preferences.favoriteExerciseIds);
 
-    return showFavorites ? matches : matches.slice(0, 18);
-  }, [exercises, query, selectedGroup, preferences.favoriteExerciseIds]);
+    return exercises.filter(
+      (exercise) =>
+        (showFavorites ? favorites.has(exercise.id) : selectedGroup === "Todos" || exercise.grupoMuscular === selectedGroup) &&
+        (!term || searchIndex.get(exercise.id)?.includes(term))
+    );
+  }, [exercises, deferredQuery, searchIndex, selectedGroup, preferences.favoriteExerciseIds]);
 
   function updatePreferences(nextPreferences: GeneratorPreferences) {
     preferencesDirty.current = true;
@@ -347,9 +342,9 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
     setGeneratedPlan(generateWorkoutPlan(exercises, nextPreferences));
   }
 
-  async function saveGeneratedPlan() {
-    if (!authToken || !generatedPlan.days.length) {
-      return;
+  async function persistPlan(planDays: WorkoutDay[]) {
+    if (!authToken) {
+      return "Sessao expirada. Entre novamente.";
     }
 
     setPlanSaving(true);
@@ -358,12 +353,12 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
     try {
       const response = await apiFetch(authToken, "/api/plan", {
         method: "PUT",
-        body: JSON.stringify({ preferences, days: toPlanDays(generatedPlan.days) })
+        body: JSON.stringify({ preferences, days: toPlanDays(planDays) })
       });
-      const data = (await response.json()) as { workouts?: ApiWorkout[]; error?: string };
+      const data = (await response.json()) as { workouts?: ApiWorkout[]; error?: string; details?: Array<{ message: string }> };
 
       if (!response.ok || !data.workouts) {
-        throw new Error(data.error ?? "Nao foi possivel salvar o plano.");
+        throw new Error(data.details?.[0]?.message ?? data.error ?? "Nao foi possivel salvar o plano.");
       }
 
       const days = data.workouts.map(toWorkoutDay);
@@ -371,10 +366,23 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
       setSavedDays(days);
       setActiveDayId(days[0]?.id ?? "");
       setActiveTab("plan");
+      return null;
     } catch (error) {
-      setPlanError(error instanceof Error ? error.message : "Nao foi possivel salvar o plano.");
+      return error instanceof Error ? error.message : "Nao foi possivel salvar o plano.";
     } finally {
       setPlanSaving(false);
+    }
+  }
+
+  async function saveGeneratedPlan() {
+    if (!generatedPlan.days.length) {
+      return;
+    }
+
+    const message = await persistPlan(generatedPlan.days);
+
+    if (message) {
+      setPlanError(message);
     }
   }
 
@@ -836,19 +844,47 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
             />
           )}
           {activeTab === "builder" && (
-            <BuilderView
-              byId={byId}
-              equipment={equipment}
-              exercises={exercises}
-              favoriteExercises={favoriteExercises}
-              generatedPlan={generatedPlan}
-              hasSavedPlan={savedDays.length > 0}
-              preferences={preferences}
-              saving={planSaving}
-              onChange={updatePreferences}
-              onFavoriteToggle={toggleFavorite}
-              onSavePlan={saveGeneratedPlan}
-            />
+            <div className="space-y-6">
+              <div aria-label="Como montar o treino" className="glass-inset grid grid-cols-2 gap-1 rounded-xl p-1" role="radiogroup">
+                {(
+                  [
+                    ["auto", "Gerar automatico"],
+                    ["custom", "Do meu jeito"]
+                  ] as const
+                ).map(([mode, label]) => (
+                  <button
+                    key={mode}
+                    aria-checked={builderMode === mode}
+                    className={`h-10 rounded-lg text-sm font-semibold transition ${
+                      builderMode === mode ? "bg-white/90 text-[#06100b]" : "text-white/65 hover:text-white"
+                    }`}
+                    onClick={() => setBuilderMode(mode)}
+                    role="radio"
+                    type="button"
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+
+              {builderMode === "auto" ? (
+                <BuilderView
+                  byId={byId}
+                  equipment={equipment}
+                  exercises={exercises}
+                  favoriteExercises={favoriteExercises}
+                  generatedPlan={generatedPlan}
+                  hasSavedPlan={savedDays.length > 0}
+                  preferences={preferences}
+                  saving={planSaving}
+                  onChange={updatePreferences}
+                  onFavoriteToggle={toggleFavorite}
+                  onSavePlan={saveGeneratedPlan}
+                />
+              ) : (
+                <CustomPlanBuilder byId={byId} exercises={exercises} savedDays={savedDays} onSave={persistPlan} />
+              )}
+            </div>
           )}
           {activeTab === "plan" && (
             <PlanView
@@ -873,6 +909,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
               groups={groups}
               selectedGroup={selectedGroup}
               query={query}
+              listKey={`${selectedGroup}|${deferredQuery}`}
               favoriteExerciseIds={preferences.favoriteExerciseIds}
               onQueryChange={setQuery}
               onGroupChange={setSelectedGroup}
@@ -2284,6 +2321,7 @@ function LibraryView({
   groups,
   selectedGroup,
   query,
+  listKey,
   favoriteExerciseIds,
   onQueryChange,
   onGroupChange,
@@ -2294,12 +2332,16 @@ function LibraryView({
   groups: string[];
   selectedGroup: string;
   query: string;
+  listKey: string;
   favoriteExerciseIds: number[];
   onQueryChange: (query: string) => void;
   onGroupChange: (group: string) => void;
   onFavoriteToggle: (exerciseId: number) => void;
   onOpenExercise: (exerciseId: number) => void;
 }) {
+  const favorites = useMemo(() => new Set(favoriteExerciseIds), [favoriteExerciseIds]);
+  const { visible, hasMore, loadMore, sentinelRef, total } = useIncrementalList(exercises, listKey);
+
   return (
     <section className="space-y-5">
       <div>
@@ -2335,7 +2377,17 @@ function LibraryView({
         ))}
       </div>
 
-      {selectedGroup === favoritesFilter && exercises.length === 0 && (
+      {total > 0 && (
+        <p aria-live="polite" className="-mb-2 text-xs text-white/45">
+          {total} {total === 1 ? "exercicio" : "exercicios"}
+        </p>
+      )}
+
+      {selectedGroup !== favoritesFilter && total === 0 && (
+        <p className="rounded-2xl border border-white/[0.07] p-5 text-center text-sm text-white/55">Nenhum exercicio encontrado.</p>
+      )}
+
+      {selectedGroup === favoritesFilter && total === 0 && (
         <p className="rounded-2xl border border-white/[0.07] p-5 text-center text-sm leading-relaxed text-white/55">
           {favoriteExerciseIds.length
             ? "Nenhum favorito com esse nome."
@@ -2344,7 +2396,7 @@ function LibraryView({
       )}
 
       <div className="divide-y divide-white/[0.07] border-y border-white/[0.07]">
-        {exercises.map((exercise) => (
+        {visible.map((exercise) => (
           <article key={exercise.id} className="flex items-center gap-3 py-3">
             <button className="min-w-0 flex-1 text-left" onClick={() => onOpenExercise(exercise.id)} type="button">
               <span className="block truncate text-[15px] font-medium">{exercise.nome}</span>
@@ -2355,16 +2407,27 @@ function LibraryView({
             <button
               aria-label={`Favoritar ${exercise.nome}`}
               className={`grid size-10 shrink-0 place-items-center rounded-full transition hover:bg-white/[0.06] ${
-                favoriteExerciseIds.includes(exercise.id) ? "text-accent" : "text-white/35 hover:text-white/70"
+                favorites.has(exercise.id) ? "text-accent" : "text-white/35 hover:text-white/70"
               }`}
               onClick={() => onFavoriteToggle(exercise.id)}
               type="button"
             >
-              <Heart size={17} fill={favoriteExerciseIds.includes(exercise.id) ? "currentColor" : "none"} />
+              <Heart size={17} fill={favorites.has(exercise.id) ? "currentColor" : "none"} />
             </button>
           </article>
         ))}
       </div>
+      {hasMore && (
+        <div ref={sentinelRef} className="flex justify-center">
+          <button
+            className="h-10 rounded-xl px-4 text-sm font-medium text-white/65 transition hover:bg-white/[0.04] hover:text-white"
+            onClick={loadMore}
+            type="button"
+          >
+            Carregar mais
+          </button>
+        </div>
+      )}
     </section>
   );
 }

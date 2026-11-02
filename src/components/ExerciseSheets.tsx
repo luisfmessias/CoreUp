@@ -1,8 +1,10 @@
 "use client";
 
 import { ExternalLink, Search, X } from "lucide-react";
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useDeferredValue, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { bestLoadFor, formatKg, formatShortDate, type ApiWorkoutLog } from "@/lib/history";
+import { normalizeText } from "@/lib/text";
+import { useIncrementalList } from "@/lib/use-incremental-list";
 import type { Exercise } from "@/types/fitness";
 
 const safetyTips = [
@@ -136,11 +138,20 @@ export function ExercisePicker({
   const groups = useMemo(() => ["Todos", ...Array.from(new Set(exercises.map((exercise) => exercise.grupoMuscular)))], [exercises]);
   const [group, setGroup] = useState(initialGroup);
   const [query, setQuery] = useState("");
-  const normalize = (value: string) => value.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
-  const results = exercises
-    .filter((exercise) => !excludeIds.includes(exercise.id))
-    .filter((exercise) => group === "Todos" || exercise.grupoMuscular === group)
-    .filter((exercise) => normalize(exercise.nome).includes(normalize(query)));
+  const deferredQuery = useDeferredValue(query);
+  const searchIndex = useMemo(() => new Map(exercises.map((exercise) => [exercise.id, normalizeText(exercise.nome)])), [exercises]);
+  const results = useMemo(() => {
+    const term = normalizeText(deferredQuery.trim());
+    const excluded = new Set(excludeIds);
+
+    return exercises.filter(
+      (exercise) =>
+        !excluded.has(exercise.id) &&
+        (group === "Todos" || exercise.grupoMuscular === group) &&
+        (!term || searchIndex.get(exercise.id)?.includes(term))
+    );
+  }, [deferredQuery, excludeIds, exercises, group, searchIndex]);
+  const { visible, hasMore, loadMore, sentinelRef, total } = useIncrementalList(results, `${group}|${deferredQuery}`);
 
   return (
     <BottomSheet title={title} onClose={onClose}>
@@ -169,7 +180,7 @@ export function ExercisePicker({
         ))}
       </div>
       <ul className="mt-2 divide-y divide-white/[0.07] pb-2">
-        {results.map((exercise) => (
+        {visible.map((exercise) => (
           <li key={exercise.id}>
             <button
               className="flex w-full items-center justify-between gap-3 py-3 text-left transition hover:opacity-80"
@@ -186,8 +197,19 @@ export function ExercisePicker({
             </button>
           </li>
         ))}
-        {!results.length && <li className="py-6 text-center text-sm text-white/50">Nenhum exercicio encontrado.</li>}
+        {!total && <li className="py-6 text-center text-sm text-white/50">Nenhum exercicio encontrado.</li>}
       </ul>
+      {hasMore && (
+        <div ref={sentinelRef} className="flex justify-center pb-3">
+          <button
+            className="h-10 rounded-xl px-4 text-sm font-medium text-white/65 transition hover:bg-white/[0.04] hover:text-white"
+            onClick={loadMore}
+            type="button"
+          >
+            Carregar mais
+          </button>
+        </div>
+      )}
     </BottomSheet>
   );
 }
