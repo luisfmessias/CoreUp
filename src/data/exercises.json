@@ -1398,5 +1398,5605 @@
     "grupoMuscular": "Corpo Inteiro / Funcionais",
     "equipamento": "Peso corporal",
     "nivel": "Intermediário"
+  },
+  {
+    "id": 201,
+    "nome": "Supino reto com Smith",
+    "grupoMuscular": "Peito",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 202,
+    "nome": "Remada curvada pronada com barra",
+    "grupoMuscular": "Costas",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 203,
+    "nome": "Elevação lateral em pé (halteres)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 204,
+    "nome": "Rosca direta barra reta com barra",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 205,
+    "nome": "Extensão de tríceps na polia com corda (polia)",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 206,
+    "nome": "Flexão de punho sentado com barra",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 207,
+    "nome": "Agachamento frontal com barra",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 208,
+    "nome": "Levantamento romeno com barra (barra)",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 209,
+    "nome": "Hip thrust com barra (barra)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 210,
+    "nome": "Elevação de panturrilha em pé (máquina)",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 211,
+    "nome": "Crunch no solo (peso corporal)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 212,
+    "nome": "Caminhada na esteira inclinada (esteira)",
+    "grupoMuscular": "Cardio",
+    "equipamento": "esteira",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 213,
+    "nome": "Thruster com halteres (halteres)",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 214,
+    "nome": "Supino reto com máquina",
+    "grupoMuscular": "Peito",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 215,
+    "nome": "Remada curvada pronada com halteres",
+    "grupoMuscular": "Costas",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 216,
+    "nome": "Elevação lateral em pé (polia)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 217,
+    "nome": "Rosca direta barra reta com barra W",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "barra W",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 218,
+    "nome": "Extensão de tríceps na polia barra reta (polia)",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 219,
+    "nome": "Flexão de punho sentado com halter",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 220,
+    "nome": "Agachamento frontal com halter",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 221,
+    "nome": "Levantamento romeno com barra (halteres)",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 222,
+    "nome": "Hip thrust com barra (Smith)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 223,
+    "nome": "Elevação de panturrilha em pé (halteres)",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 224,
+    "nome": "Crunch no solo (polia)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 225,
+    "nome": "Caminhada na esteira inclinada (peso corporal)",
+    "grupoMuscular": "Cardio",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 226,
+    "nome": "Thruster com halteres (barra)",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 227,
+    "nome": "Supino reto com polia unilateral",
+    "grupoMuscular": "Peito",
+    "equipamento": "polia unilateral",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 228,
+    "nome": "Remada curvada pronada com polia",
+    "grupoMuscular": "Costas",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 229,
+    "nome": "Elevação lateral em pé (máquina)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 230,
+    "nome": "Rosca direta barra W com barra",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 231,
+    "nome": "Extensão de tríceps unilateral na polia com polia",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 232,
+    "nome": "Flexão de punho em pé (barra)",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 233,
+    "nome": "Agachamento frontal com Smith",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 234,
+    "nome": "Levantamento romeno com halteres (barra)",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 235,
+    "nome": "Hip thrust com barra (peso corporal)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 236,
+    "nome": "Elevação de panturrilha em pé (Smith)",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 237,
+    "nome": "Crunch no solo (anilha)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "anilha",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 238,
+    "nome": "Caminhada intervalada com esteira",
+    "grupoMuscular": "Cardio",
+    "equipamento": "esteira",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 239,
+    "nome": "Thruster com halteres (kettlebell)",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "kettlebell",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 240,
+    "nome": "Supino inclinado com Smith",
+    "grupoMuscular": "Peito",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 241,
+    "nome": "Remada curvada pronada com máquina",
+    "grupoMuscular": "Costas",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 242,
+    "nome": "Elevação lateral sentado com halteres",
+    "grupoMuscular": "Ombros",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 243,
+    "nome": "Rosca direta barra W com barra W",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "barra W",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 244,
+    "nome": "Extensão de tríceps acima da cabeça com corda com polia",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 245,
+    "nome": "Flexão de punho em pé (halter)",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 246,
+    "nome": "Agachamento frontal com máquina",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 247,
+    "nome": "Levantamento romeno com halteres (halteres)",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 248,
+    "nome": "Hip thrust com barra (elástico)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "elástico",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 249,
+    "nome": "Elevação de panturrilha em pé (peso corporal)",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 250,
+    "nome": "Crunch na polia ajoelhado (peso corporal)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 251,
+    "nome": "Caminhada intervalada com peso corporal",
+    "grupoMuscular": "Cardio",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 252,
+    "nome": "Thruster com barra (halteres)",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 253,
+    "nome": "Supino inclinado com máquina",
+    "grupoMuscular": "Peito",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 254,
+    "nome": "Remada curvada supinada com barra",
+    "grupoMuscular": "Costas",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 255,
+    "nome": "Elevação lateral sentado com polia",
+    "grupoMuscular": "Ombros",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 256,
+    "nome": "Rosca direta pegada aberta com barra",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 257,
+    "nome": "Extensão de tríceps acima da cabeça unilateral com polia",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 258,
+    "nome": "Flexão de punho unilateral com barra",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 259,
+    "nome": "Agachamento com pausa (barra)",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 260,
+    "nome": "Levantamento romeno unilateral com barra",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 261,
+    "nome": "Hip thrust unilateral com barra",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 262,
+    "nome": "Elevação de panturrilha sentado com máquina",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 263,
+    "nome": "Crunch na polia ajoelhado (polia)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 264,
+    "nome": "Caminhada rápida com esteira",
+    "grupoMuscular": "Cardio",
+    "equipamento": "esteira",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 265,
+    "nome": "Thruster com barra (barra)",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 266,
+    "nome": "Supino inclinado com polia unilateral",
+    "grupoMuscular": "Peito",
+    "equipamento": "polia unilateral",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 267,
+    "nome": "Remada curvada supinada com halteres",
+    "grupoMuscular": "Costas",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 268,
+    "nome": "Elevação lateral sentado com máquina",
+    "grupoMuscular": "Ombros",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 269,
+    "nome": "Rosca direta pegada aberta com barra W",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "barra W",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 270,
+    "nome": "Tríceps testa com barra W (barra W)",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "barra W",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 271,
+    "nome": "Flexão de punho unilateral com halter",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 272,
+    "nome": "Agachamento com pausa (halter)",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 273,
+    "nome": "Levantamento romeno unilateral com halteres",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 274,
+    "nome": "Hip thrust unilateral com Smith",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 275,
+    "nome": "Elevação de panturrilha sentado com halteres",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 276,
+    "nome": "Crunch na polia ajoelhado (anilha)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "anilha",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 277,
+    "nome": "Caminhada rápida com peso corporal",
+    "grupoMuscular": "Cardio",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 278,
+    "nome": "Thruster com barra (kettlebell)",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "kettlebell",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 279,
+    "nome": "Supino declinado com barra",
+    "grupoMuscular": "Peito",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 280,
+    "nome": "Remada curvada supinada com polia",
+    "grupoMuscular": "Costas",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 281,
+    "nome": "Elevação lateral inclinada com halteres",
+    "grupoMuscular": "Ombros",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 282,
+    "nome": "Rosca direta pegada fechada com barra",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 283,
+    "nome": "Tríceps testa com barra W (halteres)",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 284,
+    "nome": "Extensão de punho sentado com barra",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 285,
+    "nome": "Agachamento com pausa (Smith)",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 286,
+    "nome": "Levantamento romeno com pausa (barra)",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 287,
+    "nome": "Hip thrust unilateral com peso corporal",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 288,
+    "nome": "Elevação de panturrilha sentado com Smith",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 289,
+    "nome": "Crunch com carga (peso corporal)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 290,
+    "nome": "Caminhada com inclinação variável (esteira)",
+    "grupoMuscular": "Cardio",
+    "equipamento": "esteira",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 291,
+    "nome": "Thruster com kettlebell (halteres)",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 292,
+    "nome": "Supino declinado com halteres",
+    "grupoMuscular": "Peito",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 293,
+    "nome": "Remada curvada supinada com máquina",
+    "grupoMuscular": "Costas",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 294,
+    "nome": "Elevação lateral inclinada com polia",
+    "grupoMuscular": "Ombros",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 295,
+    "nome": "Rosca direta pegada fechada com barra W",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "barra W",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 296,
+    "nome": "Tríceps testa com halteres (barra W)",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "barra W",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 297,
+    "nome": "Extensão de punho sentado com halter",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 298,
+    "nome": "Agachamento com pausa (máquina)",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 299,
+    "nome": "Levantamento romeno com pausa (halteres)",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 300,
+    "nome": "Hip thrust unilateral com elástico",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "elástico",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 301,
+    "nome": "Elevação de panturrilha sentado com peso corporal",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 302,
+    "nome": "Crunch com carga (polia)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 303,
+    "nome": "Caminhada com inclinação variável (peso corporal)",
+    "grupoMuscular": "Cardio",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 304,
+    "nome": "Thruster com kettlebell (barra)",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 305,
+    "nome": "Supino declinado com Smith",
+    "grupoMuscular": "Peito",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 306,
+    "nome": "Remada unilateral apoiada com barra",
+    "grupoMuscular": "Costas",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 307,
+    "nome": "Elevação lateral inclinada com máquina",
+    "grupoMuscular": "Ombros",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 308,
+    "nome": "Rosca direta com pausa (barra)",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 309,
+    "nome": "Tríceps testa com halteres (halteres)",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 310,
+    "nome": "Extensão de punho unilateral com barra",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 311,
+    "nome": "Agachamento com calço nos calcanhares (barra)",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 312,
+    "nome": "Levantamento romeno déficit com barra",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 313,
+    "nome": "Hip thrust com pausa (barra)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 314,
+    "nome": "Elevação de panturrilha unilateral com máquina",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 315,
+    "nome": "Crunch com carga (anilha)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "anilha",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 316,
+    "nome": "Corrida intervalada com esteira",
+    "grupoMuscular": "Cardio",
+    "equipamento": "esteira",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 317,
+    "nome": "Thruster com kettlebell (kettlebell)",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "kettlebell",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 318,
+    "nome": "Supino declinado com máquina",
+    "grupoMuscular": "Peito",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 319,
+    "nome": "Remada unilateral apoiada com halteres",
+    "grupoMuscular": "Costas",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 320,
+    "nome": "Elevação lateral na polia baixa (halteres)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 321,
+    "nome": "Rosca direta com pausa (barra W)",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "barra W",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 322,
+    "nome": "Tríceps testa inclinado com barra W",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "barra W",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 323,
+    "nome": "Extensão de punho unilateral com halter",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 324,
+    "nome": "Agachamento com calço nos calcanhares (halter)",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 325,
+    "nome": "Levantamento romeno déficit com halteres",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 326,
+    "nome": "Hip thrust com pausa (Smith)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 327,
+    "nome": "Elevação de panturrilha unilateral com halteres",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 328,
+    "nome": "Crunch declinado com peso corporal",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 329,
+    "nome": "Corrida intervalada com peso corporal",
+    "grupoMuscular": "Cardio",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 330,
+    "nome": "Clean power clean com barra",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 331,
+    "nome": "Supino declinado com polia unilateral",
+    "grupoMuscular": "Peito",
+    "equipamento": "polia unilateral",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 332,
+    "nome": "Remada unilateral apoiada com polia",
+    "grupoMuscular": "Costas",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 333,
+    "nome": "Elevação lateral na polia baixa (polia)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 334,
+    "nome": "Rosca alternada em pé (halteres)",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 335,
+    "nome": "Tríceps testa inclinado com halteres",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 336,
+    "nome": "Pronação de antebraço com cotovelo apoiado (halter)",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 337,
+    "nome": "Agachamento com calço nos calcanhares (Smith)",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 338,
+    "nome": "Flexora deitado com máquina",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 339,
+    "nome": "Hip thrust com pausa (peso corporal)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 340,
+    "nome": "Elevação de panturrilha unilateral com Smith",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 341,
+    "nome": "Crunch declinado com polia",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 342,
+    "nome": "Corrida contínua leve com esteira",
+    "grupoMuscular": "Cardio",
+    "equipamento": "esteira",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 343,
+    "nome": "Clean power clean com kettlebell",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "kettlebell",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 344,
+    "nome": "Supino inclinado baixo com barra",
+    "grupoMuscular": "Peito",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 345,
+    "nome": "Remada unilateral apoiada com máquina",
+    "grupoMuscular": "Costas",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 346,
+    "nome": "Elevação lateral na polia baixa (máquina)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 347,
+    "nome": "Rosca alternada sentada com halteres",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 348,
+    "nome": "Tríceps testa com pegada neutra (barra W)",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "barra W",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 349,
+    "nome": "Pronação de antebraço com cotovelo apoiado (polia)",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 350,
+    "nome": "Agachamento com calço nos calcanhares (máquina)",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 351,
+    "nome": "Flexora sentado com máquina",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 352,
+    "nome": "Hip thrust com pausa (elástico)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "elástico",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 353,
+    "nome": "Elevação de panturrilha unilateral com peso corporal",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 354,
+    "nome": "Crunch declinado com anilha",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "anilha",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 355,
+    "nome": "Corrida contínua leve com peso corporal",
+    "grupoMuscular": "Cardio",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 356,
+    "nome": "Clean hang clean com barra",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 357,
+    "nome": "Supino inclinado baixo com halteres",
+    "grupoMuscular": "Peito",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 358,
+    "nome": "Remada serrote apoiado com barra",
+    "grupoMuscular": "Costas",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 359,
+    "nome": "Elevação lateral na polia atrás do corpo (halteres)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 360,
+    "nome": "Rosca alternada com supinação (halteres)",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 361,
+    "nome": "Tríceps testa com pegada neutra (halteres)",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 362,
+    "nome": "Pronação de antebraço na polia (halter)",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 363,
+    "nome": "Agachamento Smith com barra",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 364,
+    "nome": "Flexora unilateral com máquina",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 365,
+    "nome": "Hip thrust no Smith (barra)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 366,
+    "nome": "Elevação de panturrilha com pausa alongada (máquina)",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 367,
+    "nome": "Crunch com pausa (peso corporal)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 368,
+    "nome": "Corrida em subida (esteira)",
+    "grupoMuscular": "Cardio",
+    "equipamento": "esteira",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 369,
+    "nome": "Clean hang clean com kettlebell",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "kettlebell",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 370,
+    "nome": "Supino inclinado baixo com Smith",
+    "grupoMuscular": "Peito",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 371,
+    "nome": "Remada serrote apoiado com halteres",
+    "grupoMuscular": "Costas",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 372,
+    "nome": "Elevação lateral na polia atrás do corpo (polia)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 373,
+    "nome": "Rosca alternada inclinada com halteres",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 374,
+    "nome": "Supino fechado reto com barra",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 375,
+    "nome": "Pronação de antebraço na polia (polia)",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 376,
+    "nome": "Agachamento Smith com halter",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 377,
+    "nome": "Flexora em pé (máquina)",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 378,
+    "nome": "Hip thrust no Smith (Smith)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 379,
+    "nome": "Elevação de panturrilha com pausa alongada (halteres)",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 380,
+    "nome": "Crunch com pausa (polia)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 381,
+    "nome": "Corrida em subida (peso corporal)",
+    "grupoMuscular": "Cardio",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 382,
+    "nome": "Clean com kettlebell (barra)",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 383,
+    "nome": "Supino inclinado baixo com máquina",
+    "grupoMuscular": "Peito",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 384,
+    "nome": "Remada serrote apoiado com polia",
+    "grupoMuscular": "Costas",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 385,
+    "nome": "Elevação lateral na polia atrás do corpo (máquina)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 386,
+    "nome": "Rosca martelo tradicional com halteres",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 387,
+    "nome": "Supino fechado reto com Smith",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 388,
+    "nome": "Supinação de antebraço com cotovelo apoiado (halter)",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 389,
+    "nome": "Agachamento Smith com Smith",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 390,
+    "nome": "Good morning com barra (barra)",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 391,
+    "nome": "Hip thrust no Smith (peso corporal)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 392,
+    "nome": "Elevação de panturrilha com pausa alongada (Smith)",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 393,
+    "nome": "Crunch com pausa (anilha)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "anilha",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 394,
+    "nome": "Corrida progressiva com esteira",
+    "grupoMuscular": "Cardio",
+    "equipamento": "esteira",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 395,
+    "nome": "Clean com kettlebell (kettlebell)",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "kettlebell",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 396,
+    "nome": "Supino inclinado baixo com polia unilateral",
+    "grupoMuscular": "Peito",
+    "equipamento": "polia unilateral",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 397,
+    "nome": "Remada serrote apoiado com máquina",
+    "grupoMuscular": "Costas",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 398,
+    "nome": "Elevação lateral parcial com halteres",
+    "grupoMuscular": "Ombros",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 399,
+    "nome": "Rosca martelo tradicional com polia",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 400,
+    "nome": "Supino fechado inclinado com barra",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 401,
+    "nome": "Supinação de antebraço com cotovelo apoiado (polia)",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 402,
+    "nome": "Agachamento Smith com máquina",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 403,
+    "nome": "Good morning com barra (peso corporal)",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 404,
+    "nome": "Hip thrust no Smith (elástico)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "elástico",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 405,
+    "nome": "Elevação de panturrilha com pausa alongada (peso corporal)",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 406,
+    "nome": "Elevação de joelhos na cadeira romana (peso corporal)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 407,
+    "nome": "Corrida progressiva com peso corporal",
+    "grupoMuscular": "Cardio",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 408,
+    "nome": "Snatch power snatch com barra",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 409,
+    "nome": "Supino inclinado alto com barra",
+    "grupoMuscular": "Peito",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 410,
+    "nome": "Remada baixa neutra com barra",
+    "grupoMuscular": "Costas",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 411,
+    "nome": "Elevação lateral parcial com polia",
+    "grupoMuscular": "Ombros",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 412,
+    "nome": "Rosca martelo cruzada com halteres",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 413,
+    "nome": "Supino fechado inclinado com Smith",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 414,
+    "nome": "Supinação de antebraço na polia (halter)",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 415,
+    "nome": "Agachamento sumô com barra",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 416,
+    "nome": "Good morning sentado com barra",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 417,
+    "nome": "Hip thrust com banda (barra)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 418,
+    "nome": "Elevação de panturrilha com joelhos flexionados (máquina)",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 419,
+    "nome": "Elevação de joelhos suspenso com peso corporal",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 420,
+    "nome": "Bicicleta intervalada com ergométrica",
+    "grupoMuscular": "Cardio",
+    "equipamento": "ergométrica",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 421,
+    "nome": "Snatch power snatch com kettlebell",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "kettlebell",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 422,
+    "nome": "Supino inclinado alto com halteres",
+    "grupoMuscular": "Peito",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 423,
+    "nome": "Remada baixa neutra com halteres",
+    "grupoMuscular": "Costas",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 424,
+    "nome": "Elevação lateral parcial com máquina",
+    "grupoMuscular": "Ombros",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 425,
+    "nome": "Rosca martelo cruzada com polia",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 426,
+    "nome": "Supino fechado no Smith (barra)",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 427,
+    "nome": "Supinação de antebraço na polia (polia)",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 428,
+    "nome": "Agachamento sumô com halter",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 429,
+    "nome": "Good morning sentado com peso corporal",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 430,
+    "nome": "Hip thrust com banda (Smith)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 431,
+    "nome": "Elevação de panturrilha com joelhos flexionados (halteres)",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 432,
+    "nome": "Elevação de joelhos deitado com peso corporal",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 433,
+    "nome": "Bicicleta em ritmo contínuo (ergométrica)",
+    "grupoMuscular": "Cardio",
+    "equipamento": "ergométrica",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 434,
+    "nome": "Snatch hang snatch com barra",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 435,
+    "nome": "Supino inclinado alto com Smith",
+    "grupoMuscular": "Peito",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 436,
+    "nome": "Remada baixa neutra com polia",
+    "grupoMuscular": "Costas",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 437,
+    "nome": "Elevação lateral com pausa (halteres)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 438,
+    "nome": "Rosca martelo sentada com halteres",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 439,
+    "nome": "Supino fechado no Smith (Smith)",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 440,
+    "nome": "Pegada sustentação com toalha com peso corporal",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 441,
+    "nome": "Agachamento sumô com Smith",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 442,
+    "nome": "Good morning com pausa (barra)",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 443,
+    "nome": "Hip thrust com banda (peso corporal)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 444,
+    "nome": "Elevação de panturrilha com joelhos flexionados (Smith)",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 445,
+    "nome": "Elevação de joelhos com rotação (peso corporal)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 446,
+    "nome": "Bicicleta sprints com ergométrica",
+    "grupoMuscular": "Cardio",
+    "equipamento": "ergométrica",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 447,
+    "nome": "Snatch hang snatch com kettlebell",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "kettlebell",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 448,
+    "nome": "Supino inclinado alto com máquina",
+    "grupoMuscular": "Peito",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 449,
+    "nome": "Remada baixa neutra com máquina",
+    "grupoMuscular": "Costas",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 450,
+    "nome": "Elevação lateral com pausa (polia)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 451,
+    "nome": "Rosca martelo sentada com polia",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 452,
+    "nome": "Mergulho nas paralelas com peso corporal",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 453,
+    "nome": "Pegada sustentação com toalha com anilhas",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "anilhas",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 454,
+    "nome": "Agachamento sumô com máquina",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 455,
+    "nome": "Good morning com pausa (peso corporal)",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 456,
+    "nome": "Hip thrust com banda (elástico)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "elástico",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 457,
+    "nome": "Elevação de panturrilha com joelhos flexionados (peso corporal)",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 458,
+    "nome": "Prancha frontal com peso corporal",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 459,
+    "nome": "Bicicleta com resistência alta (ergométrica)",
+    "grupoMuscular": "Cardio",
+    "equipamento": "ergométrica",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 460,
+    "nome": "Snatch unilateral com kettlebell com barra",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 461,
+    "nome": "Supino inclinado alto com polia unilateral",
+    "grupoMuscular": "Peito",
+    "equipamento": "polia unilateral",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 462,
+    "nome": "Remada baixa aberta com barra",
+    "grupoMuscular": "Costas",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 463,
+    "nome": "Elevação lateral com pausa (máquina)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 464,
+    "nome": "Rosca martelo na corda (halteres)",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 465,
+    "nome": "Mergulho nas paralelas com máquina assistida",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "máquina assistida",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 466,
+    "nome": "Pegada sustentação com toalha com hand gripper",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "hand gripper",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 467,
+    "nome": "Agachamento goblet com barra",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 468,
+    "nome": "Nordic curl assistido com peso corporal",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 469,
+    "nome": "Abdução de quadril sentado com máquina",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 470,
+    "nome": "Panturrilha no leg press 45° com máquina",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 471,
+    "nome": "Prancha frontal com anilha",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "anilha",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 472,
+    "nome": "Remo intervalado com ergômetro",
+    "grupoMuscular": "Cardio",
+    "equipamento": "ergômetro",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 473,
+    "nome": "Snatch unilateral com kettlebell com kettlebell",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "kettlebell",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 474,
+    "nome": "Crucifixo reto com halteres",
+    "grupoMuscular": "Peito",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 475,
+    "nome": "Remada baixa aberta com halteres",
+    "grupoMuscular": "Costas",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 476,
+    "nome": "Desenvolvimento militar em pé com halteres",
+    "grupoMuscular": "Ombros",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 477,
+    "nome": "Rosca martelo na corda (polia)",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 478,
+    "nome": "Mergulho no banco (peso corporal)",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 479,
+    "nome": "Pegada pinça com anilhas com peso corporal",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 480,
+    "nome": "Agachamento goblet com halter",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 481,
+    "nome": "Nordic curl assistido com elástico",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "elástico",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 482,
+    "nome": "Abdução de quadril sentado com polia",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 483,
+    "nome": "Panturrilha no leg press horizontal com máquina",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 484,
+    "nome": "Prancha lateral com peso corporal",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 485,
+    "nome": "Remo contínuo com ergômetro",
+    "grupoMuscular": "Cardio",
+    "equipamento": "ergômetro",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 486,
+    "nome": "Push press com barra (barra)",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 487,
+    "nome": "Crucifixo reto com polia",
+    "grupoMuscular": "Peito",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 488,
+    "nome": "Remada baixa aberta com polia",
+    "grupoMuscular": "Costas",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 489,
+    "nome": "Desenvolvimento militar em pé com barra",
+    "grupoMuscular": "Ombros",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 490,
+    "nome": "Rosca martelo unilateral com halteres",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 491,
+    "nome": "Mergulho no banco (máquina assistida)",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "máquina assistida",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 492,
+    "nome": "Pegada pinça com anilhas com anilhas",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "anilhas",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 493,
+    "nome": "Agachamento goblet com Smith",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 494,
+    "nome": "Nordic curl excêntrico com peso corporal",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 495,
+    "nome": "Abdução de quadril sentado com elástico",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "elástico",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 496,
+    "nome": "Panturrilha no leg press unilateral com máquina",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 497,
+    "nome": "Prancha lateral com anilha",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "anilha",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 498,
+    "nome": "Remo sprints com ergômetro",
+    "grupoMuscular": "Cardio",
+    "equipamento": "ergômetro",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 499,
+    "nome": "Push press com barra (halteres)",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 500,
+    "nome": "Crucifixo reto com máquina",
+    "grupoMuscular": "Peito",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 501,
+    "nome": "Remada baixa aberta com máquina",
+    "grupoMuscular": "Costas",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 502,
+    "nome": "Desenvolvimento militar em pé com máquina",
+    "grupoMuscular": "Ombros",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 503,
+    "nome": "Rosca martelo unilateral com polia",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 504,
+    "nome": "Mergulho assistido com peso corporal",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 505,
+    "nome": "Pegada pinça com anilhas com hand gripper",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "hand gripper",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 506,
+    "nome": "Agachamento goblet com máquina",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 507,
+    "nome": "Nordic curl excêntrico com elástico",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "elástico",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 508,
+    "nome": "Abdução de quadril sentado com peso corporal",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 509,
+    "nome": "Tibial raise na parede (peso corporal)",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 510,
+    "nome": "Prancha com alcance (peso corporal)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 511,
+    "nome": "Escada contínua com máquina",
+    "grupoMuscular": "Cardio",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 512,
+    "nome": "Push press com halteres (barra)",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 513,
+    "nome": "Crucifixo inclinado com halteres",
+    "grupoMuscular": "Peito",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 514,
+    "nome": "Remada alta com barra",
+    "grupoMuscular": "Costas",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 515,
+    "nome": "Desenvolvimento sentado com halteres",
+    "grupoMuscular": "Ombros",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 516,
+    "nome": "Rosca Scott bilateral com barra W",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "barra W",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 517,
+    "nome": "Mergulho assistido com máquina assistida",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "máquina assistida",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 518,
+    "nome": "Pegada isométrica na barra com peso corporal",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 519,
+    "nome": "Agachamento Zercher com barra",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 520,
+    "nome": "Nordic curl com amplitude parcial (peso corporal)",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 521,
+    "nome": "Abdução de quadril em pé (máquina)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 522,
+    "nome": "Tibial raise na parede (halter)",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 523,
+    "nome": "Prancha com alcance (anilha)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "anilha",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 524,
+    "nome": "Escada intervalada com máquina",
+    "grupoMuscular": "Cardio",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 525,
+    "nome": "Push press com halteres (halteres)",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 526,
+    "nome": "Crucifixo inclinado com polia",
+    "grupoMuscular": "Peito",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 527,
+    "nome": "Remada alta com halteres",
+    "grupoMuscular": "Costas",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 528,
+    "nome": "Desenvolvimento sentado com barra",
+    "grupoMuscular": "Ombros",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 529,
+    "nome": "Rosca Scott bilateral com halteres",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 530,
+    "nome": "Coice de tríceps unilateral com halter",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 531,
+    "nome": "Pegada isométrica na barra com anilhas",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "anilhas",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 532,
+    "nome": "Agachamento Zercher com halter",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 533,
+    "nome": "Nordic curl com amplitude parcial (elástico)",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "elástico",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 534,
+    "nome": "Abdução de quadril em pé (polia)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 535,
+    "nome": "Tibial raise na parede (máquina)",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 536,
+    "nome": "Prancha com elevação de perna (peso corporal)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 537,
+    "nome": "Escada com ritmo progressivo (máquina)",
+    "grupoMuscular": "Cardio",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 538,
+    "nome": "Push press unilateral com barra",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 539,
+    "nome": "Crucifixo inclinado com máquina",
+    "grupoMuscular": "Peito",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 540,
+    "nome": "Remada alta com polia",
+    "grupoMuscular": "Costas",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 541,
+    "nome": "Desenvolvimento sentado com máquina",
+    "grupoMuscular": "Ombros",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 542,
+    "nome": "Rosca Scott bilateral com máquina",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 543,
+    "nome": "Coice de tríceps unilateral com polia",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 544,
+    "nome": "Pegada isométrica na barra com hand gripper",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "hand gripper",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 545,
+    "nome": "Agachamento Zercher com Smith",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 546,
+    "nome": "Pull through com corda (polia)",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 547,
+    "nome": "Abdução de quadril em pé (elástico)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "elástico",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 548,
+    "nome": "Tibial raise com carga (peso corporal)",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 549,
+    "nome": "Prancha com elevação de perna (anilha)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "anilha",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 550,
+    "nome": "Saltos corda alternada com corda",
+    "grupoMuscular": "Cardio",
+    "equipamento": "corda",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 551,
+    "nome": "Push press unilateral com halteres",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 552,
+    "nome": "Crucifixo declinado com halteres",
+    "grupoMuscular": "Peito",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 553,
+    "nome": "Remada alta com máquina",
+    "grupoMuscular": "Costas",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 554,
+    "nome": "Desenvolvimento Arnold com halteres",
+    "grupoMuscular": "Ombros",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 555,
+    "nome": "Rosca Scott unilateral com barra W",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "barra W",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 556,
+    "nome": "Coice de tríceps com apoio (halter)",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 557,
+    "nome": "Pegada com hand gripper (peso corporal)",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 558,
+    "nome": "Agachamento Zercher com máquina",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 559,
+    "nome": "Pull through unilateral com polia",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 560,
+    "nome": "Abdução de quadril em pé (peso corporal)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 561,
+    "nome": "Tibial raise com carga (halter)",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 562,
+    "nome": "Prancha com carga (peso corporal)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 563,
+    "nome": "Saltos corda alternada com peso corporal",
+    "grupoMuscular": "Cardio",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 564,
+    "nome": "Turkish get up com kettlebell (kettlebell)",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "kettlebell",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 565,
+    "nome": "Crucifixo declinado com polia",
+    "grupoMuscular": "Peito",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 566,
+    "nome": "Remada 胸 apoiado com barra",
+    "grupoMuscular": "Costas",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 567,
+    "nome": "Desenvolvimento Arnold com barra",
+    "grupoMuscular": "Ombros",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 568,
+    "nome": "Rosca Scott unilateral com halteres",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 569,
+    "nome": "Coice de tríceps com apoio (polia)",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 570,
+    "nome": "Pegada com hand gripper (anilhas)",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "anilhas",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 571,
+    "nome": "Agachamento hack com barra",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 572,
+    "nome": "Extensão de quadril no banco 45° (peso corporal)",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 573,
+    "nome": "Abdução de quadril deitado lateral com máquina",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 574,
+    "nome": "Tibial raise com carga (máquina)",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 575,
+    "nome": "Prancha com carga (anilha)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "anilha",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 576,
+    "nome": "Saltos polichinelo baixo impacto com corda",
+    "grupoMuscular": "Cardio",
+    "equipamento": "corda",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 577,
+    "nome": "Turkish get up com kettlebell (halter)",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 578,
+    "nome": "Crucifixo declinado com máquina",
+    "grupoMuscular": "Peito",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 579,
+    "nome": "Remada 胸 apoiado com halteres",
+    "grupoMuscular": "Costas",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 580,
+    "nome": "Desenvolvimento Arnold com máquina",
+    "grupoMuscular": "Ombros",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 581,
+    "nome": "Rosca Scott unilateral com máquina",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 582,
+    "nome": "Coice de tríceps na polia (halter)",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 583,
+    "nome": "Pegada com hand gripper (hand gripper)",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "hand gripper",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 584,
+    "nome": "Agachamento hack com halter",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 585,
+    "nome": "Extensão de quadril no banco 45° (disco)",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "disco",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 586,
+    "nome": "Abdução de quadril deitado lateral com polia",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 587,
+    "nome": "Tibial raise na máquina (peso corporal)",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 588,
+    "nome": "Pallof press em pé (polia)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 589,
+    "nome": "Saltos polichinelo baixo impacto com peso corporal",
+    "grupoMuscular": "Cardio",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 590,
+    "nome": "Turkish get up com halter (kettlebell)",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "kettlebell",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 591,
+    "nome": "Flexão tradicional com peso corporal",
+    "grupoMuscular": "Peito",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 592,
+    "nome": "Remada 胸 apoiado com polia",
+    "grupoMuscular": "Costas",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 593,
+    "nome": "Desenvolvimento unilateral com halteres",
+    "grupoMuscular": "Ombros",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 594,
+    "nome": "Rosca Scott pegada neutra com barra W",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "barra W",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 595,
+    "nome": "Coice de tríceps na polia (polia)",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 596,
+    "nome": "Agachamento hack com Smith",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 597,
+    "nome": "Extensão de quadril com joelho flexionado (peso corporal)",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 598,
+    "nome": "Abdução de quadril deitado lateral com elástico",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "elástico",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 599,
+    "nome": "Tibial raise na máquina (halter)",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 600,
+    "nome": "Pallof press em pé (elástico)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "elástico",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 601,
+    "nome": "Saltos skater jump com corda",
+    "grupoMuscular": "Cardio",
+    "equipamento": "corda",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 602,
+    "nome": "Turkish get up com halter (halter)",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 603,
+    "nome": "Flexão com pausa (peso corporal)",
+    "grupoMuscular": "Peito",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 604,
+    "nome": "Remada 胸 apoiado com máquina",
+    "grupoMuscular": "Costas",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 605,
+    "nome": "Desenvolvimento unilateral com barra",
+    "grupoMuscular": "Ombros",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 606,
+    "nome": "Rosca Scott pegada neutra com halteres",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 607,
+    "nome": "Extensão de tríceps sentado com halter com halter",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 608,
+    "nome": "Agachamento hack com máquina",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 609,
+    "nome": "Extensão de quadril com joelho flexionado (disco)",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "disco",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 610,
+    "nome": "Abdução de quadril deitado lateral com peso corporal",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 611,
+    "nome": "Tibial raise na máquina (máquina)",
+    "grupoMuscular": "Panturrilhas",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 612,
+    "nome": "Pallof press ajoelhado com polia",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 613,
+    "nome": "Saltos skater jump com peso corporal",
+    "grupoMuscular": "Cardio",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 614,
+    "nome": "Turkish get up por etapas com kettlebell",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "kettlebell",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 615,
+    "nome": "Flexão explosiva com peso corporal",
+    "grupoMuscular": "Peito",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 616,
+    "nome": "Remada cavalinho pronada com barra",
+    "grupoMuscular": "Costas",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 617,
+    "nome": "Desenvolvimento unilateral com máquina",
+    "grupoMuscular": "Ombros",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 618,
+    "nome": "Rosca Scott pegada neutra com máquina",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 619,
+    "nome": "Extensão de tríceps sentado com halter com máquina",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 620,
+    "nome": "Leg press 45° pés baixos com máquina",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 621,
+    "nome": "Extensão de quadril unilateral com peso corporal",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 622,
+    "nome": "Abdução de quadril com banda (máquina)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 623,
+    "nome": "Pallof press ajoelhado com elástico",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "elástico",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 624,
+    "nome": "Turkish get up por etapas com halter",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 625,
+    "nome": "Flexão arqueiro com peso corporal",
+    "grupoMuscular": "Peito",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 626,
+    "nome": "Remada cavalinho pronada com halteres",
+    "grupoMuscular": "Costas",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 627,
+    "nome": "Desenvolvimento pegada neutra com halteres",
+    "grupoMuscular": "Ombros",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 628,
+    "nome": "Rosca no cabo baixa com polia",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 629,
+    "nome": "Extensão de tríceps deitado unilateral com halter",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 630,
+    "nome": "Leg press 45° unilateral com máquina",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 631,
+    "nome": "Extensão de quadril unilateral com disco",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "disco",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 632,
+    "nome": "Abdução de quadril com banda (polia)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 633,
+    "nome": "Pallof press meio-ajoelhado com polia",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 634,
+    "nome": "Bear crawl frontal com peso corporal",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 635,
+    "nome": "Flexão com apoio elevado (peso corporal)",
+    "grupoMuscular": "Peito",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 636,
+    "nome": "Remada cavalinho pronada com polia",
+    "grupoMuscular": "Costas",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 637,
+    "nome": "Desenvolvimento pegada neutra com barra",
+    "grupoMuscular": "Ombros",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 638,
+    "nome": "Rosca no cabo alta com polia",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 639,
+    "nome": "Extensão de tríceps deitado unilateral com máquina",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 640,
+    "nome": "Leg press horizontal unilateral com máquina",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 641,
+    "nome": "Abdução de quadril com banda (elástico)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "elástico",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 642,
+    "nome": "Pallof press meio-ajoelhado com elástico",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "elástico",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 643,
+    "nome": "Bear crawl reverso com peso corporal",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 644,
+    "nome": "Flexão com pés elevados (peso corporal)",
+    "grupoMuscular": "Peito",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 645,
+    "nome": "Remada cavalinho pronada com máquina",
+    "grupoMuscular": "Costas",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 646,
+    "nome": "Desenvolvimento pegada neutra com máquina",
+    "grupoMuscular": "Ombros",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 647,
+    "nome": "Rosca no cabo Bayesian com polia",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 648,
+    "nome": "Extensão de tríceps máquina com halter",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 649,
+    "nome": "Leg press vertical com máquina",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 650,
+    "nome": "Abdução de quadril com banda (peso corporal)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 651,
+    "nome": "Pallof press com passo lateral (polia)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 652,
+    "nome": "Bear crawl lateral com peso corporal",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 653,
+    "nome": "Press de peito unilateral com máquina",
+    "grupoMuscular": "Peito",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 654,
+    "nome": "Remada cavalinho neutra com barra",
+    "grupoMuscular": "Costas",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 655,
+    "nome": "Desenvolvimento na máquina convergente (halteres)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 656,
+    "nome": "Rosca no cabo unilateral atrás do corpo com polia",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 657,
+    "nome": "Extensão de tríceps máquina com máquina",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 658,
+    "nome": "Afundo reverso com halteres",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 659,
+    "nome": "Coice de glúteo na polia (polia)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 660,
+    "nome": "Pallof press com passo lateral (elástico)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "elástico",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 661,
+    "nome": "Medicine ball slam frontal com medicine ball",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "medicine ball",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 662,
+    "nome": "Press de peito unilateral com polia",
+    "grupoMuscular": "Peito",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 663,
+    "nome": "Remada cavalinho neutra com halteres",
+    "grupoMuscular": "Costas",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 664,
+    "nome": "Desenvolvimento na máquina convergente (barra)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 665,
+    "nome": "Rosca concentrada sentada com halter",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 666,
+    "nome": "Afundo reverso com barra",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 667,
+    "nome": "Coice de glúteo na polia (máquina)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 668,
+    "nome": "Ab wheel ajoelhado com roda abdominal",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "roda abdominal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 669,
+    "nome": "Medicine ball slam rotacional com medicine ball",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "medicine ball",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 670,
+    "nome": "Press de peito convergente com máquina",
+    "grupoMuscular": "Peito",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 671,
+    "nome": "Remada cavalinho neutra com polia",
+    "grupoMuscular": "Costas",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 672,
+    "nome": "Desenvolvimento na máquina convergente (máquina)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 673,
+    "nome": "Rosca concentrada em pé apoiada (halter)",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 674,
+    "nome": "Afundo reverso com Smith",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 675,
+    "nome": "Coice de glúteo na polia (peso corporal)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 676,
+    "nome": "Ab wheel em pé assistido (roda abdominal)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "roda abdominal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 677,
+    "nome": "Medicine ball slam alternado com medicine ball",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "medicine ball",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 678,
+    "nome": "Press de peito convergente com polia",
+    "grupoMuscular": "Peito",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 679,
+    "nome": "Remada cavalinho neutra com máquina",
+    "grupoMuscular": "Costas",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 680,
+    "nome": "Elevação frontal alternada com halteres",
+    "grupoMuscular": "Ombros",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 681,
+    "nome": "Rosca inversa com barra (barra)",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 682,
+    "nome": "Afundo reverso com peso corporal",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 683,
+    "nome": "Coice de glúteo máquina com polia",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 684,
+    "nome": "Ab wheel com amplitude parcial (roda abdominal)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "roda abdominal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 685,
+    "nome": "Carregada farmer walk com halteres",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 686,
+    "nome": "Press de peito com pegada neutra (máquina)",
+    "grupoMuscular": "Peito",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 687,
+    "nome": "Remada invertida pronada com barra",
+    "grupoMuscular": "Costas",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 688,
+    "nome": "Elevação frontal alternada com anilha",
+    "grupoMuscular": "Ombros",
+    "equipamento": "anilha",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 689,
+    "nome": "Rosca inversa com barra (barra W)",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "barra W",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 690,
+    "nome": "Afundo caminhando com halteres",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 691,
+    "nome": "Coice de glúteo máquina com máquina",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 692,
+    "nome": "Dead bug tradicional com peso corporal",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 693,
+    "nome": "Carregada farmer walk com kettlebell",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "kettlebell",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 694,
+    "nome": "Press de peito com pegada neutra (polia)",
+    "grupoMuscular": "Peito",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 695,
+    "nome": "Remada invertida pronada com halteres",
+    "grupoMuscular": "Costas",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 696,
+    "nome": "Elevação frontal alternada com polia",
+    "grupoMuscular": "Ombros",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 697,
+    "nome": "Rosca inversa com barra (polia)",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 698,
+    "nome": "Afundo caminhando com barra",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 699,
+    "nome": "Coice de glúteo máquina com peso corporal",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 700,
+    "nome": "Dead bug tradicional com bola",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "bola",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 701,
+    "nome": "Carregada suitcase carry com halteres",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 702,
+    "nome": "Press de peito com pausa (máquina)",
+    "grupoMuscular": "Peito",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 703,
+    "nome": "Remada invertida pronada com polia",
+    "grupoMuscular": "Costas",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 704,
+    "nome": "Elevação frontal com anilha (halteres)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 705,
+    "nome": "Rosca inversa com barra W (barra)",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 706,
+    "nome": "Afundo caminhando com Smith",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 707,
+    "nome": "Coice de glúteo quadrúpede com polia",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 708,
+    "nome": "Dead bug tradicional com elástico",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "elástico",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 709,
+    "nome": "Carregada suitcase carry com kettlebell",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "kettlebell",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 710,
+    "nome": "Press de peito com pausa (polia)",
+    "grupoMuscular": "Peito",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 711,
+    "nome": "Remada invertida pronada com máquina",
+    "grupoMuscular": "Costas",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 712,
+    "nome": "Elevação frontal com anilha (anilha)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "anilha",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 713,
+    "nome": "Rosca inversa com barra W (barra W)",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "barra W",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 714,
+    "nome": "Afundo caminhando com peso corporal",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 715,
+    "nome": "Coice de glúteo quadrúpede com máquina",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 716,
+    "nome": "Dead bug com bola (peso corporal)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 717,
+    "nome": "Carregada front rack carry com halteres",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 718,
+    "nome": "Crossover alto para baixo com polia",
+    "grupoMuscular": "Peito",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 719,
+    "nome": "Remada invertida supinada com barra",
+    "grupoMuscular": "Costas",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 720,
+    "nome": "Elevação frontal com anilha (polia)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 721,
+    "nome": "Rosca inversa com barra W (polia)",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 722,
+    "nome": "Afundo no Smith (halteres)",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 723,
+    "nome": "Coice de glúteo quadrúpede com peso corporal",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 724,
+    "nome": "Dead bug com bola (bola)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "bola",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 725,
+    "nome": "Carregada front rack carry com kettlebell",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "kettlebell",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 726,
+    "nome": "Crossover baixo para cima com polia",
+    "grupoMuscular": "Peito",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 727,
+    "nome": "Remada invertida supinada com halteres",
+    "grupoMuscular": "Costas",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 728,
+    "nome": "Elevação frontal na polia baixa (halteres)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 729,
+    "nome": "Rosca inversa na polia (barra)",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 730,
+    "nome": "Afundo no Smith (barra)",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 731,
+    "nome": "Coice de glúteo com joelho flexionado (polia)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 732,
+    "nome": "Dead bug com bola (elástico)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "elástico",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 733,
+    "nome": "Carregada overhead carry com halteres",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 734,
+    "nome": "Crossover unilateral com polia",
+    "grupoMuscular": "Peito",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 735,
+    "nome": "Remada invertida supinada com polia",
+    "grupoMuscular": "Costas",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 736,
+    "nome": "Elevação frontal na polia baixa (anilha)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "anilha",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 737,
+    "nome": "Rosca inversa na polia (barra W)",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "barra W",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 738,
+    "nome": "Afundo no Smith (Smith)",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 739,
+    "nome": "Coice de glúteo com joelho flexionado (máquina)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 740,
+    "nome": "Dead bug com elástico (peso corporal)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 741,
+    "nome": "Carregada overhead carry com kettlebell",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "kettlebell",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 742,
+    "nome": "Crossover com pausa (polia)",
+    "grupoMuscular": "Peito",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 743,
+    "nome": "Remada invertida supinada com máquina",
+    "grupoMuscular": "Costas",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 744,
+    "nome": "Elevação frontal na polia baixa (polia)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 745,
+    "nome": "Rosca inversa na polia (polia)",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 746,
+    "nome": "Afundo no Smith (peso corporal)",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 747,
+    "nome": "Coice de glúteo com joelho flexionado (peso corporal)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 748,
+    "nome": "Dead bug com elástico (bola)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "bola",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 749,
+    "nome": "Burpee tradicional com peso corporal",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 750,
+    "nome": "Pullover reto com halter",
+    "grupoMuscular": "Peito",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 751,
+    "nome": "Puxada frontal pronada com polia",
+    "grupoMuscular": "Costas",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 752,
+    "nome": "Elevação frontal com corda (halteres)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 753,
+    "nome": "Afundo com passada curta (halteres)",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 754,
+    "nome": "Ponte de glúteo unilateral com peso corporal",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 755,
+    "nome": "Dead bug com elástico (elástico)",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "elástico",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 756,
+    "nome": "Burpee sem salto com peso corporal",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 757,
+    "nome": "Pullover reto com polia",
+    "grupoMuscular": "Peito",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 758,
+    "nome": "Puxada frontal supinada com polia",
+    "grupoMuscular": "Costas",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 759,
+    "nome": "Elevação frontal com corda (anilha)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "anilha",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 760,
+    "nome": "Afundo com passada curta (barra)",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 761,
+    "nome": "Ponte de glúteo unilateral com barra",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 762,
+    "nome": "Wood chop alto para baixo com polia",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 763,
+    "nome": "Burpee com flexão (peso corporal)",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 764,
+    "nome": "Pullover inclinado com halter",
+    "grupoMuscular": "Peito",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 765,
+    "nome": "Puxada pegada neutra com polia",
+    "grupoMuscular": "Costas",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 766,
+    "nome": "Elevação frontal com corda (polia)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 767,
+    "nome": "Afundo com passada curta (Smith)",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 768,
+    "nome": "Ponte de glúteo unilateral com elástico",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "elástico",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 769,
+    "nome": "Wood chop alto para baixo com medicine ball",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "medicine ball",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 770,
+    "nome": "Burpee lateral com peso corporal",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 771,
+    "nome": "Pullover inclinado com polia",
+    "grupoMuscular": "Peito",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 772,
+    "nome": "Puxada unilateral com polia",
+    "grupoMuscular": "Costas",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 773,
+    "nome": "Crucifixo inverso inclinado com halteres",
+    "grupoMuscular": "Ombros",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 774,
+    "nome": "Afundo com passada curta (peso corporal)",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 775,
+    "nome": "Ponte de glúteo com pausa (peso corporal)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 776,
+    "nome": "Wood chop baixo para cima com polia",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 777,
+    "nome": "Agachamento com salto vertical com peso corporal",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 778,
+    "nome": "Pullover com braços semiflexionados (halter)",
+    "grupoMuscular": "Peito",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 779,
+    "nome": "Puxada com braços retos (polia)",
+    "grupoMuscular": "Costas",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 780,
+    "nome": "Crucifixo inverso inclinado com polia",
+    "grupoMuscular": "Ombros",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 781,
+    "nome": "Afundo déficit com halteres",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 782,
+    "nome": "Ponte de glúteo com pausa (barra)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 783,
+    "nome": "Wood chop baixo para cima com medicine ball",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "medicine ball",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 784,
+    "nome": "Agachamento com salto com pausa (peso corporal)",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 785,
+    "nome": "Pullover com braços semiflexionados (polia)",
+    "grupoMuscular": "Peito",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 786,
+    "nome": "Puxada alta unilateral com polia",
+    "grupoMuscular": "Costas",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 787,
+    "nome": "Crucifixo inverso inclinado com máquina",
+    "grupoMuscular": "Ombros",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 788,
+    "nome": "Afundo déficit com barra",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 789,
+    "nome": "Ponte de glúteo com pausa (elástico)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "elástico",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 790,
+    "nome": "Wood chop ajoelhado com polia",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 791,
+    "nome": "Agachamento com salto lateral com peso corporal",
+    "grupoMuscular": "Corpo Inteiro / Funcionais",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 792,
+    "nome": "Barra fixa pronada aberta com peso corporal",
+    "grupoMuscular": "Costas",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 793,
+    "nome": "Crucifixo inverso sentado com halteres",
+    "grupoMuscular": "Ombros",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 794,
+    "nome": "Afundo déficit com Smith",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 795,
+    "nome": "Ponte de glúteo com banda (peso corporal)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 796,
+    "nome": "Wood chop ajoelhado com medicine ball",
+    "grupoMuscular": "Abdômen",
+    "equipamento": "medicine ball",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 797,
+    "nome": "Barra fixa pronada aberta com máquina assistida",
+    "grupoMuscular": "Costas",
+    "equipamento": "máquina assistida",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 798,
+    "nome": "Crucifixo inverso sentado com polia",
+    "grupoMuscular": "Ombros",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 799,
+    "nome": "Afundo déficit com peso corporal",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 800,
+    "nome": "Ponte de glúteo com banda (barra)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 801,
+    "nome": "Barra fixa pronada fechada com peso corporal",
+    "grupoMuscular": "Costas",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 802,
+    "nome": "Crucifixo inverso sentado com máquina",
+    "grupoMuscular": "Ombros",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 803,
+    "nome": "Extensão de joelho unilateral com máquina",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 804,
+    "nome": "Ponte de glúteo com banda (elástico)",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "elástico",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 805,
+    "nome": "Barra fixa pronada fechada com máquina assistida",
+    "grupoMuscular": "Costas",
+    "equipamento": "máquina assistida",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 806,
+    "nome": "Crucifixo inverso unilateral com halteres",
+    "grupoMuscular": "Ombros",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 807,
+    "nome": "Extensão de joelho com pausa (máquina)",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 808,
+    "nome": "Ponte de glúteo elevada com peso corporal",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 809,
+    "nome": "Barra fixa supinada com peso corporal",
+    "grupoMuscular": "Costas",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 810,
+    "nome": "Crucifixo inverso unilateral com polia",
+    "grupoMuscular": "Ombros",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 811,
+    "nome": "Extensão de joelho parcial no topo com máquina",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 812,
+    "nome": "Ponte de glúteo elevada com barra",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 813,
+    "nome": "Barra fixa supinada com máquina assistida",
+    "grupoMuscular": "Costas",
+    "equipamento": "máquina assistida",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 814,
+    "nome": "Crucifixo inverso unilateral com máquina",
+    "grupoMuscular": "Ombros",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 815,
+    "nome": "Step up baixo com peso corporal",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 816,
+    "nome": "Ponte de glúteo elevada com elástico",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "elástico",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 817,
+    "nome": "Barra fixa neutra com peso corporal",
+    "grupoMuscular": "Costas",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 818,
+    "nome": "Crucifixo inverso com pausa (halteres)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 819,
+    "nome": "Step up baixo com halteres",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 820,
+    "nome": "Afundo reverso longo com halteres",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 821,
+    "nome": "Barra fixa neutra com máquina assistida",
+    "grupoMuscular": "Costas",
+    "equipamento": "máquina assistida",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 822,
+    "nome": "Crucifixo inverso com pausa (polia)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 823,
+    "nome": "Step up alto com peso corporal",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 824,
+    "nome": "Afundo reverso longo com Smith",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 825,
+    "nome": "Barra fixa com pausa (peso corporal)",
+    "grupoMuscular": "Costas",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 826,
+    "nome": "Crucifixo inverso com pausa (máquina)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 827,
+    "nome": "Step up alto com halteres",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 828,
+    "nome": "Afundo reverso longo com peso corporal",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 829,
+    "nome": "Barra fixa com pausa (máquina assistida)",
+    "grupoMuscular": "Costas",
+    "equipamento": "máquina assistida",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 830,
+    "nome": "Face pull na altura do rosto (polia)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 831,
+    "nome": "Step up lateral com peso corporal",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 832,
+    "nome": "Afundo búlgaro inclinado com halteres",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 833,
+    "nome": "Barra fixa assistida com peso corporal",
+    "grupoMuscular": "Costas",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 834,
+    "nome": "Face pull alto com polia",
+    "grupoMuscular": "Ombros",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 835,
+    "nome": "Step up lateral com halteres",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 836,
+    "nome": "Afundo búlgaro inclinado com Smith",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 837,
+    "nome": "Barra fixa assistida com máquina assistida",
+    "grupoMuscular": "Costas",
+    "equipamento": "máquina assistida",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 838,
+    "nome": "Face pull com rotação externa (polia)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 839,
+    "nome": "Step up com joelho elevado (peso corporal)",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 840,
+    "nome": "Afundo búlgaro inclinado com peso corporal",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 841,
+    "nome": "Extensão lombar no banco 45° (peso corporal)",
+    "grupoMuscular": "Costas",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 842,
+    "nome": "Y raise inclinado com halteres",
+    "grupoMuscular": "Ombros",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 843,
+    "nome": "Step up com joelho elevado (halteres)",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 844,
+    "nome": "Afundo passada longa com halteres",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 845,
+    "nome": "Extensão lombar no banco 45° (disco)",
+    "grupoMuscular": "Costas",
+    "equipamento": "disco",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 846,
+    "nome": "Y raise inclinado com polia",
+    "grupoMuscular": "Ombros",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 847,
+    "nome": "Agachamento unilateral assistido com peso corporal",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 848,
+    "nome": "Afundo passada longa com Smith",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 849,
+    "nome": "Extensão lombar horizontal com peso corporal",
+    "grupoMuscular": "Costas",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 850,
+    "nome": "Y raise inclinado com peso corporal",
+    "grupoMuscular": "Ombros",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 851,
+    "nome": "Agachamento unilateral assistido com halter",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 852,
+    "nome": "Afundo passada longa com peso corporal",
+    "grupoMuscular": "Glúteos",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 853,
+    "nome": "Extensão lombar horizontal com disco",
+    "grupoMuscular": "Costas",
+    "equipamento": "disco",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 854,
+    "nome": "Y raise na polia (halteres)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 855,
+    "nome": "Agachamento unilateral pistol no banco com peso corporal",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 856,
+    "nome": "Extensão lombar com carga (peso corporal)",
+    "grupoMuscular": "Costas",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 857,
+    "nome": "Y raise na polia (polia)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 858,
+    "nome": "Agachamento unilateral pistol no banco com halter",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 859,
+    "nome": "Extensão lombar com carga (disco)",
+    "grupoMuscular": "Costas",
+    "equipamento": "disco",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 860,
+    "nome": "Y raise na polia (peso corporal)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 861,
+    "nome": "Agachamento unilateral com apoio (peso corporal)",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 862,
+    "nome": "Extensão lombar unilateral com peso corporal",
+    "grupoMuscular": "Costas",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 863,
+    "nome": "Y raise no banco (halteres)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 864,
+    "nome": "Agachamento unilateral com apoio (halter)",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "halter",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 865,
+    "nome": "Extensão lombar unilateral com disco",
+    "grupoMuscular": "Costas",
+    "equipamento": "disco",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 866,
+    "nome": "Y raise no banco (polia)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 867,
+    "nome": "Levantamento terra convencional com barra",
+    "grupoMuscular": "Costas",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 868,
+    "nome": "Y raise no banco (peso corporal)",
+    "grupoMuscular": "Ombros",
+    "equipamento": "peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 869,
+    "nome": "Levantamento terra convencional com trap bar",
+    "grupoMuscular": "Costas",
+    "equipamento": "trap bar",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 870,
+    "nome": "Levantamento terra sumô com barra",
+    "grupoMuscular": "Costas",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 871,
+    "nome": "Levantamento terra sumô com trap bar",
+    "grupoMuscular": "Costas",
+    "equipamento": "trap bar",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 872,
+    "nome": "Levantamento terra com déficit (barra)",
+    "grupoMuscular": "Costas",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 873,
+    "nome": "Levantamento terra com déficit (trap bar)",
+    "grupoMuscular": "Costas",
+    "equipamento": "trap bar",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 874,
+    "nome": "Levantamento terra trap bar com barra",
+    "grupoMuscular": "Costas",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 875,
+    "nome": "Levantamento terra trap bar com trap bar",
+    "grupoMuscular": "Costas",
+    "equipamento": "trap bar",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 876,
+    "nome": "Levantamento terra com pausa (barra)",
+    "grupoMuscular": "Costas",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 877,
+    "nome": "Levantamento terra com pausa (trap bar)",
+    "grupoMuscular": "Costas",
+    "equipamento": "trap bar",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 878,
+    "nome": "Levantamento terra rack pull com barra",
+    "grupoMuscular": "Costas",
+    "equipamento": "barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 879,
+    "nome": "Levantamento terra rack pull com trap bar",
+    "grupoMuscular": "Costas",
+    "equipamento": "trap bar",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 880,
+    "nome": "Supino reto com barra com tempo controlado",
+    "grupoMuscular": "Peito",
+    "equipamento": "Barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 881,
+    "nome": "Supino reto com halteres com tempo controlado",
+    "grupoMuscular": "Peito",
+    "equipamento": "Halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 882,
+    "nome": "Supino inclinado com barra com tempo controlado",
+    "grupoMuscular": "Peito",
+    "equipamento": "Barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 883,
+    "nome": "Supino inclinado com halteres com tempo controlado",
+    "grupoMuscular": "Peito",
+    "equipamento": "Halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 884,
+    "nome": "Supino declinado com tempo controlado",
+    "grupoMuscular": "Peito",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 885,
+    "nome": "Crucifixo reto com tempo controlado",
+    "grupoMuscular": "Peito",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 886,
+    "nome": "Crucifixo inclinado com tempo controlado",
+    "grupoMuscular": "Peito",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 887,
+    "nome": "Crucifixo declinado com tempo controlado",
+    "grupoMuscular": "Peito",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 888,
+    "nome": "Crossover alto com tempo controlado",
+    "grupoMuscular": "Peito",
+    "equipamento": "Polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 889,
+    "nome": "Crossover médio com tempo controlado",
+    "grupoMuscular": "Peito",
+    "equipamento": "Polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 890,
+    "nome": "Crossover baixo com tempo controlado",
+    "grupoMuscular": "Peito",
+    "equipamento": "Polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 891,
+    "nome": "Peck Deck com tempo controlado",
+    "grupoMuscular": "Peito",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 892,
+    "nome": "Flexão tradicional com tempo controlado",
+    "grupoMuscular": "Peito",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 893,
+    "nome": "Flexão inclinada com tempo controlado",
+    "grupoMuscular": "Peito",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 894,
+    "nome": "Flexão declinada com tempo controlado",
+    "grupoMuscular": "Peito",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 895,
+    "nome": "Flexão diamante com tempo controlado",
+    "grupoMuscular": "Peito",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 896,
+    "nome": "Pullover com halter com tempo controlado",
+    "grupoMuscular": "Peito",
+    "equipamento": "Halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 897,
+    "nome": "Supino máquina com tempo controlado",
+    "grupoMuscular": "Peito",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 898,
+    "nome": "Chest Press com tempo controlado",
+    "grupoMuscular": "Peito",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 899,
+    "nome": "Svend Press com tempo controlado",
+    "grupoMuscular": "Peito",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 900,
+    "nome": "Barra fixa pronada com tempo controlado",
+    "grupoMuscular": "Costas",
+    "equipamento": "Barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 901,
+    "nome": "Barra fixa supinada com tempo controlado",
+    "grupoMuscular": "Costas",
+    "equipamento": "Barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 902,
+    "nome": "Barra fixa neutra com tempo controlado",
+    "grupoMuscular": "Costas",
+    "equipamento": "Barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 903,
+    "nome": "Remada curvada com tempo controlado",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 904,
+    "nome": "Remada unilateral com tempo controlado",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 905,
+    "nome": "Remada cavalinho com tempo controlado",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 906,
+    "nome": "Remada baixa com tempo controlado",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 907,
+    "nome": "Remada máquina com tempo controlado",
+    "grupoMuscular": "Costas",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 908,
+    "nome": "Pulldown frontal com tempo controlado",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 909,
+    "nome": "Pulldown supinado com tempo controlado",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 910,
+    "nome": "Pulldown unilateral com tempo controlado",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 911,
+    "nome": "Pullover na polia com tempo controlado",
+    "grupoMuscular": "Costas",
+    "equipamento": "Polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 912,
+    "nome": "Serrote com tempo controlado",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 913,
+    "nome": "Remada T-Bar com tempo controlado",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 914,
+    "nome": "Rack Pull com tempo controlado",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 915,
+    "nome": "Levantamento terra com tempo controlado",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 916,
+    "nome": "Remada invertida com tempo controlado",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 917,
+    "nome": "Remada articulada com tempo controlado",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 918,
+    "nome": "High Row com tempo controlado",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 919,
+    "nome": "Pulldown atrás da cabeça com tempo controlado",
+    "grupoMuscular": "Costas",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 920,
+    "nome": "Desenvolvimento militar com tempo controlado",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 921,
+    "nome": "Desenvolvimento com halteres com tempo controlado",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Halteres",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 922,
+    "nome": "Desenvolvimento Arnold com tempo controlado",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 923,
+    "nome": "Elevação lateral com tempo controlado",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 924,
+    "nome": "Elevação frontal com tempo controlado",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 925,
+    "nome": "Elevação frontal com corda com tempo controlado",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 926,
+    "nome": "Crucifixo inverso com tempo controlado",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 927,
+    "nome": "Face Pull com tempo controlado",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 928,
+    "nome": "Desenvolvimento máquina com tempo controlado",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 929,
+    "nome": "Elevação lateral máquina com tempo controlado",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 930,
+    "nome": "Elevação lateral unilateral com tempo controlado",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 931,
+    "nome": "Remada alta com tempo controlado",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 932,
+    "nome": "Landmine Press com tempo controlado",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 933,
+    "nome": "Cuban Press com tempo controlado",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 934,
+    "nome": "Y Raise com tempo controlado",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 935,
+    "nome": "Elevação frontal alternada com tempo controlado",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 936,
+    "nome": "Elevação lateral inclinada com tempo controlado",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 937,
+    "nome": "Crucifixo inverso máquina com tempo controlado",
+    "grupoMuscular": "Ombros",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 938,
+    "nome": "Rosca direta com tempo controlado",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 939,
+    "nome": "Rosca alternada com tempo controlado",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 940,
+    "nome": "Rosca martelo com tempo controlado",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 941,
+    "nome": "Rosca concentrada com tempo controlado",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 942,
+    "nome": "Rosca Scott com tempo controlado",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 943,
+    "nome": "Rosca Scott unilateral com tempo controlado",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 944,
+    "nome": "Rosca inclinada com tempo controlado",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 945,
+    "nome": "Rosca no cabo com tempo controlado",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 946,
+    "nome": "Rosca inversa com tempo controlado",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 947,
+    "nome": "Rosca 21 com tempo controlado",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 948,
+    "nome": "Rosca spider com tempo controlado",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 949,
+    "nome": "Rosca Zottman com tempo controlado",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 950,
+    "nome": "Rosca martelo cruzada com tempo controlado",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 951,
+    "nome": "Rosca barra W com tempo controlado",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 952,
+    "nome": "Rosca Bayesian com tempo controlado",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 953,
+    "nome": "Rosca unilateral polia com tempo controlado",
+    "grupoMuscular": "Bíceps",
+    "equipamento": "Polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 954,
+    "nome": "Tríceps pulley com tempo controlado",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 955,
+    "nome": "Tríceps corda com tempo controlado",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 956,
+    "nome": "Tríceps francês com tempo controlado",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 957,
+    "nome": "Tríceps testa com tempo controlado",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 958,
+    "nome": "Tríceps banco com tempo controlado",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 959,
+    "nome": "Mergulho nas paralelas com tempo controlado",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 960,
+    "nome": "Tríceps unilateral polia com tempo controlado",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 961,
+    "nome": "Tríceps coice com tempo controlado",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 962,
+    "nome": "Tríceps máquina com tempo controlado",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 963,
+    "nome": "Tríceps barra reta com tempo controlado",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 964,
+    "nome": "Tríceps barra V com tempo controlado",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Barra",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 965,
+    "nome": "Tríceps overhead corda com tempo controlado",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Polia",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 966,
+    "nome": "Supino fechado com tempo controlado",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 967,
+    "nome": "Tríceps kickback com tempo controlado",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 968,
+    "nome": "Extensão de tríceps sentado com tempo controlado",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 969,
+    "nome": "Extensão unilateral acima da cabeça com tempo controlado",
+    "grupoMuscular": "Tríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 970,
+    "nome": "Rosca punho com tempo controlado",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 971,
+    "nome": "Rosca punho inversa com tempo controlado",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 972,
+    "nome": "Farmer Walk com tempo controlado",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 973,
+    "nome": "Hand Grip com tempo controlado",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 974,
+    "nome": "Wrist Roller com tempo controlado",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 975,
+    "nome": "Pinch Grip com tempo controlado",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 976,
+    "nome": "Dead Hang com tempo controlado",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 977,
+    "nome": "Reverse Curl com tempo controlado",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 978,
+    "nome": "Hammer Hold com tempo controlado",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 979,
+    "nome": "Plate Hold com tempo controlado",
+    "grupoMuscular": "Antebraço",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 980,
+    "nome": "Agachamento livre com tempo controlado",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 981,
+    "nome": "Agachamento frontal com tempo controlado",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 982,
+    "nome": "Agachamento Smith com tempo controlado",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Smith",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 983,
+    "nome": "Leg Press 45° com tempo controlado",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 984,
+    "nome": "Leg Press horizontal com tempo controlado",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 985,
+    "nome": "Hack Squat com tempo controlado",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 986,
+    "nome": "Cadeira extensora com tempo controlado",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 987,
+    "nome": "Afundo com tempo controlado",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 988,
+    "nome": "Passada com tempo controlado",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 989,
+    "nome": "Bulgarian Split Squat com tempo controlado",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 990,
+    "nome": "Step Up com tempo controlado",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 991,
+    "nome": "Sissy Squat com tempo controlado",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 992,
+    "nome": "Agachamento sumô com tempo controlado",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 993,
+    "nome": "Goblet Squat com tempo controlado",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 994,
+    "nome": "Agachamento Zercher com tempo controlado",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 995,
+    "nome": "Wall Sit com tempo controlado",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 996,
+    "nome": "Agachamento unilateral com tempo controlado",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 997,
+    "nome": "Pistol Squat com tempo controlado",
+    "grupoMuscular": "Quadríceps",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 998,
+    "nome": "Stiff com tempo controlado",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 999,
+    "nome": "Romanian Deadlift com tempo controlado",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "Peso corporal",
+    "nivel": "Intermediário"
+  },
+  {
+    "id": 1000,
+    "nome": "Mesa flexora com tempo controlado",
+    "grupoMuscular": "Posterior de Coxa",
+    "equipamento": "Máquina",
+    "nivel": "Intermediário"
   }
 ]
