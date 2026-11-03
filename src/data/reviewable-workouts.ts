@@ -1,6 +1,6 @@
 import type { TrainingGoal, TrainingLevel, TrainingPreset } from "@/lib/workout-generator";
 
-// Nao mude a key de um treino existente: e ela que liga as avaliacoes gravadas no banco.
+// Não mude a key de um treino existente: é ela que liga as avaliações gravadas no banco.
 export type ReviewableWorkout = {
   key: string;
   name: string;
@@ -19,7 +19,7 @@ export const reviewableWorkouts: ReviewableWorkout[] = [
   { key: "peito-avancado", name: "Foco em peito", preset: "peito", goal: "hipertrofia", level: "avancado", daysPerWeek: 5, minutesPerSession: 60 },
   { key: "costas-saude", name: "Foco em costas", preset: "costas", goal: "saude", level: "iniciante", daysPerWeek: 3, minutesPerSession: 40 },
   { key: "livre-saude-2dias", name: "Corpo todo em 2 dias", preset: "livre", goal: "saude", level: "intermediario", daysPerWeek: 2, minutesPerSession: 40 },
-  { key: "ppl-forca-avancado", name: "Push Pull Legs para forca", preset: "ppl", goal: "forca", level: "avancado", daysPerWeek: 4, minutesPerSession: 60 }
+  { key: "ppl-forca-avancado", name: "Push Pull Legs para força", preset: "ppl", goal: "forca", level: "avancado", daysPerWeek: 4, minutesPerSession: 60 }
 ];
 
 export const reviewableWorkoutKeys = new Set(reviewableWorkouts.map((workout) => workout.key));

@@ -46,7 +46,7 @@ function writeSession(userId: string, state: SessionState | null) {
       window.localStorage.removeItem(storageKey(userId));
     }
   } catch {
-    // Sem armazenamento local o treino continua funcionando, so nao sobrevive a recarga.
+    // Sem armazenamento local o treino continua funcionando, só não sobrevive a recarga.
   }
 }
 
@@ -171,7 +171,7 @@ export function WorkoutSession({
     );
 
     if (!sets.length) {
-      setError("Marque pelo menos uma serie como feita para concluir o treino.");
+      setError("Marque pelo menos uma série como feita para concluir o treino.");
       return;
     }
 
@@ -185,7 +185,7 @@ export function WorkoutSession({
     setSaving(false);
 
     if (!log) {
-      setError("Nao foi possivel salvar o treino. Seus dados continuam aqui; tente de novo.");
+      setError("Não foi possível salvar o treino. Seus dados continuam aqui; tente de novo.");
       return;
     }
 
@@ -203,11 +203,11 @@ export function WorkoutSession({
           <span className="mx-auto grid size-14 place-items-center rounded-full bg-accent/15 text-accent">
             <Check size={28} strokeWidth={2.5} />
           </span>
-          <h2 className="mt-3 text-2xl font-semibold tracking-tight">Treino concluido!</h2>
+          <h2 className="mt-3 text-2xl font-semibold tracking-tight">Treino concluído!</h2>
           <p className="mt-1 text-sm text-white/55">{day.focus}</p>
           <div className="mt-5 grid grid-cols-3 divide-x divide-white/[0.07] rounded-xl border border-white/[0.07]">
             <Stat label="Tempo" value={`${finished.log.durationMin ?? 0} min`} />
-            <Stat label="Series" value={String(finished.log.sets.length)} />
+            <Stat label="Séries" value={String(finished.log.sets.length)} />
             <Stat label="Volume" value={volume ? formatKg(Math.round(volume)) : "--"} />
           </div>
         </div>
@@ -231,11 +231,11 @@ export function WorkoutSession({
 
         <div className="space-y-2">
           <button className="btn-primary flex h-12 w-full items-center justify-center gap-2 rounded-xl text-[15px] font-semibold" onClick={onOpenProgress} type="button">
-            Ver minha evolucao
+            Ver minha evolução
             <ChevronRight size={18} />
           </button>
           <button className="h-11 w-full rounded-xl text-sm font-medium text-white/65 transition hover:text-white" onClick={onExit} type="button">
-            Voltar ao inicio
+            Voltar ao início
           </button>
         </div>
       </section>
@@ -249,7 +249,7 @@ export function WorkoutSession({
           <p className="text-xs font-medium text-accent">Treinando agora · {day.label}</p>
           <h2 className="mt-1 text-2xl font-semibold leading-tight tracking-tight">{day.focus}</h2>
           <p className="mt-1 text-sm text-white/55">
-            {doneCount} de {totalCount} series feitas
+            {doneCount} de {totalCount} séries feitas
           </p>
         </div>
         <span className="flex shrink-0 items-center gap-1.5 rounded-full border border-white/10 px-3 py-1.5 text-sm tabular-nums text-white/85">
@@ -280,14 +280,14 @@ export function WorkoutSession({
             </button>
             {last && !timed && (
               <p className="mt-1 text-xs text-white/40">
-                Ultima vez: {last.sets.map((set) => `${set.loadKg ? formatKg(set.loadKg) : "-"} × ${set.reps ?? "-"}`).join(" · ")}
+                Última vez: {last.sets.map((set) => `${set.loadKg ? formatKg(set.loadKg) : "-"} × ${set.reps ?? "-"}`).join(" · ")}
               </p>
             )}
 
             <div className="mt-3 space-y-2">
               {!timed && (
                 <div className="grid grid-cols-[2rem_1fr_1fr_2.75rem] gap-2 px-1 text-[11px] text-white/40">
-                  <span>Serie</span>
+                  <span>Série</span>
                   <span>Carga (kg)</span>
                   <span>Reps</span>
                   <span className="text-center">Feita</span>
@@ -302,13 +302,13 @@ export function WorkoutSession({
                 >
                   {timed ? (
                     <span className="pl-2 text-sm text-white/75">
-                      Serie {setIndex + 1} · {plan?.reps}
+                      Série {setIndex + 1} · {plan?.reps}
                     </span>
                   ) : (
                     <>
                       <span className="text-center text-sm tabular-nums text-white/50">{setIndex + 1}</span>
                       <input
-                        aria-label={`Carga da serie ${setIndex + 1} de ${exercise?.nome}`}
+                        aria-label={`Carga da série ${setIndex + 1} de ${exercise?.nome}`}
                         className="glass-field h-10 w-full min-w-0 rounded-lg px-2.5 text-[15px] tabular-nums text-white outline-none placeholder:text-white/30"
                         inputMode="decimal"
                         onChange={(event) => updateSet(exerciseIndex, setIndex, { load: event.target.value.replace(/[^\d.,]/g, "").slice(0, 6) })}
@@ -316,7 +316,7 @@ export function WorkoutSession({
                         value={set.load}
                       />
                       <input
-                        aria-label={`Repeticoes da serie ${setIndex + 1} de ${exercise?.nome}`}
+                        aria-label={`Repetições da série ${setIndex + 1} de ${exercise?.nome}`}
                         className="glass-field h-10 w-full min-w-0 rounded-lg px-2.5 text-[15px] tabular-nums text-white outline-none placeholder:text-white/30"
                         inputMode="numeric"
                         onChange={(event) => updateSet(exerciseIndex, setIndex, { reps: event.target.value.replace(/\D/g, "").slice(0, 3) })}
@@ -326,7 +326,7 @@ export function WorkoutSession({
                     </>
                   )}
                   <button
-                    aria-label={`Marcar serie ${setIndex + 1} de ${exercise?.nome} como feita`}
+                    aria-label={`Marcar série ${setIndex + 1} de ${exercise?.nome} como feita`}
                     aria-pressed={set.done}
                     className={`mx-auto grid size-10 place-items-center rounded-lg border transition ${
                       set.done ? "border-accent bg-accent text-on-accent" : "border-white/15 text-white/30 hover:border-white/30"
@@ -345,7 +345,7 @@ export function WorkoutSession({
               type="button"
             >
               <Plus size={15} />
-              Adicionar serie
+              Adicionar série
             </button>
           </article>
         );
@@ -361,7 +361,7 @@ export function WorkoutSession({
         <ConfirmPanel
           busy={false}
           confirmLabel="Descartar"
-          description="As series marcadas neste treino nao serao salvas."
+          description="As séries marcadas neste treino não serão salvas."
           title="Descartar este treino?"
           onCancel={() => setConfirmingDiscard(false)}
           onConfirm={() => {

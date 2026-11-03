@@ -109,7 +109,7 @@ const defaultPreferences: GeneratorPreferences = {
 };
 
 const tabs = [
-  { id: "home", label: "Inicio", icon: Home },
+  { id: "home", label: "Início", icon: Home },
   { id: "builder", label: "Montar", icon: Sparkles },
   { id: "plan", label: "Treino", icon: CalendarDays },
   { id: "library", label: "Exerc.", icon: Library },
@@ -194,7 +194,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
     })
       .then(async (response) => {
         if (!response.ok) {
-          throw new Error("Sessao expirada.");
+          throw new Error("Sessão expirada.");
         }
 
         const data = (await response.json()) as { user: AuthUser };
@@ -236,7 +236,12 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
         }
 
         const days = data.workouts.map(toWorkoutDay);
-        const nextPreferences = data.preferences ?? defaultPreferences;
+        const nextPreferences = data.preferences
+          ? {
+              ...data.preferences,
+              availableEquipment: data.preferences.availableEquipment.map((item) => (item === "Maquina" ? "Máquina" : item))
+            }
+          : defaultPreferences;
         setSavedDays(days);
         setActiveDayId(days[0]?.id ?? "");
         setPreferences(nextPreferences);
@@ -245,7 +250,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
       })
       .catch(() => {
         if (!cancelled) {
-          setPlanError("Nao foi possivel carregar seu treino. Tente recarregar a pagina.");
+          setPlanError("Não foi possível carregar seu treino. Tente recarregar a página.");
         }
       })
       .finally(() => {
@@ -344,7 +349,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
 
   async function persistPlan(planDays: WorkoutDay[]) {
     if (!authToken) {
-      return "Sessao expirada. Entre novamente.";
+      return "Sessão expirada. Entre novamente.";
     }
 
     setPlanSaving(true);
@@ -358,7 +363,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
       const data = (await response.json()) as { workouts?: ApiWorkout[]; error?: string; details?: Array<{ message: string }> };
 
       if (!response.ok || !data.workouts) {
-        throw new Error(data.details?.[0]?.message ?? data.error ?? "Nao foi possivel salvar o plano.");
+        throw new Error(data.details?.[0]?.message ?? data.error ?? "Não foi possível salvar o plano.");
       }
 
       const days = data.workouts.map(toWorkoutDay);
@@ -368,7 +373,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
       setActiveTab("plan");
       return null;
     } catch (error) {
-      return error instanceof Error ? error.message : "Nao foi possivel salvar o plano.";
+      return error instanceof Error ? error.message : "Não foi possível salvar o plano.";
     } finally {
       setPlanSaving(false);
     }
@@ -395,7 +400,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
     const response = await apiFetch(authToken, `/api/workouts/${dayId}`, { method: "DELETE" }).catch(() => null);
 
     if (!response || (!response.ok && response.status !== 404)) {
-      setPlanError("Nao foi possivel remover o treino.");
+      setPlanError("Não foi possível remover o treino.");
       return;
     }
 
@@ -443,7 +448,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
     const response = await apiFetch(authToken, `/api/history/${logId}`, { method: "DELETE" }).catch(() => null);
 
     if (!response?.ok && response?.status !== 404) {
-      setPlanError("Nao foi possivel apagar o registro.");
+      setPlanError("Não foi possível apagar o registro.");
       return false;
     }
 
@@ -453,13 +458,13 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
 
   async function addMetric(payload: { weightKg: number; bodyFat?: number }) {
     if (!authToken || !user) {
-      return "Sessao expirada. Entre novamente.";
+      return "Sessão expirada. Entre novamente.";
     }
 
     const response = await apiFetch(authToken, "/api/body-metrics", { method: "POST", body: JSON.stringify(payload) }).catch(() => null);
 
     if (!response?.ok) {
-      return "Nao foi possivel salvar a medida.";
+      return "Não foi possível salvar a medida.";
     }
 
     const { metric } = (await response.json()) as { metric: ApiBodyMetric };
@@ -470,7 +475,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
 
   async function saveDayEdit(dayId: string, exercisesPayload: EditorPayload) {
     if (!authToken) {
-      return "Sessao expirada. Entre novamente.";
+      return "Sessão expirada. Entre novamente.";
     }
 
     const response = await apiFetch(authToken, `/api/workouts/${dayId}`, {
@@ -480,7 +485,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
     const data = response ? ((await response.json().catch(() => ({}))) as { workout?: ApiWorkout; error?: string; details?: Array<{ message: string }> }) : {};
 
     if (!response?.ok || !data.workout) {
-      return data.details?.[0]?.message ?? data.error ?? "Nao foi possivel salvar o dia.";
+      return data.details?.[0]?.message ?? data.error ?? "Não foi possível salvar o dia.";
     }
 
     const updated = toWorkoutDay(data.workout);
@@ -490,14 +495,14 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
 
   async function updateProfile(payload: { name: string; heightCm: number | null }) {
     if (!authToken) {
-      return "Sessao expirada. Entre novamente.";
+      return "Sessão expirada. Entre novamente.";
     }
 
     const response = await apiFetch(authToken, "/api/me", { method: "PATCH", body: JSON.stringify(payload) }).catch(() => null);
     const data = response ? ((await response.json().catch(() => ({}))) as { user?: AuthUser; error?: string; details?: Array<{ message: string }> }) : {};
 
     if (!response?.ok || !data.user) {
-      return data.details?.[0]?.message ?? data.error ?? "Nao foi possivel salvar o perfil.";
+      return data.details?.[0]?.message ?? data.error ?? "Não foi possível salvar o perfil.";
     }
 
     setUser(data.user);
@@ -522,7 +527,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
     }).catch(() => null);
 
     if (!response?.ok) {
-      setPlanError("Nao foi possivel limpar o treino.");
+      setPlanError("Não foi possível limpar o treino.");
       return false;
     }
 
@@ -533,7 +538,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
 
   async function deleteAccount(password: string) {
     if (!authToken) {
-      return "Sessao expirada. Entre novamente.";
+      return "Sessão expirada. Entre novamente.";
     }
 
     try {
@@ -544,13 +549,13 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
 
       if (!response.ok) {
         const data = (await response.json()) as { error?: string; details?: Array<{ message: string }> };
-        return data.details?.[0]?.message ?? data.error ?? "Nao foi possivel excluir a conta.";
+        return data.details?.[0]?.message ?? data.error ?? "Não foi possível excluir a conta.";
       }
 
       clearSession();
       return null;
     } catch {
-      return "Nao foi possivel excluir a conta.";
+      return "Não foi possível excluir a conta.";
     }
   }
 
@@ -595,11 +600,11 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
 
     try {
       if (authMode === "register" && authForm.password !== authForm.confirmPassword) {
-        throw new Error("As senhas nao conferem.");
+        throw new Error("As senhas não conferem.");
       }
 
       if (authMode === "register" && !authForm.acceptPrivacy) {
-        throw new Error("Aceite a Politica de Privacidade para criar a conta.");
+        throw new Error("Aceite a Política de Privacidade para criar a conta.");
       }
 
       if (authMode === "register" && isProfessional && !authForm.crefState) {
@@ -617,7 +622,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
 
       if (!response.ok || !data.token || !data.user) {
         const detail = data.details?.[0]?.message;
-        throw new Error(detail ?? data.error ?? "Nao foi possivel entrar.");
+        throw new Error(detail ?? data.error ?? "Não foi possível entrar.");
       }
 
       window.localStorage.setItem(authStorageKey, data.token);
@@ -626,7 +631,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
       setJustRequested(authMode === "register" && data.user.professional?.status === "PENDING");
       setAuthForm(emptyAuthForm);
     } catch (error) {
-      setAuthError(error instanceof Error ? error.message : "Nao foi possivel entrar.");
+      setAuthError(error instanceof Error ? error.message : "Não foi possível entrar.");
     } finally {
       setAuthLoading(false);
     }
@@ -848,7 +853,7 @@ export function CoreUpApp({ exercises }: CoreUpAppProps) {
               <div aria-label="Como montar o treino" className="glass-inset grid grid-cols-2 gap-1 rounded-xl p-1" role="radiogroup">
                 {(
                   [
-                    ["auto", "Gerar automatico"],
+                    ["auto", "Gerar automático"],
                     ["custom", "Do meu jeito"]
                   ] as const
                 ).map(([mode, label]) => (
@@ -1074,7 +1079,7 @@ function AuthView({
               icon={<LockKeyhole size={18} />}
               label="Senha"
               onChange={(password) => onFormChange({ ...authForm, password })}
-              placeholder={isRegister ? "8+ com numero e simbolo" : "Sua senha"}
+              placeholder={isRegister ? "8+ com número e símbolo" : "Sua senha"}
               trailing={passwordToggle}
               type={showPassword ? "text" : "password"}
               value={authForm.password}
@@ -1097,12 +1102,12 @@ function AuthView({
                 <div>
                   <p className="text-sm font-medium text-white/85">Registro profissional</p>
                   <p className="mt-0.5 text-xs leading-relaxed text-white/50">
-                    Registro no CREF (Conselho Regional de Educacao Fisica). Ele aparece nas suas avaliacoes de treino.
+                    Registro no CREF (Conselho Regional de Educação Física). Ele aparece nas suas avaliações de treino.
                   </p>
                 </div>
                 <div className="grid grid-cols-[1fr_96px] gap-3">
                   <AuthInput
-                    label="Numero do CREF"
+                    label="Número do CREF"
                     onChange={(crefNumber) => onFormChange({ ...authForm, crefNumber })}
                     placeholder="012345-G"
                     value={authForm.crefNumber}
@@ -1116,20 +1121,20 @@ function AuthView({
                   />
                 </div>
                 <AuthInput
-                  label="Especialidade ou area de atuacao"
+                  label="Especialidade ou área de atuação"
                   onChange={(specialty) => onFormChange({ ...authForm, specialty })}
-                  placeholder="Ex.: Musculacao e hipertrofia"
+                  placeholder="Ex.: Musculação e hipertrofia"
                   value={authForm.specialty}
                 />
                 <AuthInput
-                  label="Formacao academica"
+                  label="Formação acadêmica"
                   onChange={(education) => onFormChange({ ...authForm, education })}
-                  placeholder="Ex.: Bacharelado em Educacao Fisica"
+                  placeholder="Ex.: Bacharelado em Educação Física"
                   value={authForm.education}
                 />
                 <p className="text-xs leading-relaxed text-white/50">
-                  Sua conta e criada na hora e voce ja pode usar o app. As funcoes profissionais, como avaliar
-                  treinos, sao liberadas depois que o administrador conferir o seu CREF.
+                  Sua conta e criada na hora e você já pode usar o app. As funções profissionais, como avaliar
+                  treinos, são liberadas depois que o administrador conferir o seu CREF.
                 </p>
               </fieldset>
             )}
@@ -1164,9 +1169,9 @@ function AuthView({
                 <span>
                   Li e aceito a{" "}
                   <a className="font-medium text-accent underline underline-offset-2" href="/privacidade" target="_blank">
-                    Politica de Privacidade
+                    Política de Privacidade
                   </a>{" "}
-                  e autorizo o uso dos meus dados de saude (altura, peso e medidas) para acompanhar minha evolucao.
+                  e autorizo o uso dos meus dados de saúde (altura, peso e medidas) para acompanhar minha evolução.
                 </span>
               </label>
             )}
@@ -1180,19 +1185,19 @@ function AuthView({
               type="submit"
             >
               {authLoading && <Loader2 size={18} className="animate-spin" />}
-              {!isRegister ? "Entrar" : isProfessional ? "Criar conta e enviar solicitacao" : "Criar e entrar"}
+              {!isRegister ? "Entrar" : isProfessional ? "Criar conta e enviar solicitação" : "Criar e entrar"}
             </button>
           </form>
 
           {isRegister && (
             <p className="mt-5 text-xs leading-relaxed text-white/50">
-              A senha precisa ter letra maiuscula, minuscula, numero, simbolo e pelo menos 8 caracteres.
+              A senha precisa ter letra maiúscula, minúscula, número, símbolo e pelo menos 8 caracteres.
             </p>
           )}
         </section>
 
         <a className="mt-6 text-center text-xs font-medium text-white/45 transition hover:text-white/80" href="/privacidade">
-          Politica de Privacidade
+          Política de Privacidade
         </a>
       </main>
     </div>
@@ -1202,13 +1207,13 @@ function AuthView({
 const accountTypeOptions: Array<{ id: AccountType; label: string; description: string }> = [
   {
     id: "USER",
-    label: "Usuario comum",
+    label: "Usuário comum",
     description: "Organize seus treinos e acompanhe sua rotina."
   },
   {
     id: "PROFESSIONAL",
-    label: "Profissional de Educacao Fisica",
-    description: "Formado e registrado no CREF. Usa o app e tambem avalia treinos."
+    label: "Profissional de Educação Física",
+    description: "Formado e registrado no CREF. Usa o app e também avalia treinos."
   }
 ];
 
@@ -1390,7 +1395,7 @@ function AppHeader({
         <div className="flex min-w-0 items-center gap-3">
           <BrandMark size={30} />
           <div className="min-w-0">
-            <p className="text-xs text-white/45">Ola,</p>
+            <p className="text-xs text-white/45">Olá,</p>
             <h1 className="truncate text-lg font-semibold leading-tight">{firstName}</h1>
           </div>
         </div>
@@ -1398,7 +1403,7 @@ function AppHeader({
           <IconButton
             aria-current={notificationsOpen ? "page" : undefined}
             className={`relative ${notificationsOpen ? "text-accent" : ""}`}
-            label={unreadCount ? `Notificacoes, ${unreadCount} nao lidas` : "Notificacoes"}
+            label={unreadCount ? `Notificações, ${unreadCount} não lidas` : "Notificações"}
             onClick={onOpenNotifications}
           >
             <Bell size={19} />
@@ -1434,7 +1439,7 @@ function HomeView({ selectedWorkout, byId, groupSummary, savedPlan, onOpenPlan, 
   const planStats = [
     { label: "Treinos", value: savedPlan.days.length, helper: "por semana" },
     {
-      label: "Exercicios",
+      label: "Exercícios",
       value: savedPlan.days.reduce((total, day) => total + day.exercises.length, 0),
       helper: "na semana"
     },
@@ -1485,9 +1490,9 @@ function EmptyPlan({ onOpenBuilder }: { onOpenBuilder: () => void }) {
   return (
     <section className="glass-strong rounded-2xl p-5">
       <p className="text-xs font-medium text-accent">Seu treino</p>
-      <h3 className="mt-2 text-lg font-semibold">Voce ainda nao tem um plano</h3>
+      <h3 className="mt-2 text-lg font-semibold">Você ainda não tem um plano</h3>
       <p className="mt-1 text-sm leading-relaxed text-white/55">
-        Escolha objetivo, nivel e dias na aba Montar para gerar a sua semana de treino.
+        Escolha objetivo, nível e dias na aba Montar para gerar a sua semana de treino.
       </p>
       <button
         className="btn-primary mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold"
@@ -1518,7 +1523,7 @@ function TodayWorkout({ workout, byId, notes, weeklySets, onOpenPlan, onStart }:
       </div>
       <h2 className="mt-2 text-2xl font-semibold leading-tight tracking-tight">{workout.focus}</h2>
       <p className="mt-1 text-sm tabular-nums text-white/55">
-        {workout.duration} · {workout.exercises.length} exercicios · {weeklySets} series na semana
+        {workout.duration} · {workout.exercises.length} exercícios · {weeklySets} séries na semana
       </p>
 
       <ul className="mt-4 divide-y divide-white/[0.07] border-t border-white/[0.07]">
@@ -1546,7 +1551,7 @@ function TodayWorkout({ workout, byId, notes, weeklySets, onOpenPlan, onStart }:
         type="button"
       >
         <Play size={16} fill="currentColor" />
-        Comecar treino
+        Começar treino
       </button>
       <button
         className="mt-2 flex h-10 w-full items-center justify-center gap-1.5 rounded-xl text-sm font-medium text-white/70 transition hover:bg-white/[0.04] hover:text-white"
@@ -1575,9 +1580,9 @@ type BuilderViewProps = {
 };
 
 const builderSteps = [
-  { title: "Seu objetivo", description: "O que voce quer alcancar e ha quanto tempo treina." },
-  { title: "Sua rotina", description: "Quantos dias e quanto tempo voce tem para treinar." },
-  { title: "Equipamentos e favoritos", description: "Opcional: ajuste ao que voce tem disponivel." },
+  { title: "Seu objetivo", description: "O que você quer alcançar e há quanto tempo treina." },
+  { title: "Sua rotina", description: "Quantos dias e quanto tempo você tem para treinar." },
+  { title: "Equipamentos e favoritos", description: "Opcional: ajuste ao que você tem disponível." },
   { title: "Revise e salve", description: "Confira a semana montada antes de salvar." }
 ];
 
@@ -1589,25 +1594,25 @@ const goalDescriptions: Record<GeneratorPreferences["goal"], string> = {
 };
 
 const levelDescriptions: Record<GeneratorPreferences["level"], string> = {
-  iniciante: "Treina ha menos de 6 meses",
+  iniciante: "Treina há menos de 6 meses",
   intermediario: "Treina de 6 meses a 2 anos",
-  avancado: "Treina ha mais de 2 anos"
+  avancado: "Treina há mais de 2 anos"
 };
 
 const presetDescriptions: Record<GeneratorPreferences["planPreset"], string> = {
-  livre: "O app escolhe a melhor divisao para os seus dias",
+  livre: "O app escolhe a melhor divisão para os seus dias",
   "full-body": "Todos os grupos em cada treino, alternando A, B e C",
-  abc: "A: peito e triceps · B: costas e biceps · C: pernas e ombros",
-  abcd: "A: peito e triceps · B: costas e biceps · C: pernas · D: ombros",
-  abcde: "Um grupo por dia: peito, costas, pernas, ombros e bracos",
+  abc: "A: peito e tríceps · B: costas e bíceps · C: pernas e ombros",
+  abcd: "A: peito e tríceps · B: costas e bíceps · C: pernas · D: ombros",
+  abcde: "Um grupo por dia: peito, costas, pernas, ombros e braços",
   ppl: "Empurrar, puxar e pernas em dias separados",
   "superiores-inferiores": "Alterna parte de cima e parte de baixo do corpo",
   peito: "Mais volume para o peitoral",
   costas: "Mais volume para as costas",
   pernas: "Mais volume para as pernas",
-  gluteos: "Mais volume para gluteos e posteriores",
-  bracos: "Mais volume para biceps e triceps",
-  funcional: "Exercicios funcionais e cardio para condicionamento"
+  gluteos: "Mais volume para glúteos e posteriores",
+  bracos: "Mais volume para bíceps e tríceps",
+  funcional: "Exercícios funcionais e cardio para condicionamento"
 };
 
 const presetOrder: GeneratorPreferences["planPreset"][] = [
@@ -1706,7 +1711,7 @@ function BuilderView({
 
       {step === 0 && (
         <>
-          <BuilderSection title="Qual e o seu objetivo?">
+          <BuilderSection title="Qual é o seu objetivo?">
             <div className="grid grid-cols-2 gap-2">
               {generatorOptions.goals.map((goal) => (
                 <OptionCard
@@ -1719,7 +1724,7 @@ function BuilderView({
               ))}
             </div>
           </BuilderSection>
-          <BuilderSection title="Qual e o seu nivel?">
+          <BuilderSection title="Qual é o seu nível?">
             <div className="space-y-2">
               {generatorOptions.levels.map((level) => (
                 <OptionCard
@@ -1750,7 +1755,7 @@ function BuilderView({
             </div>
             <CustomNumberField
               key={`dias-${dayPresets.includes(preferences.daysPerWeek)}`}
-              label="Outro numero de dias"
+              label="Outro número de dias"
               max={7}
               min={1}
               presets={dayPresets}
@@ -1772,7 +1777,7 @@ function BuilderView({
             </div>
             <CustomNumberField
               key={`minutos-${minutePresets.includes(preferences.minutesPerSession)}`}
-              hint="Ex.: 75 para 1h15. Mais tempo, mais exercicios por dia."
+              hint="Ex.: 75 para 1h15. Mais tempo, mais exercícios por dia."
               label="Outro tempo"
               max={180}
               min={15}
@@ -1785,7 +1790,7 @@ function BuilderView({
           <BuilderSection title="Como dividir os treinos?">
             {preferences.daysPerWeek === 1 && (
               <p className="-mt-1 mb-3 rounded-xl border border-white/[0.08] px-3 py-2.5 text-xs leading-relaxed text-white/60">
-                Com 1 dia por semana o treino e sempre de corpo inteiro, para nao deixar nenhum grupo de fora.
+                Com 1 dia por semana o treino é sempre de corpo inteiro, para não deixar nenhum grupo de fora.
               </p>
             )}
             <div className="space-y-2">
@@ -1796,7 +1801,7 @@ function BuilderView({
                   description={presetDescriptions[presetId]}
                   label={
                     presetId === "livre"
-                      ? "Automatica (recomendado)"
+                      ? "Automática (recomendado)"
                       : generatorOptions.presets.find((preset) => preset.id === presetId)?.label ?? presetId
                   }
                   onClick={() => update({ planPreset: presetId })}
@@ -1809,7 +1814,7 @@ function BuilderView({
                 onClick={() => setShowAllPresets(true)}
                 type="button"
               >
-                Ver mais divisoes ({presetOrder.length - visiblePresetCount})
+                Ver mais divisões ({presetOrder.length - visiblePresetCount})
                 <ChevronDown size={16} />
               </button>
             )}
@@ -1819,7 +1824,7 @@ function BuilderView({
 
       {step === 2 && (
         <>
-          <BuilderSection title="Onde voce treina?">
+          <BuilderSection title="Onde você treina?">
             <div className="flex flex-wrap gap-2">
               {[...generatorOptions.equipment, ...equipment.filter((item) => !generatorOptions.equipment.includes(item))].map(
                 (item) => (
@@ -1839,11 +1844,11 @@ function BuilderView({
                 )
               )}
             </div>
-            <p className="mt-2 text-xs text-white/45">O treino so usa exercicios com o que voce marcar.</p>
+            <p className="mt-2 text-xs text-white/45">O treino só usa exercícios com o que você marcar.</p>
           </BuilderSection>
-          <BuilderSection title="Exercicios favoritos">
+          <BuilderSection title="Exercícios favoritos">
             <p className="-mt-1 mb-2 text-xs leading-relaxed text-white/45">
-              Os marcados entram primeiro no seu treino. Voce pode favoritar outros na aba Exercicios.
+              Os marcados entram primeiro no seu treino. Você pode favoritar outros na aba Exercícios.
             </p>
             <div className="divide-y divide-white/[0.06]">
               {favoriteList.map((exercise) => (
@@ -1882,7 +1887,7 @@ function BuilderView({
             </p>
             {hasSavedPlan && (
               <p className="mt-3 text-xs leading-relaxed text-white/50">
-                Ao salvar, este treino substitui o que esta na aba Treino.
+                Ao salvar, este treino substitui o que está na aba Treino.
               </p>
             )}
           </section>
@@ -1913,7 +1918,7 @@ function BuilderView({
 
           <section className="border-t border-white/[0.07] pt-5">
             <h3 className="text-sm font-medium text-white/80">Grupos trabalhados na semana</h3>
-            <p className="mb-4 text-xs text-white/45">Total de series por grupo muscular.</p>
+            <p className="mb-4 text-xs text-white/45">Total de séries por grupo muscular.</p>
             <GroupBars groupSummary={generatedPlan.coverage} />
             <ul className="mt-5 space-y-2 border-l border-white/10 pl-3">
               {generatedPlan.notes.map((note) => (
@@ -1955,7 +1960,7 @@ function BuilderView({
               onClick={() => goTo(step + 1)}
               type="button"
             >
-              {step === builderSteps.length - 2 ? "Ver meu treino" : "Proximo"}
+              {step === builderSteps.length - 2 ? "Ver meu treino" : "Próximo"}
               <ChevronRight size={18} />
             </button>
           )}
@@ -2178,7 +2183,7 @@ function PlanView({
         <ConfirmPanel
           busy={clearing}
           confirmLabel="Apagar treino"
-          description="Todos os dias da sua semana serao removidos. Seu historico e suas preferencias do gerador continuam salvos, e voce pode montar um novo treino quando quiser."
+          description="Todos os dias da sua semana serão removidos. Seu histórico e suas preferências do gerador continuam salvos, e você pode montar um novo treino quando quiser."
           title={"Limpar treino"}
           onCancel={() => setConfirmingClear(false)}
           onConfirm={() => void handleClear()}
@@ -2222,7 +2227,7 @@ function PlanView({
             <div className="min-w-0">
               <h3 className="text-xl font-semibold leading-tight tracking-tight">{selectedDay.focus}</h3>
               <p className="mt-1 text-sm text-white/55">
-                {selectedDay.duration} · {selectedDay.exercises.length} exercicios
+                {selectedDay.duration} · {selectedDay.exercises.length} exercícios
               </p>
             </div>
             <Badge tone={selectedDay.intensity === "Forte" ? "green" : "muted"}>{selectedDay.intensity}</Badge>
@@ -2234,7 +2239,7 @@ function PlanView({
               type="button"
             >
               <Play size={16} fill="currentColor" />
-              Comecar treino
+              Começar treino
             </button>
             <button
               className="flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-white/10 px-3 text-sm font-medium text-white/85 transition hover:bg-white/[0.05]"
@@ -2290,7 +2295,7 @@ function PlanView({
                     </div>
                   </div>
                   <div className="mt-3 grid grid-cols-3 gap-2 pl-8">
-                    <MiniStat label="Series" value={String(item.sets)} />
+                    <MiniStat label="Séries" value={String(item.sets)} />
                     <MiniStat label="Reps" value={item.reps} />
                     <MiniStat label="Pausa" value={item.rest} />
                   </div>
@@ -2346,7 +2351,7 @@ function LibraryView({
     <section className="space-y-5">
       <div>
         <p className="text-sm text-white/45">Biblioteca</p>
-        <h2 className="text-2xl font-semibold tracking-tight">Exercicios</h2>
+        <h2 className="text-2xl font-semibold tracking-tight">Exercícios</h2>
       </div>
 
       <label className="glass-field flex items-center gap-3 rounded-xl px-4 py-3">
@@ -2354,7 +2359,7 @@ function LibraryView({
         <input
           className="w-full bg-transparent text-[15px] outline-none placeholder:text-white/40"
           onChange={(event) => onQueryChange(event.target.value)}
-          placeholder="Buscar exercicio"
+          placeholder="Buscar exercício"
           value={query}
         />
       </label>
@@ -2379,19 +2384,19 @@ function LibraryView({
 
       {total > 0 && (
         <p aria-live="polite" className="-mb-2 text-xs text-white/45">
-          {total} {total === 1 ? "exercicio" : "exercicios"}
+          {total} {total === 1 ? "exercício" : "exercícios"}
         </p>
       )}
 
       {selectedGroup !== favoritesFilter && total === 0 && (
-        <p className="rounded-2xl border border-white/[0.07] p-5 text-center text-sm text-white/55">Nenhum exercicio encontrado.</p>
+        <p className="rounded-2xl border border-white/[0.07] p-5 text-center text-sm text-white/55">Nenhum exercício encontrado.</p>
       )}
 
       {selectedGroup === favoritesFilter && total === 0 && (
         <p className="rounded-2xl border border-white/[0.07] p-5 text-center text-sm leading-relaxed text-white/55">
           {favoriteExerciseIds.length
             ? "Nenhum favorito com esse nome."
-            : "Voce ainda nao favoritou nenhum exercicio. Toque no coracao ao lado de um exercicio para salva-lo aqui."}
+            : "Você ainda não favoritou nenhum exercício. Toque no coração ao lado de um exercício para salva-lo aqui."}
         </p>
       )}
 
@@ -2502,7 +2507,7 @@ function ProgressView({
   return (
     <section className="space-y-5">
       <div>
-        <p className="text-sm text-white/45">Evolucao</p>
+        <p className="text-sm text-white/45">Evolução</p>
         <h2 className="text-2xl font-semibold tracking-tight">Progresso</h2>
       </div>
 
@@ -2514,11 +2519,11 @@ function ProgressView({
       <section className="border-t border-white/[0.07] pt-5">
         <div className="flex items-baseline justify-between">
           <h3 className="text-sm font-medium text-white/80">Seu plano</h3>
-          <span className="text-xs tabular-nums text-white/45">{weeklySets} series por semana</span>
+          <span className="text-xs tabular-nums text-white/45">{weeklySets} séries por semana</span>
         </div>
         {savedPlan.days.length ? (
           <>
-            <p className="mt-3 text-xs text-white/45">Series por dia</p>
+            <p className="mt-3 text-xs text-white/45">Séries por dia</p>
             <div className="mt-2 flex items-end gap-2">
               {setsPerDay.map((day) => (
                 <div key={day.id} className="flex flex-1 flex-col items-center gap-1">
@@ -2534,7 +2539,7 @@ function ProgressView({
             <GroupBars groupSummary={savedPlan.coverage} />
           </>
         ) : (
-          <p className="mt-2 text-sm text-white/55">Monte um treino para ver a distribuicao da semana.</p>
+          <p className="mt-2 text-sm text-white/55">Monte um treino para ver a distribuição da semana.</p>
         )}
       </section>
 
@@ -2575,7 +2580,7 @@ function ProfileEditor({
     }
 
     if (heightCm !== null && (!Number.isFinite(heightCm) || heightCm < 100 || heightCm > 250)) {
-      setError("Informe a altura em centimetros, entre 100 e 250.");
+      setError("Informe a altura em centímetros, entre 100 e 250.");
       return;
     }
 
@@ -2665,7 +2670,7 @@ function ProfessionalSection({
             <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 px-1 text-sm">
               <dt className="text-white/45">Especialidade</dt>
               <dd>{professional.specialty}</dd>
-              <dt className="text-white/45">Formacao</dt>
+              <dt className="text-white/45">Formação</dt>
               <dd>{professional.education}</dd>
             </dl>
           )}
@@ -2690,8 +2695,8 @@ function ProfessionalSection({
             type="button"
           >
             {professional?.status === "REJECTED"
-              ? "Enviar nova solicitacao com outro CREF"
-              : "Sou profissional de Educacao Fisica"}
+              ? "Enviar nova solicitação com outro CREF"
+              : "Sou profissional de Educação Física"}
           </button>
         ))}
     </div>
@@ -2755,14 +2760,14 @@ function AccountSection({
         href="/privacidade"
         target="_blank"
       >
-        Politica de Privacidade
+        Política de Privacidade
       </a>
       <button
         className="mt-3 block text-sm text-white/70 underline underline-offset-4 transition hover:text-white"
         onClick={onReplayOnboarding}
         type="button"
       >
-        Ver introducao do app
+        Ver introdução do app
       </button>
 
       {!confirming ? (
@@ -2777,7 +2782,7 @@ function AccountSection({
       ) : (
         <form className="mt-4 space-y-3 rounded-xl border border-red-400/20 bg-red-500/[0.06] p-4" onSubmit={handleDelete}>
           <p className="text-sm font-medium leading-relaxed text-red-100">
-            Isso apaga definitivamente sua conta, seus planos, seu historico e suas medidas. Nao tem volta.
+            Isso apaga definitivamente sua conta, seus planos, seu histórico e suas medidas. Não tem volta.
           </p>
           <input
             autoComplete="current-password"
@@ -2878,7 +2883,7 @@ function BottomNavigation({
               type="button"
             >
               <tab.icon size={19} strokeWidth={active ? 2.2 : 1.8} />
-              {/* Fonte no span: o "button { font: inherit }" global anula classes de fonte no botao. */}
+              {/* Fonte no span: o "button { font: inherit }" global anula classes de fonte no botão. */}
               <span className="max-w-full truncate text-[11px] leading-none">{tab.label}</span>
             </button>
           );

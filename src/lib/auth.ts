@@ -92,7 +92,7 @@ function getJwtSecret() {
   }
 
   if (process.env.NODE_ENV === "production") {
-    throw new Error("JWT_SECRET precisa estar configurado em producao.");
+    throw new Error("JWT_SECRET precisa estar configurado em produção.");
   }
 
   return "coreup-local-dev-secret-change-me";

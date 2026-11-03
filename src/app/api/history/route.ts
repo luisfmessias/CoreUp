@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
     const missingIds = getMissingExerciseIds(payload.sets.map((set) => set.exerciseId));
 
     if (missingIds.length) {
-      return json({ error: "Exercicios nao encontrados.", exerciseIds: missingIds }, 400);
+      return json({ error: "Exercícios não encontrados.", exerciseIds: missingIds }, 400);
     }
 
     if (payload.workoutId) {

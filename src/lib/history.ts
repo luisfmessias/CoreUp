@@ -107,7 +107,7 @@ function weekStart(date: Date) {
 }
 
 // Semanas seguidas (segunda a domingo) com pelo menos um treino. A semana atual
-// so quebra a sequencia depois que termina.
+// só quebra a sequencia depois que termina.
 export function weekStreak(logs: ApiWorkoutLog[], now = new Date()) {
   const weeks = new Set(logs.map((log) => weekStart(new Date(log.performedAt))));
   const week = 7 * 24 * 60 * 60 * 1000;

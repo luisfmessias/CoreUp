@@ -15,7 +15,7 @@ export async function GET(request: NextRequest, context: { params: Promise<{ id:
   const found = await prisma.professionalRequest.findUnique({ where: { id }, include: adminRequestInclude });
 
   if (!found) {
-    return notFound("Solicitacao");
+    return notFound("Solicitação");
   }
 
   return json({ request: serializeRequestForAdmin(found) });

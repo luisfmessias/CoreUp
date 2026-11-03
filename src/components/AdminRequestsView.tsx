@@ -64,7 +64,7 @@ export function AdminRequestsView({
       setRequests(data.requests);
       setCounts(data.counts);
     } catch {
-      setError("Nao foi possivel carregar as solicitacoes.");
+      setError("Não foi possível carregar as solicitações.");
     } finally {
       setLoading(false);
     }
@@ -115,7 +115,7 @@ export function AdminRequestsView({
   return (
     <section className="space-y-5">
       <div>
-        <p className="text-sm text-white/45">Administracao</p>
+        <p className="text-sm text-white/45">Administração</p>
         <h2 className="text-2xl font-semibold tracking-tight">Cadastros profissionais</h2>
         <p className="mt-1 text-sm leading-relaxed text-white/55">
           Confira cada registro no site do CONFEF ou do CREF do estado antes de aprovar.
@@ -145,7 +145,7 @@ export function AdminRequestsView({
       {loading ? (
         <div className="flex items-center gap-2 py-6 text-sm text-white/55">
           <Loader2 className="animate-spin text-accent" size={16} />
-          Carregando solicitacoes
+          Carregando solicitações
         </div>
       ) : error ? (
         <p className="rounded-xl border border-red-400/25 bg-red-500/10 px-4 py-3 text-sm text-red-100" role="alert">
@@ -166,7 +166,7 @@ export function AdminRequestsView({
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <h3 className="truncate text-[15px] font-semibold">{request.fullName}</h3>
-                    <p className="truncate text-xs text-white/50">{request.email ?? "Conta excluida"}</p>
+                    <p className="truncate text-xs text-white/50">{request.email ?? "Conta excluída"}</p>
                   </div>
                   <StatusBadge status={request.status} />
                 </div>
@@ -186,7 +186,7 @@ export function AdminRequestsView({
         </ul>
       ) : (
         <p className="rounded-2xl border border-white/[0.07] p-5 text-center text-sm text-white/55">
-          {filter === "PENDING" ? "Nenhuma solicitacao aguardando analise." : "Nenhuma solicitacao neste filtro."}
+          {filter === "PENDING" ? "Nenhuma solicitação aguardando análise." : "Nenhuma solicitação neste filtro."}
         </p>
       )}
     </section>
@@ -226,13 +226,13 @@ function RequestDetail({
       const data = (await response.json()) as { request?: AdminRequest; error?: string; details?: Array<{ message: string }> };
 
       if (!response.ok || !data.request) {
-        throw new Error(data.details?.[0]?.message ?? data.error ?? "Nao foi possivel registrar a decisao.");
+        throw new Error(data.details?.[0]?.message ?? data.error ?? "Não foi possível registrar a decisão.");
       }
 
       setRejecting(false);
       onDecided(data.request);
     } catch (decideError) {
-      setError(decideError instanceof Error ? decideError.message : "Nao foi possivel registrar a decisao.");
+      setError(decideError instanceof Error ? decideError.message : "Não foi possível registrar a decisão.");
     } finally {
       setSending(false);
     }
@@ -251,7 +251,7 @@ function RequestDetail({
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <h2 className="text-xl font-semibold leading-tight tracking-tight">{request.fullName}</h2>
-            <p className="mt-0.5 truncate text-sm text-white/55">{request.email ?? "Conta excluida pelo usuario"}</p>
+            <p className="mt-0.5 truncate text-sm text-white/55">{request.email ?? "Conta excluída pelo usuário"}</p>
           </div>
           <StatusBadge status={request.status} />
         </div>
@@ -261,18 +261,18 @@ function RequestDetail({
             <span className="tabular-nums">{request.crefNumber}</span>
           </Info>
           <Info label="UF">{request.crefState}</Info>
-          <Info label="Formacao">{request.education}</Info>
+          <Info label="Formação">{request.education}</Info>
           <Info label="Especialidade">{request.specialty}</Info>
           <Info label="Solicitada em">{formatDateTime(request.createdAt)}</Info>
           {request.reviewedAt && <Info label="Analisada em">{formatDateTime(request.reviewedAt)}</Info>}
-          {request.reviewedBy && <Info label="Responsavel">{request.reviewedBy}</Info>}
-          {request.status === "REJECTED" && <Info label="Motivo">{request.rejectionReason || "Nao informado"}</Info>}
+          {request.reviewedBy && <Info label="Responsável">{request.reviewedBy}</Info>}
+          {request.status === "REJECTED" && <Info label="Motivo">{request.rejectionReason || "Não informado"}</Info>}
         </dl>
       </section>
 
       {request.status === "PENDING" && (
         <section className="space-y-4 border-t border-white/[0.07] pt-5">
-          <h3 className="text-sm font-medium text-white/80">Decisao</h3>
+          <h3 className="text-sm font-medium text-white/80">Decisão</h3>
 
           {!rejecting ? (
             <>
@@ -283,7 +283,7 @@ function RequestDetail({
                   onChange={(event) => setCrefChecked(event.target.checked)}
                   type="checkbox"
                 />
-                Conferi o registro {request.crefNumber}/{request.crefState} no CONFEF ou no CREF do estado e ele e valido.
+                Conferi o registro {request.crefNumber}/{request.crefState} no CONFEF ou no CREF do estado e ele é válido.
               </label>
               <button
                 className="btn-primary flex h-11 w-full items-center justify-center gap-2 rounded-xl text-sm font-semibold"
@@ -305,9 +305,9 @@ function RequestDetail({
             </>
           ) : (
             <div className="space-y-3 rounded-xl border border-red-400/20 bg-red-500/[0.06] p-4">
-              <p className="text-sm font-medium text-red-100">Rejeitar a solicitacao de {request.fullName}?</p>
+              <p className="text-sm font-medium text-red-100">Rejeitar a solicitação de {request.fullName}?</p>
               <p className="text-xs leading-relaxed text-white/55">
-                O CREF {request.crefNumber}/{request.crefState} fica bloqueado para novos cadastros. O profissional sera
+                O CREF {request.crefNumber}/{request.crefState} fica bloqueado para novos cadastros. O profissional será
                 notificado com o motivo abaixo.
               </p>
               <label className="block">
@@ -316,7 +316,7 @@ function RequestDetail({
                   className="glass-field block w-full resize-y rounded-xl px-3 py-2.5 text-[15px] text-white outline-none placeholder:text-white/35"
                   maxLength={500}
                   onChange={(event) => setReason(event.target.value)}
-                  placeholder="Ex.: registro nao encontrado no CREF informado"
+                  placeholder="Ex.: registro não encontrado no CREF informado"
                   rows={3}
                   value={reason}
                 />
@@ -337,14 +337,14 @@ function RequestDetail({
                   type="button"
                 >
                   {sending && <Loader2 className="animate-spin" size={16} />}
-                  Confirmar rejeicao
+                  Confirmar rejeição
                 </button>
               </div>
             </div>
           )}
 
           {request.accountDeleted && (
-            <p className="text-xs text-white/50">A conta foi excluida pelo usuario. So e possivel rejeitar a solicitacao.</p>
+            <p className="text-xs text-white/50">A conta foi excluída pelo usuário. Só é possível rejeitar a solicitação.</p>
           )}
           {error && (
             <p className="rounded-xl border border-red-400/25 bg-red-500/10 px-3 py-2.5 text-sm text-red-100" role="alert">

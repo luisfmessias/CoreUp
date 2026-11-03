@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
 
     if (!user || !(await verifyPassword(payload.password, user.passwordHash))) {
       await recordAttempt(emailLimit, ipLimit);
-      return json({ error: "E-mail ou senha invalidos." }, 401);
+      return json({ error: "E-mail ou senha inválidos." }, 401);
     }
 
     await clearAttempts(emailLimit);

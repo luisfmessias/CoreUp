@@ -7,14 +7,14 @@ const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/;
 const emailSchema = z
   .string()
   .trim()
-  .regex(emailRegex, "Informe um e-mail valido.")
+  .regex(emailRegex, "Informe um e-mail válido.")
   .transform((email) => email.toLowerCase());
 
 const passwordSchema = z
   .string()
-  .regex(passwordRegex, "A senha precisa ter 8 caracteres, letra maiuscula, letra minuscula, numero e simbolo.");
+  .regex(passwordRegex, "A senha precisa ter 8 caracteres, letra maiúscula, letra minúscula, número e símbolo.");
 
-// O cadastro nunca cria ADMIN: essa conta so nasce pelo script admin:create.
+// O cadastro nunca cria ADMIN: essa conta só nasce pelo script admin:create.
 const accountTypeSchema = z.enum(["USER", "PROFESSIONAL"]);
 
 export const professionalProfileSchema = z.object({
@@ -25,15 +25,15 @@ export const professionalProfileSchema = z.object({
       const normalized = normalizeCref(value);
 
       if (!normalized) {
-        context.addIssue({ code: "custom", message: "Informe o CREF com numero e categoria, por exemplo 012345-G." });
+        context.addIssue({ code: "custom", message: "Informe o CREF com número e categoria, por exemplo 012345-G." });
         return z.NEVER;
       }
 
       return normalized;
     }),
   crefState: z.enum(brazilianStates, { error: "Selecione a UF do registro CREF." }),
-  specialty: z.string().trim().min(3, "Informe sua especialidade ou area de atuacao.").max(80),
-  education: z.string().trim().min(3, "Informe sua formacao academica.").max(120)
+  specialty: z.string().trim().min(3, "Informe sua especialidade ou área de atuação.").max(80),
+  education: z.string().trim().min(3, "Informe sua formação acadêmica.").max(120)
 });
 
 export const registerSchema = z
@@ -43,7 +43,7 @@ export const registerSchema = z
     password: passwordSchema,
     heightCm: z.number().positive().optional(),
     weightKg: z.number().positive().optional(),
-    acceptPrivacy: z.literal(true, { error: "Aceite a Politica de Privacidade para criar a conta." }),
+    acceptPrivacy: z.literal(true, { error: "Aceite a Política de Privacidade para criar a conta." }),
     accountType: accountTypeSchema.default("USER"),
     professional: professionalProfileSchema.optional()
   })
@@ -71,7 +71,7 @@ const fullNameSchema = z
 export const professionalRequestSchema = professionalProfileSchema.extend({ fullName: fullNameSchema });
 
 export const approveRequestSchema = z.object({
-  crefChecked: z.literal(true, { error: "Confirme que o CREF foi analisado e considerado valido." })
+  crefChecked: z.literal(true, { error: "Confirme que o CREF foi analisado e considerado válido." })
 });
 
 export const rejectRequestSchema = z.object({
@@ -95,7 +95,7 @@ const reviewItemsSchema = z.array(z.string().trim().min(2).max(300)).max(10);
 
 export const workoutReviewSchema = z.object({
   rating: z.number().int().min(1, "Escolha uma nota de 1 a 5.").max(5, "Escolha uma nota de 1 a 5."),
-  comment: z.string().trim().min(10, "Escreva um comentario com pelo menos 10 caracteres.").max(1000),
+  comment: z.string().trim().min(10, "Escreva um comentário com pelo menos 10 caracteres.").max(1000),
   strengths: reviewItemsSchema.default([]),
   limitations: reviewItemsSchema.default([]),
   recommendations: reviewItemsSchema.default([])
@@ -144,7 +144,7 @@ export const workoutLogSchema = z.object({
 export const profileUpdateSchema = z
   .object({
     name: z.string().trim().min(2, "Informe seu nome.").max(120).optional(),
-    heightCm: z.number().min(100, "Informe a altura em centimetros.").max(250).nullable().optional()
+    heightCm: z.number().min(100, "Informe a altura em centímetros.").max(250).nullable().optional()
   })
   .refine((value) => value.name !== undefined || value.heightCm !== undefined, "Nada para atualizar.");
 

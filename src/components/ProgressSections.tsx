@@ -25,7 +25,7 @@ export function TrainingSummary({ logs }: { logs: ApiWorkoutLog[] }) {
   const trainedDays = days.filter((day) => day.trained).length;
   const streak = weekStreak(logs);
   const stats = [
-    { label: "Treinos no mes", value: monthCount(logs) },
+    { label: "Treinos no mês", value: monthCount(logs) },
     { label: streak === 1 ? "Semana seguida" : "Semanas seguidas", value: streak },
     { label: "Treinos no total", value: logs.length }
   ];
@@ -43,12 +43,12 @@ export function TrainingSummary({ logs }: { logs: ApiWorkoutLog[] }) {
       </div>
 
       <div className="mt-5 flex items-baseline justify-between">
-        <p className="text-xs text-white/50">Ultimos 28 dias</p>
+        <p className="text-xs text-white/50">Últimos 28 dias</p>
         <p className="text-xs tabular-nums text-white/50">
           {trainedDays} {trainedDays === 1 ? "dia" : "dias"} com treino
         </p>
       </div>
-      <div className="mt-2 grid grid-cols-7 gap-1.5" role="list" aria-label="Dias com treino nos ultimos 28 dias">
+      <div className="mt-2 grid grid-cols-7 gap-1.5" role="list" aria-label="Dias com treino nos últimos 28 dias">
         {days.map((day) => (
           <span
             key={day.date.toISOString()}
@@ -61,7 +61,7 @@ export function TrainingSummary({ logs }: { logs: ApiWorkoutLog[] }) {
       </div>
       {!logs.length && (
         <p className="mt-4 text-sm text-white/55">
-          Comece um treino na aba Treino ou no Inicio e marque as series feitas. Ele aparece aqui.
+          Comece um treino na aba Treino ou no Início e marque as séries feitas. Ele aparece aqui.
         </p>
       )}
     </section>
@@ -76,8 +76,8 @@ export function LoadProgress({ logs, byId }: { logs: ApiWorkoutLog[]; byId: Map<
   if (exerciseId === undefined) {
     return (
       <section className="border-t border-white/[0.07] pt-5">
-        <h3 className="text-sm font-medium text-white/80">Evolucao de carga</h3>
-        <p className="mt-2 text-sm text-white/50">Registre a carga das series durante o treino para acompanhar sua evolucao.</p>
+        <h3 className="text-sm font-medium text-white/80">Evolução de carga</h3>
+        <p className="mt-2 text-sm text-white/50">Registre a carga das séries durante o treino para acompanhar sua evolução.</p>
       </section>
     );
   }
@@ -87,9 +87,9 @@ export function LoadProgress({ logs, byId }: { logs: ApiWorkoutLog[]; byId: Map<
   return (
     <section className="border-t border-white/[0.07] pt-5">
       <div className="flex items-center justify-between gap-3">
-        <h3 className="text-sm font-medium text-white/80">Evolucao de carga</h3>
+        <h3 className="text-sm font-medium text-white/80">Evolução de carga</h3>
         <label className="relative">
-          <span className="sr-only">Exercicio</span>
+          <span className="sr-only">Exercício</span>
           <select
             className="glass-field h-9 max-w-[190px] appearance-none truncate rounded-lg pl-3 pr-8 text-sm text-white outline-none [&>option]:bg-[#161a18]"
             onChange={(event) => setSelected(Number(event.target.value))}
@@ -110,7 +110,7 @@ export function LoadProgress({ logs, byId }: { logs: ApiWorkoutLog[]; byId: Map<
         points={series.map((point) => ({ label: formatShortDate(point.date), value: point.value }))}
         title={`Carga de ${byId.get(exerciseId)?.nome}`}
       />
-      {series.length < 2 && <p className="mt-2 text-xs text-white/45">Mais um treino com este exercicio e a linha aparece.</p>}
+      {series.length < 2 && <p className="mt-2 text-xs text-white/45">Mais um treino com este exercício e a linha aparece.</p>}
     </section>
   );
 }
@@ -247,7 +247,7 @@ export function HistoryList({
 
   return (
     <section className="border-t border-white/[0.07] pt-5">
-      <h3 className="text-sm font-medium text-white/80">Historico</h3>
+      <h3 className="text-sm font-medium text-white/80">Histórico</h3>
       <ul className="mt-2 divide-y divide-white/[0.07]">
         {visible.map((log) => {
           const open = openId === log.id;
@@ -266,7 +266,7 @@ export function HistoryList({
                 <span className="min-w-0">
                   <span className="block truncate text-[15px] font-medium">{logTitle(log)}</span>
                   <span className="block text-xs text-white/45">
-                    {formatLongDate(log.performedAt)} · {log.durationMin ?? "--"} min · {log.sets.length} series
+                    {formatLongDate(log.performedAt)} · {log.durationMin ?? "--"} min · {log.sets.length} séries
                     {volume ? ` · ${formatKg(Math.round(volume))}` : ""}
                   </span>
                 </span>
@@ -277,7 +277,7 @@ export function HistoryList({
                 <div className="mt-3 space-y-2 pl-1">
                   {[...grouped.entries()].map(([exerciseId, sets]) => (
                     <p key={exerciseId} className="flex justify-between gap-3 text-sm">
-                      <span className="truncate text-white/75">{byId.get(exerciseId)?.nome ?? "Exercicio"}</span>
+                      <span className="truncate text-white/75">{byId.get(exerciseId)?.nome ?? "Exercício"}</span>
                       <span className="shrink-0 tabular-nums text-white/50">
                         {sets.map((set) => (set.loadKg ? `${set.loadKg}×${set.reps ?? "-"}` : set.reps ? `${set.reps}` : "ok")).join(" · ")}
                       </span>
@@ -287,7 +287,7 @@ export function HistoryList({
                     <ConfirmPanel
                       busy={deleting}
                       confirmLabel="Apagar"
-                      description="Este treino sai do historico e das estatisticas."
+                      description="Este treino sai do histórico e das estatísticas."
                       title="Apagar este registro?"
                       onCancel={() => setConfirmId(null)}
                       onConfirm={async () => {

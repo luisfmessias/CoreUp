@@ -64,7 +64,7 @@ export async function PUT(
       const missingIds = getMissingExerciseIds(payload.exercises.map((exercise) => exercise.exerciseId));
 
       if (missingIds.length) {
-        return json({ error: "Exercicios nao encontrados.", exerciseIds: missingIds }, 400);
+        return json({ error: "Exercícios não encontrados.", exerciseIds: missingIds }, 400);
       }
     }
 

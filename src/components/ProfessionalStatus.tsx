@@ -16,12 +16,12 @@ export function ProfessionalStatusCard({
   const { status } = professional;
   const title =
     justSubmitted && status === "PENDING"
-      ? "Solicitacao enviada"
+      ? "Solicitação enviada"
       : status === "APPROVED"
         ? "Cadastro profissional aprovado"
         : status === "REJECTED"
           ? "Cadastro profissional rejeitado"
-          : "Cadastro profissional em analise";
+          : "Cadastro profissional em análise";
 
   return (
     <section
@@ -93,12 +93,12 @@ export function ProfessionalRequestForm({
       const data = (await response.json()) as { user?: AuthUser; error?: string; details?: Array<{ message: string }> };
 
       if (!response.ok || !data.user) {
-        throw new Error(data.details?.[0]?.message ?? data.error ?? "Nao foi possivel enviar a solicitacao.");
+        throw new Error(data.details?.[0]?.message ?? data.error ?? "Não foi possível enviar a solicitação.");
       }
 
       onSubmitted(data.user);
     } catch (submitError) {
-      setError(submitError instanceof Error ? submitError.message : "Nao foi possivel enviar a solicitacao.");
+      setError(submitError instanceof Error ? submitError.message : "Não foi possível enviar a solicitação.");
       setSending(false);
     }
   }
@@ -120,12 +120,12 @@ export function ProfessionalRequestForm({
       <div>
         <p className="text-sm font-medium">Solicitar conta profissional</p>
         <p className="mt-0.5 text-xs leading-relaxed text-white/50">
-          O administrador confere o registro no CREF antes de liberar as funcoes profissionais.
+          O administrador confere o registro no CREF antes de liberar as funções profissionais.
         </p>
       </div>
       {field("fullName", "Nome completo", "Como consta no registro CREF")}
       <div className="grid grid-cols-[1fr_96px] gap-3">
-        {field("crefNumber", "Numero do CREF", "012345-G")}
+        {field("crefNumber", "Número do CREF", "012345-G")}
         <label className="block">
           <span className="mb-1.5 block text-sm font-medium text-white/85">UF</span>
           <select
@@ -144,8 +144,8 @@ export function ProfessionalRequestForm({
           </select>
         </label>
       </div>
-      {field("specialty", "Especialidade ou area de atuacao", "Ex.: Musculacao e hipertrofia")}
-      {field("education", "Formacao academica", "Ex.: Bacharelado em Educacao Fisica")}
+      {field("specialty", "Especialidade ou área de atuação", "Ex.: Musculação e hipertrofia")}
+      {field("education", "Formação acadêmica", "Ex.: Bacharelado em Educação Física")}
 
       {error && (
         <p className="rounded-xl border border-red-400/25 bg-red-500/10 px-3 py-2.5 text-sm text-red-100" role="alert">
@@ -168,7 +168,7 @@ export function ProfessionalRequestForm({
           type="submit"
         >
           {sending && <Loader2 className="animate-spin" size={16} />}
-          Enviar solicitacao
+          Enviar solicitação
         </button>
       </div>
     </form>

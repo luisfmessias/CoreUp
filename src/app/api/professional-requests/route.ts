@@ -14,13 +14,13 @@ export async function POST(request: NextRequest) {
   }
 
   if (user.accountType !== "USER") {
-    return json({ error: "Sua conta ja tem acesso as funcionalidades profissionais." }, 409);
+    return json({ error: "Sua conta já tem acesso as funcionalidades profissionais." }, 409);
   }
 
   const latest = user.professionalRequests[0];
 
   if (latest?.status === "PENDING") {
-    return json({ error: "Voce ja tem uma solicitacao em analise. Aguarde a decisao do administrador." }, 409);
+    return json({ error: "Você já tem uma solicitação em análise. Aguarde a decisão do administrador." }, 409);
   }
 
   let input: ProfessionalRequestInput | undefined;

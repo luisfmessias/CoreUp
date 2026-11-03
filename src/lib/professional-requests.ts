@@ -50,7 +50,7 @@ export async function createProfessionalRequest(tx: Tx, userId: string, input: P
       data: admins.map((admin) => ({
         userId: admin.id,
         type: "PROFESSIONAL_REQUEST_CREATED" as const,
-        title: "Nova solicitacao de cadastro profissional",
+        title: "Nova solicitação de cadastro profissional",
         message: `${input.fullName} · CREF ${input.crefNumber}/${input.crefState}`,
         requestId: request.id
       }))

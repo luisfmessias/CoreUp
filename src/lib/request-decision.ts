@@ -20,15 +20,15 @@ export async function decideProfessionalRequest(requestId: string, admin: User, 
       const current = await tx.professionalRequest.findUnique({ where: { id: requestId } });
 
       if (!current) {
-        throw new DecisionError("Solicitacao nao encontrada.", 404);
+        throw new DecisionError("Solicitação não encontrada.", 404);
       }
 
       if (current.status !== "PENDING") {
-        throw new DecisionError("Esta solicitacao ja foi analisada.", 409);
+        throw new DecisionError("Esta solicitação já foi analisada.", 409);
       }
 
       if (decision.kind === "approve" && !current.userId) {
-        throw new DecisionError("A conta desta solicitacao foi excluida. Nao ha conta para liberar.", 409);
+        throw new DecisionError("A conta desta solicitação foi excluída. Não há conta para liberar.", 409);
       }
 
       const now = new Date();
@@ -43,7 +43,7 @@ export async function decideProfessionalRequest(requestId: string, admin: User, 
       });
 
       if (!updated.count) {
-        throw new DecisionError("Esta solicitacao ja foi analisada.", 409);
+        throw new DecisionError("Esta solicitação já foi analisada.", 409);
       }
 
       if (current.userId) {
@@ -62,14 +62,14 @@ export async function decideProfessionalRequest(requestId: string, admin: User, 
               ? {
                   type: "PROFESSIONAL_REQUEST_APPROVED",
                   title: "Cadastro profissional aprovado",
-                  message: "Seu CREF foi aprovado. Agora voce pode avaliar os treinos do app."
+                  message: "Seu CREF foi aprovado. Agora você pode avaliar os treinos do app."
                 }
               : {
                   type: "PROFESSIONAL_REQUEST_REJECTED",
                   title: "Cadastro profissional rejeitado",
                   message: decision.reason
                     ? `Motivo informado pelo administrador: ${decision.reason}`
-                    : "O administrador nao informou um motivo."
+                    : "O administrador não informou um motivo."
                 })
           }
         });

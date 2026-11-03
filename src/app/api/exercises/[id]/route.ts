@@ -10,7 +10,7 @@ export async function GET(
   const exercise = findExercise(Number(id));
 
   if (!exercise) {
-    return notFound("Exercicio");
+    return notFound("Exercício");
   }
 
   return json({ exercise });

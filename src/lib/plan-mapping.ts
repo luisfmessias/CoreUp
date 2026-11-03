@@ -23,7 +23,7 @@ const weekdayByLabel: Record<string, Weekday> = {
   Qua: "WEDNESDAY",
   Qui: "THURSDAY",
   Sex: "FRIDAY",
-  Sab: "SATURDAY",
+  "Sáb": "SATURDAY",
   Dom: "SUNDAY"
 };
 

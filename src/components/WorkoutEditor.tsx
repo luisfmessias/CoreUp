@@ -40,7 +40,7 @@ export function findInvalidExercise(items: EditedExercise[], byId: Map<number, E
     return !Number.isInteger(sets) || sets < 1 || sets > 10 || !item.reps.trim() || item.reps.length > 40;
   });
 
-  return invalid ? `Confira ${byId.get(invalid.exerciseId)?.nome}: series de 1 a 10 e repeticoes preenchidas.` : null;
+  return invalid ? `Confira ${byId.get(invalid.exerciseId)?.nome}: séries de 1 a 10 e repetições preenchidas.` : null;
 }
 
 export function toEditorPayload(items: EditedExercise[]): EditorPayload {
@@ -80,7 +80,7 @@ export function ExerciseListEditor({
     onChange(next);
   };
 
-  const pickerTitle = picker?.mode === "replace" ? "Trocar exercicio" : "Adicionar exercicio";
+  const pickerTitle = picker?.mode === "replace" ? "Trocar exercício" : "Adicionar exercício";
   const pickerGroup =
     picker?.mode === "replace" ? byId.get(items[picker.index].exerciseId)?.grupoMuscular ?? "Todos" : "Todos";
 
@@ -114,7 +114,7 @@ export function ExerciseListEditor({
                 </div>
 
                 <div className="mt-3 grid grid-cols-3 gap-2">
-                  <Field label="Series" value={item.sets} inputMode="numeric" onChange={(sets) => update(index, { sets: sets.replace(/\D/g, "").slice(0, 2) })} />
+                  <Field label="Séries" value={item.sets} inputMode="numeric" onChange={(sets) => update(index, { sets: sets.replace(/\D/g, "").slice(0, 2) })} />
                   <Field label="Reps" value={item.reps} onChange={(reps) => update(index, { reps: reps.slice(0, 20) })} />
                   <Field label="Pausa (s)" value={item.rest} inputMode="numeric" onChange={(rest) => update(index, { rest: rest.replace(/\D/g, "").slice(0, 3) })} />
                 </div>
@@ -143,7 +143,7 @@ export function ExerciseListEditor({
         </ol>
       ) : (
         <p className="rounded-2xl border border-dashed border-white/15 p-5 text-center text-sm text-white/55">
-          Nenhum exercicio ainda. Toque em Adicionar exercicio para escolher o primeiro.
+          Nenhum exercício ainda. Toque em Adicionar exercício para escolher o primeiro.
         </p>
       )}
 
@@ -153,7 +153,7 @@ export function ExerciseListEditor({
         type="button"
       >
         <Plus size={16} />
-        Adicionar exercicio
+        Adicionar exercício
       </button>
 
       {picker && (
@@ -202,7 +202,7 @@ export function WorkoutEditor({
     setError("");
 
     if (!items.length) {
-      setError("O dia precisa ter pelo menos um exercicio. Para tirar o dia inteiro, use Remover dia.");
+      setError("O dia precisa ter pelo menos um exercício. Para tirar o dia inteiro, use Remover dia.");
       return;
     }
 
@@ -227,7 +227,7 @@ export function WorkoutEditor({
       <div>
         <p className="text-xs font-medium text-accent">Editando · {day.label}</p>
         <h3 className="mt-1 text-xl font-semibold leading-tight tracking-tight">{day.focus}</h3>
-        <p className="mt-1 text-sm text-white/55">Troque exercicios, ajuste series e mude a ordem.</p>
+        <p className="mt-1 text-sm text-white/55">Troque exercícios, ajuste séries e mude a ordem.</p>
       </div>
 
       <ExerciseListEditor byId={byId} exercises={exercises} items={items} onChange={setItems} />

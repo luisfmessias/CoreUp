@@ -100,7 +100,7 @@ export function Onboarding({
   return (
     <div
       ref={dialogRef}
-      aria-label="Introducao ao CoreUp"
+      aria-label="Introdução ao CoreUp"
       aria-modal="true"
       className="fixed inset-0 z-50 flex justify-center bg-ink bg-[radial-gradient(42rem_22rem_at_50%_-8rem,rgba(124,198,160,0.12),transparent_70%)] focus:outline-none"
       role="dialog"
@@ -162,7 +162,7 @@ export function Onboarding({
             >
               <div className="pt-2">
                 <p className="text-xs font-medium text-accent">Primeiro passo</p>
-                <h2 className="mt-2 text-[26px] font-semibold leading-tight tracking-tight">Qual e o seu objetivo principal?</h2>
+                <h2 className="mt-2 text-[26px] font-semibold leading-tight tracking-tight">Qual é o seu objetivo principal?</h2>
                 <p className="mt-3 text-[15px] leading-relaxed text-white/65">
                   Vamos usar isso para montar o seu primeiro treino. Da para mudar quando quiser.
                 </p>
@@ -236,7 +236,7 @@ export function Onboarding({
                 onClick={() => goTo(current + 1)}
                 type="button"
               >
-                {current === 0 ? "Comecar" : "Proximo"}
+                {current === 0 ? "Começar" : "Próximo"}
                 <ArrowRight size={18} />
               </button>
             </div>
@@ -253,12 +253,12 @@ function buildSlides(user: AuthUser): Slide[] {
   const requestStatus = user.professional?.status;
 
   const reviewsBody = canReview
-    ? "Na aba Aval. voce da nota, comenta e recomenda ajustes nos treinos do app. Sua avaliacao aparece para todos os usuarios."
+    ? "Na aba Aval. você da nota, comenta e recomenda ajustes nos treinos do app. Sua avaliação aparece para todos os usuários."
     : requestStatus === "PENDING"
-      ? "Profissionais com CREF aprovado avaliam os treinos do app. Seu cadastro profissional esta em analise: assim que for aprovado, voce tambem podera avaliar."
+      ? "Profissionais com CREF aprovado avaliam os treinos do app. Seu cadastro profissional está em análise: assim que for aprovado, você também poderá avaliar."
       : requestStatus === "REJECTED"
-        ? "Profissionais com CREF aprovado avaliam os treinos do app. Seu cadastro profissional foi rejeitado; o motivo esta na secao Conta, na aba Evol."
-        : "Na aba Aval., profissionais de Educacao Fisica com CREF aprovado dao nota e comentam os treinos do app. Use isso para escolher com mais confianca.";
+        ? "Profissionais com CREF aprovado avaliam os treinos do app. Seu cadastro profissional foi rejeitado; o motivo está na seção Conta, na aba Evol."
+        : "Na aba Aval., profissionais de Educação Física com CREF aprovado dão nota e comentam os treinos do app. Use isso para escolher com mais confiança.";
 
   return [
     {
@@ -272,21 +272,21 @@ function buildSlides(user: AuthUser): Slide[] {
       id: "builder",
       eyebrow: "Aba Montar",
       title: "Monte seu treino em 4 passos",
-      body: "Escolha objetivo, dias, tempo e equipamentos. O app monta a semana inteira e mostra cada exercício antes de voce salvar.",
+      body: "Escolha objetivo, dias, tempo e equipamentos. O app monta a semana inteira e mostra cada exercício antes de você salvar.",
       visual: () => <BuilderVisual />
     },
     {
       id: "plan",
-      eyebrow: "Inicio e Treino",
+      eyebrow: "Início e Treino",
       title: "Siga sua semana, dia a dia",
-      body: "No Inicio aparece o treino de hoje. Na aba Treino ficam todos os dias, com series, repeticoes e pausa de cada exercicio.",
+      body: "No Início aparece o treino de hoje. Na aba Treino ficam todos os dias, com séries, repetições e pausa de cada exercício.",
       visual: () => <PlanVisual />
     },
     {
       id: "library",
-      eyebrow: "Aba Exercicios",
-      title: "Encontre e favorite exercicios",
-      body: "Busque entre mais de 200 exercicios e toque no coracao para favoritar. Os favoritos entram primeiro quando o app monta o seu treino.",
+      eyebrow: "Aba Exercícios",
+      title: "Encontre e favorite exercícios",
+      body: "Busque entre mais de 200 exercícios e toque no coração para favoritar. Os favoritos entram primeiro quando o app monta o seu treino.",
       visual: () => <LibraryVisual />
     },
     {
@@ -298,9 +298,9 @@ function buildSlides(user: AuthUser): Slide[] {
     },
     {
       id: "navigation",
-      eyebrow: "Navegacao",
+      eyebrow: "Navegação",
       title: "Tudo a um toque",
-      body: "A barra de baixo leva a cada parte do app. O sino no topo mostra as suas notificacoes.",
+      body: "A barra de baixo leva a cada parte do app. O sino no topo mostra as suas notificações.",
       visual: (active) => <NavigationVisual active={active} isAdmin={user.accountType === "ADMIN"} />
     }
   ];
@@ -348,10 +348,10 @@ function WelcomeVisual() {
 function BuilderVisual() {
   const choices = ["Hipertrofia", "4 dias", "1h"];
   const days = [
-    ["Seg", "Peito, ombro e triceps"],
-    ["Ter", "Costas e biceps"],
+    ["Seg", "Peito, ombro e tríceps"],
+    ["Ter", "Costas e bíceps"],
     ["Qua", "Pernas"],
-    ["Qui", "Ombros e abdomen"]
+    ["Qui", "Ombros e abdômen"]
   ];
 
   return (
@@ -387,7 +387,7 @@ function PlanVisual() {
   const rows = [
     ["Supino reto com barra", "4 × 8-12"],
     ["Desenvolvimento com halteres", "4 × 8-12"],
-    ["Triceps na polia", "3 × 10-12"]
+    ["Tríceps na polia", "3 × 10-12"]
   ];
 
   return (
@@ -397,8 +397,8 @@ function PlanVisual() {
           <p className="text-xs font-medium text-accent">Treino de hoje · Seg</p>
           <CalendarDays className="text-white/40" size={16} />
         </div>
-        <p className="mt-2 text-lg font-semibold leading-tight">Peito, ombro e triceps</p>
-        <p className="mt-0.5 text-xs text-white/50">1h · 5 exercicios</p>
+        <p className="mt-2 text-lg font-semibold leading-tight">Peito, ombro e tríceps</p>
+        <p className="mt-0.5 text-xs text-white/50">1h · 5 exercícios</p>
         <ul className="mt-3 divide-y divide-white/[0.07] border-t border-white/[0.07]">
           {rows.map(([name, prescription], index) => (
             <Appear key={name} delay={200 + index * 140}>
@@ -416,7 +416,7 @@ function PlanVisual() {
 
 function LibraryVisual() {
   const rows = [
-    ["Agachamento livre", "Quadriceps · Barra", true],
+    ["Agachamento livre", "Quadríceps · Barra", true],
     ["Remada curvada", "Costas · Barra", false],
     ["Supino inclinado", "Peito · Halteres", true]
   ] as const;
@@ -426,7 +426,7 @@ function LibraryVisual() {
       <Appear>
         <div className="glass-field flex h-11 items-center gap-2 rounded-xl px-3 text-sm text-white/40">
           <Search size={16} />
-          Buscar exercicio
+          Buscar exercício
         </div>
       </Appear>
       <Appear delay={120} className="flex gap-2">
@@ -463,7 +463,7 @@ function ReviewVisual() {
     <Appear className="mx-auto w-full max-w-[320px]">
       <MockCard>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm font-semibold">Profissional de Ed. Fisica</span>
+          <span className="text-sm font-semibold">Profissional de Ed. Física</span>
           <span className="inline-flex items-center gap-1 rounded-md border border-accent/35 bg-accent/10 px-2 py-0.5 text-xs font-medium text-accent">
             <BadgeCheck size={12} />
             CREF aprovado
@@ -479,7 +479,7 @@ function ReviewVisual() {
         </div>
         <Appear delay={700}>
           <p className="mt-3 text-sm leading-relaxed text-white/70">
-            &ldquo;Boa divisao para hipertrofia, com os exercicios compostos no inicio de cada treino.&rdquo;
+            &ldquo;Boa divisão para hipertrofia, com os exercícios compostos no início de cada treino.&rdquo;
           </p>
         </Appear>
       </MockCard>
@@ -489,11 +489,11 @@ function ReviewVisual() {
 
 function NavigationVisual({ active, isAdmin }: { active: boolean; isAdmin: boolean }) {
   const tabs = [
-    { label: "Inicio", icon: Home, caption: "Treino de hoje e resumo da semana" },
-    { label: "Montar", icon: Sparkles, caption: "Crie ou refaca o seu treino" },
+    { label: "Início", icon: Home, caption: "Treino de hoje e resumo da semana" },
+    { label: "Montar", icon: Sparkles, caption: "Crie ou refaça o seu treino" },
     { label: "Treino", icon: CalendarDays, caption: "Todos os dias da sua semana" },
     { label: "Exerc.", icon: Library, caption: "Biblioteca e favoritos" },
-    { label: "Aval.", icon: BadgeCheck, caption: "Opiniao de profissionais" },
+    { label: "Aval.", icon: BadgeCheck, caption: "Opinião de profissionais" },
     { label: "Evol.", icon: BarChart3, caption: "Seu progresso e a sua conta" },
     ...(isAdmin ? [{ label: "Admin", icon: ShieldCheck, caption: "Aprovar cadastros profissionais" }] : [])
   ];
@@ -513,7 +513,7 @@ function NavigationVisual({ active, isAdmin }: { active: boolean; isAdmin: boole
   return (
     <div className="mx-auto w-full max-w-[340px] space-y-5">
       <div className="flex items-center justify-end gap-2">
-        <span className="text-xs text-white/45">Notificacoes</span>
+        <span className="text-xs text-white/45">Notificações</span>
         <span className="grid size-9 place-items-center rounded-full bg-white/[0.06] text-white/75">
           <Bell size={16} />
         </span>

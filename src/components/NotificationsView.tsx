@@ -26,8 +26,8 @@ export function NotificationsView({
       </IconButton>
       <div className="flex items-end justify-between gap-3">
         <div>
-          <p className="text-sm text-white/45">{unreadCount ? `${unreadCount} nao lidas` : "Tudo lido"}</p>
-          <h2 className="text-2xl font-semibold tracking-tight">Notificacoes</h2>
+          <p className="text-sm text-white/45">{unreadCount ? `${unreadCount} não lidas` : "Tudo lido"}</p>
+          <h2 className="text-2xl font-semibold tracking-tight">Notificações</h2>
         </div>
         {unreadCount > 0 && (
           <button className="text-sm text-white/70 underline underline-offset-4 hover:text-white" onClick={onMarkAllRead} type="button">
@@ -49,7 +49,7 @@ export function NotificationsView({
                   type="button"
                 >
                   <span
-                    aria-label={unread ? "Nao lida" : undefined}
+                    aria-label={unread ? "Não lida" : undefined}
                     className={`mt-1.5 size-2 shrink-0 rounded-full ${unread ? "bg-accent" : "bg-transparent"}`}
                   />
                   <span className="min-w-0 flex-1">
@@ -74,7 +74,7 @@ export function NotificationsView({
         </ul>
       ) : (
         <p className="rounded-2xl border border-white/[0.07] p-5 text-center text-sm text-white/55">
-          Voce ainda nao tem notificacoes.
+          Você ainda não tem notificações.
         </p>
       )}
     </section>

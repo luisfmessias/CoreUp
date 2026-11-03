@@ -52,17 +52,17 @@ try {
 
   if (existing) {
     await prisma.user.update({ where: { id: existing.id }, data: { accountType: "ADMIN" } });
-    console.log(`Conta existente ${email} promovida a ADMIN. A senha nao foi alterada.`);
+    console.log(`Conta existente ${email} promovida a ADMIN. A senha não foi alterada.`);
   } else {
     const name = process.env.ADMIN_NAME || (await ask("Nome do administrador: "));
-    const password = process.env.ADMIN_PASSWORD || (await askHidden("Senha (nao aparece ao digitar): "));
+    const password = process.env.ADMIN_PASSWORD || (await askHidden("Senha (não aparece ao digitar): "));
 
     if (name.length < 2) {
       throw new Error("Informe um nome.");
     }
 
     if (!passwordRule.test(password)) {
-      throw new Error("A senha precisa ter 8 caracteres, letra maiuscula, minuscula, numero e simbolo.");
+      throw new Error("A senha precisa ter 8 caracteres, letra maiúscula, minúscula, número e símbolo.");
     }
 
     await prisma.user.create({

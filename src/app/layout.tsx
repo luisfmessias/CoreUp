@@ -10,7 +10,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "CoreUp",
-  description: "App de rotina, exercicios e progresso de academia"
+  description: "App de rotina, exercícios e progresso de academia"
 };
 
 export const viewport: Viewport = {

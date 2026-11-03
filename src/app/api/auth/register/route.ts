@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     const passwordHash = await hashPassword(payload.password);
 
     const user = await prisma.$transaction(async (tx) => {
-      // Sempre USER: o papel PROFESSIONAL so e concedido na aprovacao do admin.
+      // Sempre USER: o papel PROFESSIONAL só é concedido na aprovação do admin.
       const created = await tx.user.create({
         data: {
           name: payload.name,
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
-      return json({ error: "Ja existe um usuario com este e-mail." }, 409);
+      return json({ error: "Já existe um usuário com este e-mail." }, 409);
     }
 
     return badRequest(error);

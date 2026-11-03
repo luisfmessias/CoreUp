@@ -44,7 +44,7 @@ export async function PUT(request: NextRequest) {
     );
 
     if (missingIds.length) {
-      return json({ error: "Exercicios nao encontrados.", exerciseIds: missingIds }, 400);
+      return json({ error: "Exercícios não encontrados.", exerciseIds: missingIds }, 400);
     }
 
     const results = await prisma.$transaction([

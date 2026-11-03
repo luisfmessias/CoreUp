@@ -97,7 +97,7 @@ export function ProfessionalReviewsView({
       })
       .catch(() => {
         if (!cancelled) {
-          setLoadError("Nao foi possivel carregar as avaliacoes. Tente novamente.");
+          setLoadError("Não foi possível carregar as avaliações. Tente novamente.");
         }
       })
       .finally(() => {
@@ -193,15 +193,15 @@ export function ProfessionalReviewsView({
     <section className="space-y-5">
       <div>
         <p className="text-sm text-white/45">Treinos avaliados</p>
-        <h2 className="text-2xl font-semibold tracking-tight">Avaliacao Profissional</h2>
+        <h2 className="text-2xl font-semibold tracking-tight">Avaliação Profissional</h2>
         <p className="mt-1 text-sm leading-relaxed text-white/55">
           {isProfessional
-            ? "Avalie os treinos do app com a sua experiencia profissional. Sua avaliacao aparece para todos os usuarios."
-            : "Veja o que profissionais de educacao fisica acham dos treinos do app antes de escolher o seu."}
+            ? "Avalie os treinos do app com a sua experiência profissional. Sua avaliação aparece para todos os usuários."
+            : "Veja o que profissionais de educação física acham dos treinos do app antes de escolher o seu."}
         </p>
         {isProfessional && (
           <p className="mt-2 text-xs text-accent">
-            Voce avaliou {myReviewCount} de {reviewableWorkouts.length} treinos.
+            Você avaliou {myReviewCount} de {reviewableWorkouts.length} treinos.
           </p>
         )}
       </div>
@@ -222,7 +222,7 @@ export function ProfessionalReviewsView({
             />
           ))}
         </FilterRow>
-        <FilterRow label="Nivel">
+        <FilterRow label="Nível">
           <FilterChip active={levelFilter === "todos"} label="Todos" onClick={() => setLevelFilter("todos")} />
           {generatorOptions.levels.map((level) => (
             <FilterChip
@@ -233,7 +233,7 @@ export function ProfessionalReviewsView({
             />
           ))}
         </FilterRow>
-        <FilterRow label="Nota media">
+        <FilterRow label="Nota média">
           {ratingOptions.map((option) => (
             <FilterChip
               key={option.id}
@@ -247,7 +247,7 @@ export function ProfessionalReviewsView({
 
       <div className="flex items-baseline justify-between border-t border-white/[0.07] pt-4">
         <p className="text-sm text-white/55">
-          {loading ? "Carregando avaliacoes" : `${filtered.length} ${filtered.length === 1 ? "treino" : "treinos"}`}
+          {loading ? "Carregando avaliações" : `${filtered.length} ${filtered.length === 1 ? "treino" : "treinos"}`}
         </p>
         {hasFilters && (
           <button className="text-sm text-white/70 underline underline-offset-4 hover:text-white" onClick={clearFilters} type="button">
@@ -259,7 +259,7 @@ export function ProfessionalReviewsView({
       {loading ? (
         <div className="flex items-center gap-2 py-6 text-sm text-white/55">
           <Loader2 className="animate-spin text-accent" size={16} />
-          Carregando avaliacoes
+          Carregando avaliações
         </div>
       ) : loadError ? (
         <p className="rounded-xl border border-red-400/25 bg-red-500/10 px-4 py-3 text-sm text-red-100" role="alert">
@@ -278,13 +278,13 @@ export function ProfessionalReviewsView({
           {visible.length ? (
             <>
               <p className="text-sm font-medium">Nenhum treino com esses filtros</p>
-              <p className="mt-1 text-sm text-white/55">Tente outro objetivo, nivel ou nota.</p>
+              <p className="mt-1 text-sm text-white/55">Tente outro objetivo, nível ou nota.</p>
             </>
           ) : (
             <>
               <p className="text-sm font-medium">Nenhum treino avaliado ainda</p>
               <p className="mt-1 text-sm text-white/55">
-                Quando profissionais de educacao fisica avaliarem os treinos do app, as avaliacoes aparecem aqui.
+                Quando profissionais de educação física avaliarem os treinos do app, as avaliações aparecem aqui.
               </p>
             </>
           )}
@@ -340,7 +340,7 @@ function WorkoutCard({
         <div className="min-w-0">
           <h3 className="text-[15px] font-semibold leading-snug">{workout.name}</h3>
           <p className="mt-0.5 text-xs text-white/50">
-            {goalLabels[workout.goal]} · {levelLabels[workout.level]} · {workout.exerciseCount} exercicios
+            {goalLabels[workout.goal]} · {levelLabels[workout.level]} · {workout.exerciseCount} exercícios
           </p>
         </div>
         <ChevronRight size={18} className="mt-0.5 shrink-0 text-white/35" />
@@ -352,16 +352,16 @@ function WorkoutCard({
             <Stars rating={Math.round(workout.average)} />
             <span className="text-sm font-medium tabular-nums">{formatAverage(workout.average)}</span>
             <span className="text-xs text-white/45">
-              {workout.reviews.length} {workout.reviews.length === 1 ? "avaliacao" : "avaliacoes"}
+              {workout.reviews.length} {workout.reviews.length === 1 ? "avaliação" : "avaliações"}
             </span>
-            {mine && <span className="ml-auto text-xs text-accent">Voce avaliou</span>}
+            {mine && <span className="ml-auto text-xs text-accent">Você avaliou</span>}
           </div>
           <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-white/65">{latest.comment}</p>
           <ProfessionalLine professional={latest.professional} />
         </>
       ) : (
         <p className="mt-3 text-sm text-white/50">
-          Ainda sem avaliacao.{isProfessional && <span className="text-accent"> Seja o primeiro a avaliar.</span>}
+          Ainda sem avaliação.{isProfessional && <span className="text-accent"> Seja o primeiro a avaliar.</span>}
         </p>
       )}
     </button>
@@ -422,7 +422,7 @@ function WorkoutReviewDetail({
         <IconButton label="Voltar para a lista" onClick={onBack}>
           <ChevronLeft size={20} />
         </IconButton>
-        <p className="text-sm text-white/55">Avaliacao Profissional</p>
+        <p className="text-sm text-white/55">Avaliação Profissional</p>
       </div>
 
       <section className="glass-strong rounded-2xl p-5">
@@ -431,7 +431,7 @@ function WorkoutReviewDetail({
         </p>
         <h2 className="mt-2 text-2xl font-semibold leading-tight tracking-tight">{workout.name}</h2>
         <p className="mt-1 text-sm tabular-nums text-white/55">
-          {workout.daysPerWeek} dias por semana · {workout.minutesPerSession} min · {workout.exerciseCount} exercicios
+          {workout.daysPerWeek} dias por semana · {workout.minutesPerSession} min · {workout.exerciseCount} exercícios
         </p>
 
         {workout.average !== null ? (
@@ -439,11 +439,11 @@ function WorkoutReviewDetail({
             <Stars rating={Math.round(workout.average)} size={18} />
             <span className="text-base font-semibold tabular-nums">{formatAverage(workout.average)}</span>
             <span className="text-sm text-white/45">
-              media de {workout.reviews.length} {workout.reviews.length === 1 ? "avaliacao" : "avaliacoes"}
+              média de {workout.reviews.length} {workout.reviews.length === 1 ? "avaliação" : "avaliações"}
             </span>
           </div>
         ) : (
-          <p className="mt-4 text-sm text-white/50">Este treino ainda nao foi avaliado.</p>
+          <p className="mt-4 text-sm text-white/50">Este treino ainda não foi avaliado.</p>
         )}
 
         {isProfessional && !editing && (
@@ -452,7 +452,7 @@ function WorkoutReviewDetail({
             onClick={() => setEditing(true)}
             type="button"
           >
-            {myReview ? "Editar minha avaliacao" : "Avaliar este treino"}
+            {myReview ? "Editar minha avaliação" : "Avaliar este treino"}
           </button>
         )}
       </section>
@@ -477,7 +477,7 @@ function WorkoutReviewDetail({
       {workout.reviews.length > 0 && (
         <section className="space-y-3">
           <h3 className="text-sm font-medium text-white/80">
-            {workout.reviews.length === 1 ? "Avaliacao" : `${workout.reviews.length} avaliacoes`}
+            {workout.reviews.length === 1 ? "Avaliação" : `${workout.reviews.length} avaliações`}
           </h3>
           {workout.reviews.map((review) => (
             <ReviewArticle key={review.id} review={review} />
@@ -492,7 +492,7 @@ function WorkoutReviewDetail({
             <li key={day.id} className="flex items-baseline justify-between gap-3 py-2.5">
               <span className="w-9 shrink-0 text-xs text-white/45">{day.label}</span>
               <span className="min-w-0 flex-1 truncate text-sm">{day.focus}</span>
-              <span className="shrink-0 text-xs tabular-nums text-white/45">{day.exercises.length} exercicios</span>
+              <span className="shrink-0 text-xs tabular-nums text-white/45">{day.exercises.length} exercícios</span>
             </li>
           ))}
         </ul>
@@ -509,7 +509,7 @@ function ReviewArticle({ review }: { review: ApiReview }) {
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-sm font-semibold">{professional.name}</span>
         <RoleBadge role={professional.role} />
-        {review.isMine && <span className="text-xs text-accent">Sua avaliacao</span>}
+        {review.isMine && <span className="text-xs text-accent">Sua avaliação</span>}
       </div>
       <p className="mt-0.5 text-xs text-white/50">
         {professional.specialty}
@@ -531,12 +531,12 @@ function ReviewArticle({ review }: { review: ApiReview }) {
       <DetailList
         icon={<CircleAlert aria-hidden="true" className="text-white/45" size={16} />}
         items={review.limitations}
-        title="Possiveis limitacoes"
+        title="Possíveis limitações"
       />
       <DetailList
         icon={<Lightbulb aria-hidden="true" className="text-white/45" size={16} />}
         items={review.recommendations}
-        title="Recomendacoes"
+        title="Recomendações"
       />
     </article>
   );
@@ -617,12 +617,12 @@ function ReviewForm({
       const data = (await response.json()) as { review?: ApiReview; error?: string; details?: Array<{ message: string }> };
 
       if (!response.ok || !data.review) {
-        throw new Error(data.details?.[0]?.message ?? data.error ?? "Nao foi possivel salvar a avaliacao.");
+        throw new Error(data.details?.[0]?.message ?? data.error ?? "Não foi possível salvar a avaliação.");
       }
 
       onSaved(data.review);
     } catch (submitError) {
-      setError(submitError instanceof Error ? submitError.message : "Nao foi possivel salvar a avaliacao.");
+      setError(submitError instanceof Error ? submitError.message : "Não foi possível salvar a avaliação.");
     } finally {
       setSaving(false);
     }
@@ -641,14 +641,14 @@ function ReviewForm({
 
       onDeleted();
     } catch {
-      setError("Nao foi possivel remover a avaliacao.");
+      setError("Não foi possível remover a avaliação.");
       setSaving(false);
     }
   }
 
   return (
     <form className="glass rounded-2xl p-5" onSubmit={handleSubmit}>
-      <h3 className="text-base font-semibold">{initial ? "Editar minha avaliacao" : "Sua avaliacao"}</h3>
+      <h3 className="text-base font-semibold">{initial ? "Editar minha avaliação" : "Sua avaliação"}</h3>
 
       <fieldset className="mt-4">
         <legend className="text-sm font-medium text-white/85">Nota</legend>
@@ -675,17 +675,17 @@ function ReviewForm({
       </fieldset>
 
       <ReviewTextarea
-        hint="Explique sua opiniao geral sobre o treino."
-        label="Comentario"
+        hint="Explique sua opinião geral sobre o treino."
+        label="Comentário"
         rows={4}
         value={comment}
         onChange={setComment}
       />
       <ReviewTextarea hint="Um item por linha." label="Pontos positivos" value={strengths} onChange={setStrengths} />
-      <ReviewTextarea hint="Um item por linha." label="Possiveis limitacoes" value={limitations} onChange={setLimitations} />
+      <ReviewTextarea hint="Um item por linha." label="Possíveis limitações" value={limitations} onChange={setLimitations} />
       <ReviewTextarea
         hint="Um item por linha."
-        label="Recomendacoes"
+        label="Recomendações"
         value={recommendations}
         onChange={setRecommendations}
       />
@@ -711,7 +711,7 @@ function ReviewForm({
           type="submit"
         >
           {saving && <Loader2 className="animate-spin" size={16} />}
-          Salvar avaliacao
+          Salvar avaliação
         </button>
       </div>
 
@@ -723,7 +723,7 @@ function ReviewForm({
           type="button"
         >
           <Trash2 size={16} />
-          Remover minha avaliacao
+          Remover minha avaliação
         </button>
       )}
     </form>

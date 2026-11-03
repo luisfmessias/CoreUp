@@ -17,7 +17,7 @@ export async function PUT(request: NextRequest, context: Context) {
   }
 
   if (!canReviewWorkouts(user)) {
-    return json({ error: "Apenas profissionais de Educacao Fisica aprovados podem avaliar treinos." }, 403);
+    return json({ error: "Apenas profissionais de Educação Física aprovados podem avaliar treinos." }, 403);
   }
 
   const { workoutKey } = await context.params;
@@ -58,7 +58,7 @@ export async function DELETE(request: NextRequest, context: Context) {
   });
 
   if (!deleted.count) {
-    return notFound("Avaliacao");
+    return notFound("Avaliação");
   }
 
   return json({ ok: true });

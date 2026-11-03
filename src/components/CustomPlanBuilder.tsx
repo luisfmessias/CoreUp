@@ -11,7 +11,7 @@ import {
 } from "@/components/WorkoutEditor";
 import { ConfirmPanel } from "@/components/ui/ConfirmPanel";
 
-const weekLabels = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab", "Dom"];
+const weekLabels = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
 
 type CustomDay = { key: string; title: string; items: EditedExercise[] };
 
@@ -20,7 +20,7 @@ const newKey = () => `dia-${Date.now()}-${nextKey++}`;
 
 const emptyDay = (): CustomDay => ({ key: newKey(), title: "", items: [] });
 
-// Cada aba corresponde a um dia da semana pela posicao, entao dias sem treino viram abas vazias.
+// Cada aba corresponde a um dia da semana pela posição, então dias sem treino viram abas vazias.
 function fromSavedDays(savedDays: WorkoutDay[]): CustomDay[] {
   const lastIndex = Math.max(...savedDays.map((day) => weekLabels.indexOf(day.label)));
 
@@ -102,12 +102,12 @@ export function CustomPlanBuilder({
     const filled = days.map((day, index) => ({ ...day, label: weekLabels[index] })).filter((day) => day.items.length);
 
     if (!filled.length) {
-      setError("Adicione pelo menos um exercicio em algum dia para salvar.");
+      setError("Adicione pelo menos um exercício em algum dia para salvar.");
       return;
     }
 
     for (const day of filled) {
-      const invalid = day.items.length > 20 ? `O treino de ${day.label} tem ${day.items.length} exercicios. O limite e 20 por dia.` : findInvalidExercise(day.items, byId);
+      const invalid = day.items.length > 20 ? `O treino de ${day.label} tem ${day.items.length} exercícios. O limite é 20 por dia.` : findInvalidExercise(day.items, byId);
 
       if (invalid) {
         setSelectedKey(day.key);
@@ -144,18 +144,18 @@ export function CustomPlanBuilder({
     <section className="space-y-5">
       <div>
         <h2 className="text-2xl font-semibold tracking-tight">Monte do seu jeito</h2>
-        <p className="mt-1 text-sm text-white/55">Crie os dias da semana e escolha exercicio por exercicio.</p>
+        <p className="mt-1 text-sm text-white/55">Crie os dias da semana e escolha exercício por exercício.</p>
       </div>
 
       {loadedFromSaved &&
         (confirmingReset ? (
           <ConfirmPanel
             busy={false}
-            confirmLabel="Comecar do zero"
-            description="Os dias e exercicios abaixo serao apagados desta montagem. Seu treino salvo so muda quando voce salvar."
+            confirmLabel="Começar do zero"
+            description="Os dias e exercícios abaixo serão apagados desta montagem. Seu treino salvo só muda quando você salvar."
             onCancel={() => setConfirmingReset(false)}
             onConfirm={startFromScratch}
-            title="Comecar do zero?"
+            title="Começar do zero?"
           />
         ) : (
           <div className="flex items-center justify-between gap-3 rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3">
@@ -165,7 +165,7 @@ export function CustomPlanBuilder({
               onClick={() => setConfirmingReset(true)}
               type="button"
             >
-              Comecar do zero
+              Começar do zero
             </button>
           </div>
         ))}
@@ -210,14 +210,14 @@ export function CustomPlanBuilder({
             className="glass-field h-11 w-full rounded-xl px-3 text-[15px] text-white outline-none placeholder:text-white/35"
             maxLength={60}
             onChange={(event) => updateSelected({ title: event.target.value })}
-            placeholder="Ex.: Peito e triceps"
+            placeholder="Ex.: Peito e tríceps"
             value={selected.title}
           />
         </label>
 
         <div className="space-y-3">
           <p className="text-xs text-white/55">
-            Exercicios · {selected.items.length}
+            Exercícios · {selected.items.length}
             {selected.items.length > 0 && ` · cerca de ${estimateMinutes(selected.items)} min`}
           </p>
           <ExerciseListEditor
@@ -248,7 +248,7 @@ export function CustomPlanBuilder({
 
       <div className="glass-nav sticky bottom-[calc(5.75rem+env(safe-area-inset-bottom))] z-10 rounded-2xl p-3">
         <p className="mb-2 text-center text-xs text-white/50">
-          {filledDays} {filledDays === 1 ? "dia" : "dias"} com treino · {totalExercises} {totalExercises === 1 ? "exercicio" : "exercicios"}
+          {filledDays} {filledDays === 1 ? "dia" : "dias"} com treino · {totalExercises} {totalExercises === 1 ? "exercício" : "exercícios"}
           {hasSavedPlan && " · substitui o treino atual"}
         </p>
         <button

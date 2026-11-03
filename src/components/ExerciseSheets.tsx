@@ -8,10 +8,10 @@ import { useIncrementalList } from "@/lib/use-incremental-list";
 import type { Exercise } from "@/types/fitness";
 
 const safetyTips = [
-  "Aqueca antes, com 1 ou 2 series leves do mesmo exercicio.",
-  "Priorize a tecnica: so aumente a carga quando conseguir fazer todas as repeticoes com controle.",
+  "Aqueça antes, com 1 ou 2 séries leves do mesmo exercício.",
+  "Priorize a técnica: só aumente a carga quando conseguir fazer todas as repetições com controle.",
   "Mantenha a coluna neutra e evite movimentos bruscos ou com impulso.",
-  "Dor aguda ou nas articulacoes e sinal para parar. Na duvida, peca orientacao a um profissional."
+  "Dor aguda ou nas articulações é sinal para parar. Na dúvida, peça orientação a um profissional."
 ];
 
 function BottomSheet({ title, onClose, children }: { title: string; onClose: () => void; children: ReactNode }) {
@@ -66,7 +66,7 @@ export function ExerciseSheet({
     .filter((session) => session.sets.length)
     .slice(0, 3);
   const best = bestLoadFor(logs, exercise.id);
-  const videoUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(`${exercise.nome} execucao correta`)}`;
+  const videoUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(`${exercise.nome} execução correta`)}`;
 
   return (
     <BottomSheet title={exercise.nome} onClose={onClose}>
@@ -83,11 +83,11 @@ export function ExerciseSheet({
         Ver como fazer
         <ExternalLink size={16} />
       </a>
-      <p className="mt-1.5 text-center text-xs text-white/40">Abre videos deste exercicio no YouTube.</p>
+      <p className="mt-1.5 text-center text-xs text-white/40">Abre vídeos deste exercício no YouTube.</p>
 
       <section className="mt-5 border-t border-white/[0.07] pt-4">
         <div className="flex items-baseline justify-between">
-          <h3 className="text-sm font-medium text-white/85">Seu historico</h3>
+          <h3 className="text-sm font-medium text-white/85">Seu histórico</h3>
           {best > 0 && <span className="text-xs text-white/50">Melhor carga: {formatKg(best)}</span>}
         </div>
         {sessions.length ? (
@@ -102,7 +102,7 @@ export function ExerciseSheet({
             ))}
           </ul>
         ) : (
-          <p className="mt-2 text-sm text-white/50">Voce ainda nao registrou este exercicio.</p>
+          <p className="mt-2 text-sm text-white/50">Você ainda não registrou este exercício.</p>
         )}
       </section>
 
@@ -160,7 +160,7 @@ export function ExercisePicker({
         <input
           className="w-full bg-transparent text-[15px] outline-none placeholder:text-white/40"
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Buscar exercicio"
+          placeholder="Buscar exercício"
           value={query}
         />
       </label>
@@ -197,7 +197,7 @@ export function ExercisePicker({
             </button>
           </li>
         ))}
-        {!total && <li className="py-6 text-center text-sm text-white/50">Nenhum exercicio encontrado.</li>}
+        {!total && <li className="py-6 text-center text-sm text-white/50">Nenhum exercício encontrado.</li>}
       </ul>
       {hasMore && (
         <div ref={sentinelRef} className="flex justify-center pb-3">

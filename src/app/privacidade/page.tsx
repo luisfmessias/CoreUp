@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { legal } from "@/lib/legal";
 
 export const metadata: Metadata = {
-  title: "Politica de Privacidade | CoreUp",
+  title: "Política de Privacidade | CoreUp",
   description: "Como o CoreUp coleta, usa e protege os seus dados"
 };
 

@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     const missingIds = getMissingExerciseIds(payload.exercises.map((exercise) => exercise.exerciseId));
 
     if (missingIds.length) {
-      return json({ error: "Exercicios nao encontrados.", exerciseIds: missingIds }, 400);
+      return json({ error: "Exercícios não encontrados.", exerciseIds: missingIds }, 400);
     }
 
     const workout = await prisma.workout.create({
